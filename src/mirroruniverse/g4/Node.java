@@ -2,7 +2,7 @@ package mirroruniverse.g4;
 
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements Comparable<Node>{
 	
 	// The two players' positions
 	private int x1;
@@ -10,6 +10,22 @@ public class Node {
 	private int x2;
 	private int y2;
 	
+	public int getX1() {
+		return x1;
+	}
+
+	public int getY1() {
+		return y1;
+	}
+
+	public int getX2() {
+		return x2;
+	}
+
+	public int getY2() {
+		return y2;
+	}
+
 	// The value of this node
 	private int value;
 	
@@ -48,7 +64,7 @@ public class Node {
 	//Implement our actual heuristic here, right now just takes the total distance both players are away from the goal
 	private static int heuristic(int p1X, int p1Y, int p2X, int p2Y){
 		if(p1ExitX == -1000 || p2ExitX == -1000){
-			return 1;
+			return Integer.MAX_VALUE;
 		}
 		return Math.max(Math.abs(p1X - p1ExitX), Math.abs(p1Y - p1ExitY)) + Math.max(Math.abs(p2X - p2ExitX), Math.abs(p2Y - p2ExitY));
 		
@@ -77,5 +93,16 @@ public class Node {
 		
 		Node n = (Node) o;
 		return (n.x1 == x1) && (n.x2 == x2) && (n.y1 == y1) && (n.y2 == y2); 
+	}
+
+	@Override
+	public int compareTo(Node n) {
+		if(value > n.value){
+			return -1;
+		} else if(value < n.value){
+			return 1;
+		} else {
+		return 0;
+		}
 	}
 }
