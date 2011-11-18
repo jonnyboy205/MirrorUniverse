@@ -41,6 +41,17 @@ public class Node implements Comparable<Node>{
 	private static int p2ExitX = -1000;
 	private static int p2ExitY = -1000;
 	
+	// Setters for the exit positions
+	public static void setExit1(int x, int y){
+		p1ExitX = x;
+		p1ExitY = y;
+	}
+	public static void setExit2(int x, int y){
+		p2ExitX = x;
+		p2ExitY = y;
+	}
+	
+	
 	// Constructor, for the first node, have parent = null;
 	public Node(int p1X, int p1Y, int p2X, int p2Y, Node parent, int action){
 		x1 = p1X;
