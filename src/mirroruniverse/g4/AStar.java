@@ -13,6 +13,7 @@ public class AStar {
 	PriorityQueue<Node> queue;
 	ArrayList<Node> closed;
 	private int numExitsFound = 0;
+	public boolean debugging = true;
 	
 	public AStar(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		root = new Node(initialX1, initialY1, initialX2, initialY2, null, 0);
@@ -22,6 +23,9 @@ public class AStar {
 		queue.add(root);
 		closed = new ArrayList<Node>();
 		closed.add(root);
+		if(debugging){
+			prettyPrint(root);
+		}
 	}
 	
 	public void setExit1(int x, int y){
@@ -47,29 +51,59 @@ public class AStar {
 		closed.clear();
 	}
 	
-	public ArrayList<Integer> findPath(){
-		while(!queue.isEmpty() && queue.peek().getValue() != 0){
+	public ArrayList<Integer> findPath(int depth){
+		while(!queue.isEmpty() && queue.peek().getValue() != depth){
+			if(debugging){
+			System.out.println("Looking at:");
+			System.out.println(queue.peek().getActionPath());
+			prettyPrint(queue.peek());
+			}
 			ArrayList<Node> nexts = successors(queue.poll());
 			queue.addAll(nexts);
 		}
 		System.out.println("Done");
 		if(queue.isEmpty()){
-			System.out.println("Empty :(");
-			return null;
+			System.out.println("Empty :(   depth: + " + depth);
+			return findPath(depth+1);
 		} else {
-			System.out.println("Found :)");
+			System.out.println("Found :)   depth: + " + depth);
 			return queue.peek().getActionPath();
 		}
 	}
 	
 	public static void main(String[] args){
 		int[][] temp = {{0,0,0,0,0},{0,0,0,0,0},{1,0,0,0,1},{1,0,1,1,1},{0,0,0,0,0}};
-		AStar a = new AStar(0, 1, 0, 2, temp, temp);
+		AStar a = new AStar(1, 0, 2, 0, temp, temp);
 		
 		a.setExit1(1, 1);
 		a.setExit2(4, 4);
 		
-		System.out.println(a.findPath());
+		System.out.println(a.findPath(0));
+	}
+	
+	public void prettyPrint(Node n){
+		for(int y = 0; y < map1.length; ++y){
+			for(int x = 0; x < map1[0].length; ++x){
+				if(x == n.getX1() && y == n.getY1()){
+					System.out.print("3 ");
+				} else {
+					System.out.print(map1[y][x] + " ");
+				}
+			}
+			System.out.println();
+		}
+		System.out.println("---------");
+		for(int y = 0; y < map1.length; ++y){
+			for(int x = 0; x < map1[0].length; ++x){
+				if(x == n.getX2() && y == n.getY2()){
+					System.out.print("3 ");
+				} else {
+					System.out.print(map2[y][x] + " ");
+				}
+			}
+			System.out.println();
+		}
+		System.out.println("+++++++++++++");
 	}
 	
 	// Will generate the possible next moves 
@@ -80,7 +114,7 @@ public class AStar {
 		int y1;
 		int y2;
 		int action = 0;
-		int[] indexOfAction = {4, 5, 6, 3, 0, 7, 2, 1, 8};
+		int[] indexOfAction = {6,5,4,7,0,3,8,1,2};
 		
 		ArrayList<Node> nexts = new ArrayList<Node>();
 		
@@ -89,6 +123,7 @@ public class AStar {
 				
 				// Dont want to add the current node to the path
 				if(xChange == 0 && yChange == 0){
+					++action;
 					continue;
 				}
 				
@@ -98,7 +133,7 @@ public class AStar {
 				y2 = n.getY2() + yChange;
 				
 				try {
-					if (map1[x1][y1] == 1) {
+					if (map1[y1][x1] == 1) {
 						x1 -= xChange;
 						y1 -= yChange;
 					}
@@ -107,7 +142,7 @@ public class AStar {
 					y1 -= yChange;
 				}
 				try {
-					if (map2[x2][y2] == 1) {
+					if (map2[y2][x2] == 1) {
 						x2 -= xChange;
 						y2 -= yChange;
 					}
@@ -115,12 +150,19 @@ public class AStar {
 					x2 -= xChange;
 					y2 -= yChange;
 				}
-				
+				if(x1 == 1 && y1 == 1 && x2 == 4 && y2 == 4)
+					System.out.println();
 				Node toAdd = new Node(x1, y1, x2, y2, n, indexOfAction[action]);
 				
 				if(!n.equals(toAdd) && !closed.contains(toAdd)){
 					nexts.add(toAdd);
+					if(debugging){
+						System.out.println(indexOfAction[action]);
+						prettyPrint(toAdd);
+					}
 				}
+				
+				
 				++action;
 			}
 		}
