@@ -1,2 +1,2 @@
-5, 5, 4, -1, maps/Test1.txt, 5
-5, 5, 4, -1, maps/Test2.txt, 5
+20, 20, 4, -1, maps/Board1.txt, 5
+20, 20, 4, -1, maps/Board2.txt, 5
