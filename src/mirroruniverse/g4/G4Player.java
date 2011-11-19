@@ -62,6 +62,10 @@ public class G4Player implements Player{
 			stepCounter = 0;
 		}
 		
+		if (checkForBoundary(currentDir)){
+			
+		}
+		
 		stepCounter++;
 		//turn++;
 		return currentDir;
@@ -69,6 +73,10 @@ public class G4Player implements Player{
 	
 	private int calcPathSteps(){
 		return (numPath/2 + 1)*(2*sightRadius - 1);
+	}
+	
+	private boolean checkForBoundary(int dir){
+		
 	}
 
 }
