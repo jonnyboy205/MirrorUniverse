@@ -12,6 +12,7 @@ public class AStar {
 	Node root;
 	PriorityQueue<Node> queue;
 	ArrayList<Node> closed;
+	private int numExitsFound = 0;
 	
 	public AStar(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		root = new Node(initialX1, initialY1, initialX2, initialY2, null, 0);
@@ -23,11 +24,32 @@ public class AStar {
 		closed.add(root);
 	}
 	
+	public void setExit1(int x, int y){
+		Node.setExit1(x, y);
+		++numExitsFound;
+		if(numExitsFound == 2){
+			exitsFound();
+		}
+	}
+	
+	public void setExit2(int x, int y){
+		Node.setExit2(x, y);
+		++numExitsFound;
+		if(numExitsFound == 2){
+			exitsFound();
+		}
+	}
+	
+	public void exitsFound(){
+		Node.reRunHeuristic(closed);
+		PriorityQueue<Node> tempQ = new PriorityQueue<Node>(closed);
+		queue = tempQ;
+	}
+	
 	public ArrayList<Integer> findPath(){
 		while(!queue.isEmpty() && queue.peek().getValue() != 0){
 			ArrayList<Node> nexts = successors(queue.poll());
 			queue.addAll(nexts);
-			closed.addAll(nexts);
 		}
 		System.out.println("Done");
 		if(queue.isEmpty()){
@@ -39,8 +61,21 @@ public class AStar {
 		}
 	}
 	
+	public static void main(String[] args){
+		int[][] temp = {{0,0,0,0,0},{0,0,0,0,0},{1,0,0,0,1},{1,0,1,1,1},{0,0,0,0,0}};
+		AStar a = new AStar(0, 1, 0, 2, temp, temp);
+		
+		System.out.println(a.findPath());
+		
+		a.setExit1(1, 1);
+		a.setExit2(4, 4);
+		
+		System.out.println(a.findPath());
+	}
+	
 	// Will generate the possible next moves 
 	private ArrayList<Node> successors(Node n){
+		closed.add(n);
 		int x1;
 		int x2;
 		int y1;

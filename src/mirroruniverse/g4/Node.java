@@ -77,13 +77,24 @@ public class Node implements Comparable<Node>{
 		if(p1ExitX == -1000 || p2ExitX == -1000){
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
-		return Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
-		
+		int toReturn = depth + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
+		if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
+			toReturn += 10000;
+		} else if (x2 == p2ExitX && y2 == p2ExitY && (x1 != p2ExitX || y1 != p2ExitY)){
+			toReturn += 10000;
+		}
+		return toReturn;
+	}
+	
+	public static void reRunHeuristic(ArrayList<Node> set){
+		for(Node n : set){
+			n.value = n.heuristic();
+		}
 	}
 
 
 	public int getValue() {
-		return value;
+		return value - depth;
 	}
 
 
