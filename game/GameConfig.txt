@@ -1,2 +1,7 @@
+<<<<<<< HEAD
+20, 20, 4, -1, maps/Board1.txt, 5
+20, 20, 4, -1, maps/Board2.txt, 5
+=======
 20, 20, 2, -1, maps/RightMap.txt, 5
 20, 20, 2, -1, maps/RightMap.txt, 5
+>>>>>>> 8aa7751a04ebf19778d72a14000922e4ded89912
