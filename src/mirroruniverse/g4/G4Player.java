@@ -11,18 +11,27 @@ public class G4Player implements Player{
 	public int[][] kb_p2;
 	private int[] p1Pos;
 	private int[] p2Pos;
+	
+	private int numPath;
+	private int initialDir;
+	//private int turn;
+	private int stepCounter;
+	private int currentDir;
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
 		if (!started){
 			initialize(aintViewL);
 		}
-		return 0;
+		
+		return move();
+		
+		//return 0;
 	}
 	
 	public void initialize(int[][] aintViewL){
 		started = true;
-		sightRadius = aintViewL[0].length;
+		sightRadius = (aintViewL[0].length - 1)/2;
 		kb_p1 = new int[2*MAX_SIZE-1][2*MAX_SIZE-1];
 		kb_p2 = new int[2*MAX_SIZE-1][2*MAX_SIZE-1];
 		p1Pos = new int[2];
@@ -35,6 +44,31 @@ public class G4Player implements Player{
 				kb_p2[i][j] = -5;
 			}
 		}
+		
+		numPath = 0;
+		initialDir = 2;
+		currentDir = initialDir;
+		stepCounter = 0;
+	}
+	
+	//not currently taking into account obstacles
+	public int move(){
+		if (stepCounter == calcPathSteps()){
+			currentDir -= 2;
+			if (currentDir == 0){
+				currentDir = 8;
+			}
+			numPath++;
+			stepCounter = 0;
+		}
+		
+		stepCounter++;
+		//turn++;
+		return currentDir;
+	}
+	
+	private int calcPathSteps(){
+		return (numPath/2 + 1)*(2*sightRadius - 1);
 	}
 
 }
