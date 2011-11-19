@@ -44,6 +44,7 @@ public class AStar {
 		Node.reRunHeuristic(closed);
 		PriorityQueue<Node> tempQ = new PriorityQueue<Node>(closed);
 		queue = tempQ;
+		closed.clear();
 	}
 	
 	public ArrayList<Integer> findPath(){
@@ -65,8 +66,6 @@ public class AStar {
 		int[][] temp = {{0,0,0,0,0},{0,0,0,0,0},{1,0,0,0,1},{1,0,1,1,1},{0,0,0,0,0}};
 		AStar a = new AStar(0, 1, 0, 2, temp, temp);
 		
-		System.out.println(a.findPath());
-		
 		a.setExit1(1, 1);
 		a.setExit2(4, 4);
 		
@@ -80,8 +79,8 @@ public class AStar {
 		int x2;
 		int y1;
 		int y2;
-		// Later, use the index variable to say which action has been taken.  Look at MUMap.java, aintDToM or something to figure out the directions
-		int index = 0;
+		int action = 0;
+		int[] indexOfAction = {4, 5, 6, 3, 0, 7, 2, 1, 8};
 		
 		ArrayList<Node> nexts = new ArrayList<Node>();
 		
@@ -117,22 +116,12 @@ public class AStar {
 					y2 -= yChange;
 				}
 				
-				// I should make this better...
-				int[] tempArr = {xChange, yChange};
-				int[][] muMapArr = MUMap.aintDToM;
-				for(int i = 0; i < MUMap.aintDToM.length; ++i){
-					int[] subMapArr = muMapArr[i];
-					if(tempArr[0] == subMapArr[0] && tempArr[1] == subMapArr[1]){
-						index = i;
-						break;
-					}
-				}
-				
-				Node toAdd = new Node(x1, y1, x2, y2, n, index);
+				Node toAdd = new Node(x1, y1, x2, y2, n, indexOfAction[action]);
 				
 				if(!n.equals(toAdd) && !closed.contains(toAdd)){
 					nexts.add(toAdd);
 				}
+				++action;
 			}
 		}
 		
