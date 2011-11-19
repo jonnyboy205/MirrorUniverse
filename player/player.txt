@@ -1,1 +1,2 @@
-mirroruniverse.dumpplayer.RandomPlayer
+//mirroruniverse.dumpplayer.RandomPlayer
+mirroruniverse.g4.G4Player
