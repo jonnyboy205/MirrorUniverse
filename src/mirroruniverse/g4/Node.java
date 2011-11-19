@@ -75,9 +75,6 @@ public class Node implements Comparable<Node>{
 	//Implement our actual heuristic here, right now just takes the total distance both players are away from the goal
 	private int heuristic(){
 		if(p1ExitX == -1000 || p2ExitX == -1000){
-			if(x1 == 4 && y2 == 4){
-				return 0;
-			}
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
 		return Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));

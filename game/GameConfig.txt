@@ -1,7 +1,2 @@
-<<<<<<< HEAD
-100, 100, 2, -1, maps/EmptyBoard.txt, 5
+50, 50, 4, -1, maps/EmptyBoard2.txt, 5
 7, 3, 2, 10, 0.1, 2
-=======
-20, 20, 30, 5, 0.1, 5
-7, 3, 3, -1, maps/RightMap.txt, 3
->>>>>>> 17514fc06e1c57059262b52432d53170dbd7f74e
