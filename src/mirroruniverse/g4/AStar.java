@@ -12,6 +12,7 @@ public class AStar {
 	Node root;
 	PriorityQueue<Node> queue;
 	ArrayList<Node> closed;
+	private int numExitsFound = 0;
 	
 	public AStar(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		root = new Node(initialX1, initialY1, initialX2, initialY2, null, 0);
@@ -23,11 +24,33 @@ public class AStar {
 		closed.add(root);
 	}
 	
+	public void setExit1(int x, int y){
+		Node.setExit1(x, y);
+		++numExitsFound;
+		if(numExitsFound == 2){
+			exitsFound();
+		}
+	}
+	
+	public void setExit2(int x, int y){
+		Node.setExit2(x, y);
+		++numExitsFound;
+		if(numExitsFound == 2){
+			exitsFound();
+		}
+	}
+	
+	public void exitsFound(){
+		Node.reRunHeuristic(closed);
+		PriorityQueue<Node> tempQ = new PriorityQueue<Node>(closed);
+		queue = tempQ;
+		closed.clear();
+	}
+	
 	public ArrayList<Integer> findPath(){
 		while(!queue.isEmpty() && queue.peek().getValue() != 0){
 			ArrayList<Node> nexts = successors(queue.poll());
 			queue.addAll(nexts);
-			closed.addAll(nexts);
 		}
 		System.out.println("Done");
 		if(queue.isEmpty()){
@@ -39,14 +62,25 @@ public class AStar {
 		}
 	}
 	
+	public static void main(String[] args){
+		int[][] temp = {{0,0,0,0,0},{0,0,0,0,0},{1,0,0,0,1},{1,0,1,1,1},{0,0,0,0,0}};
+		AStar a = new AStar(0, 1, 0, 2, temp, temp);
+		
+		a.setExit1(1, 1);
+		a.setExit2(4, 4);
+		
+		System.out.println(a.findPath());
+	}
+	
 	// Will generate the possible next moves 
 	private ArrayList<Node> successors(Node n){
+		closed.add(n);
 		int x1;
 		int x2;
 		int y1;
 		int y2;
-		// Later, use the index variable to say which action has been taken.  Look at MUMap.java, aintDToM or something to figure out the directions
-		int index = 0;
+		int action = 0;
+		int[] indexOfAction = {4, 5, 6, 3, 0, 7, 2, 1, 8};
 		
 		ArrayList<Node> nexts = new ArrayList<Node>();
 		
@@ -82,22 +116,12 @@ public class AStar {
 					y2 -= yChange;
 				}
 				
-				// I should make this better...
-				int[] tempArr = {xChange, yChange};
-				int[][] muMapArr = MUMap.aintDToM;
-				for(int i = 0; i < MUMap.aintDToM.length; ++i){
-					int[] subMapArr = muMapArr[i];
-					if(tempArr[0] == subMapArr[0] && tempArr[1] == subMapArr[1]){
-						index = i;
-						break;
-					}
-				}
-				
-				Node toAdd = new Node(x1, y1, x2, y2, n, index);
+				Node toAdd = new Node(x1, y1, x2, y2, n, indexOfAction[action]);
 				
 				if(!n.equals(toAdd) && !closed.contains(toAdd)){
 					nexts.add(toAdd);
 				}
+				++action;
 			}
 		}
 		

@@ -1,3 +1,6 @@
 .gitignore
 \bin\*
 .classpath
+\replays\*
+bin/*
+replays/*

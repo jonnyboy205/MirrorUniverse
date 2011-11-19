@@ -59,9 +59,6 @@ public class Node implements Comparable<Node>{
 		x2 = p2X;
 		y2 = p2Y;
 		
-		// Set the value of this node equal to our heuristic rating for it
-		value = this.heuristic();
-		
 		if(parent == null){
 			depth = 0;
 			actionPath = new ArrayList<Integer>();
@@ -70,23 +67,35 @@ public class Node implements Comparable<Node>{
 			actionPath = ((ArrayList<Integer>) parent.getActionPath().clone());
 			actionPath.add(action);
 		}
+
+		// Set the value of this node equal to our heuristic rating for it
+		value = this.heuristic();
+		
 	}
 
 	//Implement our actual heuristic here, right now just takes the total distance both players are away from the goal
 	private int heuristic(){
 		if(p1ExitX == -1000 || p2ExitX == -1000){
-			if(x1 == 4 && y2 == 4){
-				return 0;
-			}
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
-		return Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
-		
+		int toReturn = depth + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
+		if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
+			toReturn += 10000;
+		} else if (x2 == p2ExitX && y2 == p2ExitY && (x1 != p2ExitX || y1 != p2ExitY)){
+			toReturn += 10000;
+		}
+		return toReturn;
+	}
+	
+	public static void reRunHeuristic(ArrayList<Node> set){
+		for(Node n : set){
+			n.value = n.heuristic();
+		}
 	}
 
 
 	public int getValue() {
-		return value;
+		return value - depth;
 	}
 
 
