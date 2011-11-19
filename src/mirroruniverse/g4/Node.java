@@ -59,9 +59,6 @@ public class Node implements Comparable<Node>{
 		x2 = p2X;
 		y2 = p2Y;
 		
-		// Set the value of this node equal to our heuristic rating for it
-		value = this.heuristic();
-		
 		if(parent == null){
 			depth = 0;
 			actionPath = new ArrayList<Integer>();
@@ -70,6 +67,10 @@ public class Node implements Comparable<Node>{
 			actionPath = ((ArrayList<Integer>) parent.getActionPath().clone());
 			actionPath.add(action);
 		}
+
+		// Set the value of this node equal to our heuristic rating for it
+		value = this.heuristic();
+		
 	}
 
 	//Implement our actual heuristic here, right now just takes the total distance both players are away from the goal
