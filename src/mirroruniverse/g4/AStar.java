@@ -15,6 +15,8 @@ public class AStar {
 	private int numExitsFound = 0;
 	public boolean debugging = false;
 	
+	private int numAdded = 0;
+	
 	public AStar(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		root = new Node(initialX1, initialY1, initialX2, initialY2, null, 0);
 		map1 = kb_p1;
@@ -23,9 +25,9 @@ public class AStar {
 		queue.add(root);
 		closed = new ArrayList<Node>();
 		closed.add(root);
-		//if(debugging){
+		if(debugging){
 			prettyPrint(root);
-		//}
+		}
 	}
 	
 	public void setExit1(int x, int y){
@@ -52,19 +54,24 @@ public class AStar {
 	}
 	
 	public ArrayList<Integer> findPath(){
-		while(!queue.isEmpty() && queue.peek().getValue() != 0){
-			if(debugging){
-			System.out.println("Looking at:");
-			System.out.println(queue.peek().getActionPath());
-			prettyPrint(queue.peek());
+		while(!queue.isEmpty() && queue.peek().getValue() != 0 && !queue.peek().closeEnough()){
+			System.out.println(numAdded + " " + queue.size());
+			//System.out.println("Expanding:" + queue.peek().getValue());
+			if (debugging) {
+				System.out.println("Looking at:");
+				System.out.println(queue.peek().getActionPath());
+				prettyPrint(queue.peek());
 			}
 			ArrayList<Node> nexts = successors(queue.poll());
 			queue.addAll(nexts);
 		}
 		System.out.println("Done");
 		if(queue.isEmpty()){
+			numAdded = 0;
 			System.out.println("Empty :(");
-			return null;
+			Node.incDegree();
+			exitsFound();
+			return findPath();
 		} else {
 			System.out.println("Found :)");
 			System.out.println(queue.peek().getActionPath());
@@ -155,8 +162,9 @@ public class AStar {
 					System.out.println();
 				Node toAdd = new Node(x1, y1, x2, y2, n, indexOfAction[action]);
 				
-				if(!n.equals(toAdd) && !closed.contains(toAdd)){
+				if(!n.equals(toAdd) && shouldIAdd(toAdd)){
 					nexts.add(toAdd);
+					++numAdded;
 					if(debugging){
 						System.out.println(indexOfAction[action]);
 						prettyPrint(toAdd);
@@ -169,5 +177,30 @@ public class AStar {
 		}
 		
 		return nexts;
+	}
+	
+	private boolean shouldIAdd(Node n){
+		for(Node q: queue){
+			if(n.equals(q)){
+				if(n.getValue() + n.getDepth() < q.getValue() + q.getDepth()){
+					queue.remove(q);
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		
+		for(Node c: closed){
+			if(n.equals(c)){
+				//if(n.getValue() + n.getDepth() < c.getValue() + c.getDepth()){
+					//closed.remove(c);
+					//return true;
+				//} else {
+					return false;
+				//}
+			}
+		}
+		return true;
 	}
 }
