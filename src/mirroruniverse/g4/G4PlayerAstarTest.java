@@ -6,7 +6,8 @@ import mirroruniverse.sim.Player;
 
 public class G4PlayerAstarTest implements Player{
 	
-	public int sightRadius;
+	public int sightRadius1;
+	public int sightRadius2;
 	public boolean started = false;
 	public static final int MAX_SIZE = 100;
 	public int[][] kb_p1;
@@ -24,6 +25,8 @@ public class G4PlayerAstarTest implements Player{
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
+		sightRadius1 = aintViewL.length;
+		sightRadius2 = aintViewR.length;
 		if (!started){
 			initialize(aintViewL);
 		}
@@ -46,7 +49,7 @@ public class G4PlayerAstarTest implements Player{
 					}
 				}
 			}
-			AStar a = new AStar(sightRadius,sightRadius,sightRadius,sightRadius,aintViewL,aintViewR);
+			AStar a = new AStar(sightRadius1,sightRadius1,sightRadius2,sightRadius2,aintViewL,aintViewR);
 			a.setExit1(exit1[0], exit1[1]);
 			a.setExit2(exit2[0], exit2[1]);
 			path = a.findPath();
@@ -56,7 +59,7 @@ public class G4PlayerAstarTest implements Player{
 		//if(path.isEmpty()){
 			for(int i = 0; i < aintViewL.length; ++i){
 				for(int j = 0; j < aintViewL[0].length; ++j){
-					if(i == sightRadius && j == sightRadius){
+					if(i == sightRadius1 && j == sightRadius1){
 						System.out.print(3);
 					} else {
 						System.out.print(aintViewL[i][j]);
@@ -67,7 +70,7 @@ public class G4PlayerAstarTest implements Player{
 			System.out.println("---------------");
 			for (int i = 0; i < aintViewR.length; i++) {
 				for (int j = 0; j < aintViewR[0].length; ++j) {
-					if (i == sightRadius && j == sightRadius) {
+					if (i == sightRadius2 && j == sightRadius2) {
 						System.out.print(3);
 					} else {
 						System.out.print(aintViewR[i][j]);
@@ -85,7 +88,7 @@ public class G4PlayerAstarTest implements Player{
 	
 	public void initialize(int[][] aintViewL){
 		started = true;
-		sightRadius = (aintViewL[0].length - 1)/2;
+		sightRadius1 = (aintViewL[0].length - 1)/2;
 		kb_p1 = new int[2*MAX_SIZE-1][2*MAX_SIZE-1];
 		kb_p2 = new int[2*MAX_SIZE-1][2*MAX_SIZE-1];
 		p1Pos = new int[2];
@@ -123,7 +126,7 @@ public class G4PlayerAstarTest implements Player{
 	}
 	
 	private int calcPathSteps(){
-		return (numPath/2 + 1)*(2*sightRadius - 1);
+		return (numPath/2 + 1)*(2*sightRadius1 - 1);
 	}
 
 }
