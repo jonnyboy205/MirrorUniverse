@@ -23,9 +23,9 @@ public class AStar {
 		queue.add(root);
 		closed = new ArrayList<Node>();
 		closed.add(root);
-		if(debugging){
+		//if(debugging){
 			prettyPrint(root);
-		}
+		//}
 	}
 	
 	public void setExit1(int x, int y){
