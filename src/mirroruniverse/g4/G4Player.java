@@ -26,6 +26,11 @@ public class G4Player implements Player {
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
+		
+		/**
+		 * If you find the exit, go in immediately
+		 * @author From RandomPlayer, Shen
+		 */
 		int[][] aintLocalViewL = new int[ 3 ][ 3 ];
 		int intMid = aintViewL.length / 2;
 		for ( int i = -1; i <= 1; i ++ )
@@ -41,7 +46,6 @@ public class G4Player implements Player {
 				}
 			}
 		}
-		
 		intMid = aintViewR.length / 2;
 		int[][] aintLocalViewR = new int[ 3 ][ 3 ];
 		for ( int i = -1; i <= 1; i ++ )
@@ -57,15 +61,17 @@ public class G4Player implements Player {
 				}
 			}
 		}
+		/**
+		 * 
+		 */
 		
 		if (!started) {
 			initialize(aintViewL);
 		}
+		
 		int direction = move(aintViewL, aintViewR);
 
 		return direction;
-
-		// return 0;
 	}
 
 	public void initialize(int[][] aintViewL) {
@@ -100,9 +106,6 @@ public class G4Player implements Player {
 	public int move(int[][] aintViewL, int[][] aintViewR) {
 		currentDir = getNormalizedDir();
 		if (stepCounter == calcPathSteps()) {
-			/*if(currentDir%2!=0)
-				currentDir+=1;*/
-			
 			currentDir -= 2;
 			if (currentDir <= 0) {
 				currentDir = 8;
