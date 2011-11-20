@@ -184,6 +184,7 @@ public class AStar {
 			if(n.equals(q)){
 				if(n.getValue() + n.getDepth() < q.getValue() + q.getDepth()){
 					queue.remove(q);
+					--numAdded;
 					return true;
 				} else {
 					return false;

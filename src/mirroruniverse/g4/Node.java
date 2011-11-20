@@ -25,6 +25,17 @@ public class Node implements Comparable<Node>{
 	public int getY2() {
 		return y2;
 	}
+	
+	private boolean p1HasReached;
+	private boolean p2HasReached;
+	
+	public boolean getP1HasReached(){
+		return p1HasReached;
+	}
+	public boolean getP2HasReached(){
+		return p2HasReached;
+	}
+	
 
 	// The value of this node
 	private int value;
@@ -69,6 +80,11 @@ public class Node implements Comparable<Node>{
 		y1 = p1Y;
 		x2 = p2X;
 		y2 = p2Y;
+		p1HasReached = false;
+		p2HasReached = false;
+		
+		p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
+		p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);
 		
 		if(parent == null){
 			depth = 0;
@@ -156,11 +172,11 @@ public class Node implements Comparable<Node>{
 	public boolean closeEnough(){
 		if(x1 == p1ExitX && y1 == p1ExitY){
 			if(getValue() <= degree){
-				return true;
+				return p2HasReached;
 			}
 		} else if(x2 == p2ExitX && y2 == p2ExitY){
 			if(getValue() <= degree){
-				return true;
+				return p1HasReached;
 			}
 		}
 		return false;
