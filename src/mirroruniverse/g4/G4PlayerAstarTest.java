@@ -25,8 +25,8 @@ public class G4PlayerAstarTest implements Player{
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
-		sightRadius1 = aintViewL.length;
-		sightRadius2 = aintViewR.length;
+		sightRadius1 = (aintViewL.length-1)/2;
+		sightRadius2 = (aintViewR.length-1)/2;
 		if (!started){
 			initialize(aintViewL);
 		}

@@ -1,2 +1,3 @@
 20, 20, 2, -1, maps/RightMap.txt, 5
 20, 20, 2, -1, maps/RightMap.txt, 5
+

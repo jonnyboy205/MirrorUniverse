@@ -25,6 +25,17 @@ public class Node implements Comparable<Node>{
 	public int getY2() {
 		return y2;
 	}
+	
+	private boolean p1HasReached;
+	private boolean p2HasReached;
+	
+	public boolean getP1HasReached(){
+		return p1HasReached;
+	}
+	public boolean getP2HasReached(){
+		return p2HasReached;
+	}
+	
 
 	// The value of this node
 	private int value;
@@ -40,6 +51,17 @@ public class Node implements Comparable<Node>{
 	private static int p1ExitY = -1000;
 	private static int p2ExitX = -1000;
 	private static int p2ExitY = -1000;
+	
+	// This integer represents the degree away from perfect we can look at
+	private static int degree = 0;
+	
+	public static void incDegree(){
+		++degree;
+	}
+	
+	public static int getDegree(){
+		return degree;
+	}
 	
 	// Setters for the exit positions
 	public static void setExit1(int x, int y){
@@ -58,6 +80,14 @@ public class Node implements Comparable<Node>{
 		y1 = p1Y;
 		x2 = p2X;
 		y2 = p2Y;
+		p1HasReached = false;
+		p2HasReached = false;
+		
+		if (parent!=null)
+		{
+			p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
+			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);	
+		}
 		
 		if(parent == null){
 			depth = 0;
@@ -78,19 +108,32 @@ public class Node implements Comparable<Node>{
 		if(p1ExitX == -1000 || p2ExitX == -1000){
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
-		int toReturn = depth + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
+		int toReturn = Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
 		if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
-			toReturn += 10000;
+			if (toReturn > degree) {
+				toReturn += 10000;
+			}
 		} else if (x2 == p2ExitX && y2 == p2ExitY && (x1 != p1ExitX || y1 != p1ExitY)){
-			toReturn += 10000;
+			if (toReturn > degree) {
+				toReturn += 10000;
+			}
 		}
-		return toReturn;
+		return toReturn + depth;
 	}
 	
 	public static void reRunHeuristic(ArrayList<Node> set){
+		System.out.println("Degree is now: " + degree);
+		ArrayList<Node> newSet = new ArrayList<Node>();
 		for(Node n : set){
-			n.value = n.heuristic();
+//			if(n.getValue() > 9999){
+				n.value = n.heuristic();
+				newSet.add(n);
+//			} else if (n.getValue() <= degree){
+//				newSet.add(n);
+//			}
 		}
+		set = newSet;
+		System.out.println();
 	}
 
 
@@ -129,7 +172,20 @@ public class Node implements Comparable<Node>{
 		}
 	}
 	
+	public boolean closeEnough(){
+		if(x1 == p1ExitX && y1 == p1ExitY){
+			if(getValue() <= degree){
+				return p2HasReached;
+			}
+		} else if(x2 == p2ExitX && y2 == p2ExitY){
+			if(getValue() <= degree){
+				return p1HasReached;
+			}
+		}
+		return false;
+	}
+	
 	public String toString(){
-		return "P1: " + x1 + "," + y1 + "  P2: " + x2 + "," + y2 + "  Value: " + value + " Depth: " + depth;
+		return "(P1: " + x1 + "," + y1 + "  P2: " + x2 + "," + y2 + "  Value: " + value + " Depth: " + depth + ")";
 	}
 }
