@@ -63,8 +63,10 @@ public class G4Player implements Player {
 	// not currently taking into account obstacles
 	public int move(int[][] aintViewL, int[][] aintViewR) {
 		if (stepCounter == calcPathSteps()) {
-			if(currentDir%2!=0)
-				currentDir+=1;
+			/*if(currentDir%2!=0)
+				currentDir+=1;*/
+			//currentDir = getNormalizedDir();
+			
 			currentDir -= 2;
 			if (currentDir <= 0) {
 				currentDir = 8;
@@ -74,12 +76,30 @@ public class G4Player implements Player {
 		}
 
 		// turn++;
-		while(!isDirectionCorrect(currentDir, aintViewL)){
-			currentDir-=1;
-		}
+//		while(!isDirectionCorrect(currentDir, aintViewL)){
+//			currentDir-=1;
+//		}
 
 		stepCounter++;
 		return currentDir;
+	}
+
+	private int getNormalizedDir() {
+		int mod = numPath%4;
+		if (mod == 0){
+			currentDir = 2;
+		}
+		else if (mod == 1){
+			currentDir = 8;
+		}
+		else if (mod == 2){
+			currentDir = 6;
+		}
+		else if (mod == 3){
+			currentDir = 4;
+		}
+		
+		return 0;
 	}
 
 	private int calcPathSteps() {
