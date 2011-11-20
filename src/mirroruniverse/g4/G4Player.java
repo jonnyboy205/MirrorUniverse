@@ -61,10 +61,10 @@ public class G4Player implements Player {
 				}
 			}
 		}
-		/**
-		 * 
-		 */
 		
+		/**
+		 * @author our code starts here
+		 */
 		if (!started) {
 			initialize(aintViewL);
 		}
