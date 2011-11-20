@@ -100,8 +100,8 @@ public class G4Player implements Player {
 	public int move(int[][] aintViewL, int[][] aintViewR) {
 		currentDir = getNormalizedDir();
 		if (stepCounter == calcPathSteps()) {
-			/*if(currentDir%2!=0)
-				currentDir+=1;*/
+			if(currentDir%2!=0)
+				currentDir+=1;
 			
 			currentDir -= 2;
 			if (currentDir <= 0) {
@@ -119,7 +119,7 @@ public class G4Player implements Player {
 		}
 
 		stepCounter++;
-		if (turn > 100)
+		if (turn > 500)
 			return myRandomPlayer.lookAndMove(aintViewL, aintViewR);
 		turn++;
 		return currentDir;
@@ -151,7 +151,7 @@ public class G4Player implements Player {
 	private boolean isDirectionCorrect(int currentDirection, int[][] aintViewL) {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
-		if (aintViewL[midElement + intDeltaX][midElement + intDeltaY] == 1) {
+		if (aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 1) {
 			return false;
 		}
 		return true;
