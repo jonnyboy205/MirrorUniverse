@@ -13,7 +13,7 @@ public class AStar {
 	PriorityQueue<Node> queue;
 	ArrayList<Node> closed;
 	private int numExitsFound = 0;
-	public boolean debugging = true;
+	public boolean debugging = false;
 	
 	public AStar(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		root = new Node(initialX1, initialY1, initialX2, initialY2, null, 0);
@@ -51,8 +51,8 @@ public class AStar {
 		closed.clear();
 	}
 	
-	public ArrayList<Integer> findPath(int depth){
-		while(!queue.isEmpty() && queue.peek().getValue() != depth){
+	public ArrayList<Integer> findPath(){
+		while(!queue.isEmpty() && queue.peek().getValue() != 0){
 			if(debugging){
 			System.out.println("Looking at:");
 			System.out.println(queue.peek().getActionPath());
@@ -63,23 +63,24 @@ public class AStar {
 		}
 		System.out.println("Done");
 		if(queue.isEmpty()){
-			System.out.println("Empty :(   depth: + " + depth);
-			return findPath(depth+1);
+			System.out.println("Empty :(");
+			return null;
 		} else {
-			System.out.println("Found :)   depth: + " + depth);
+			System.out.println("Found :)");
+			System.out.println(queue.peek().getActionPath());
 			return queue.peek().getActionPath();
 		}
 	}
 	
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		int[][] temp = {{0,0,0,0,0},{0,0,0,0,0},{1,0,0,0,1},{1,0,1,1,1},{0,0,0,0,0}};
 		AStar a = new AStar(1, 0, 2, 0, temp, temp);
 		
 		a.setExit1(1, 1);
 		a.setExit2(4, 4);
 		
-		System.out.println(a.findPath(0));
-	}
+		System.out.println(a.findPath());
+	}*/
 	
 	public void prettyPrint(Node n){
 		for(int y = 0; y < map1.length; ++y){
@@ -114,8 +115,8 @@ public class AStar {
 		int y1;
 		int y2;
 		int action = 0;
-		int[] indexOfAction = {6,5,4,7,0,3,8,1,2};
-		
+		//int[] indexOfAction = {6,5,4,7,0,3,8,1,2};
+		int[] indexOfAction = {4,5,6,3,0,7,2,1,8};
 		ArrayList<Node> nexts = new ArrayList<Node>();
 		
 		for(int xChange = -1; xChange < 2; ++xChange){
