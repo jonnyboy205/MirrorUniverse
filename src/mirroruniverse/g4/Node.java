@@ -81,7 +81,7 @@ public class Node implements Comparable<Node>{
 		int toReturn = depth + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
 		if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
 			toReturn += 10000;
-		} else if (x2 == p2ExitX && y2 == p2ExitY && (x1 != p2ExitX || y1 != p2ExitY)){
+		} else if (x2 == p2ExitX && y2 == p2ExitY && (x1 != p1ExitX || y1 != p1ExitY)){
 			toReturn += 10000;
 		}
 		return toReturn;
@@ -120,9 +120,9 @@ public class Node implements Comparable<Node>{
 
 	@Override
 	public int compareTo(Node n) {
-		if(value > n.value){
+		if(this.getValue() > n.getValue()){
 			return 1;
-		} else if(value < n.value){
+		} else if(this.getValue() < n.getValue()){
 			return -1;
 		} else {
 		return 0;
