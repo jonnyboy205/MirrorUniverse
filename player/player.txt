@@ -1,2 +1,2 @@
 //mirroruniverse.dumpplayer.RandomPlayer
-mirroruniverse.g4.G4Player
+mirroruniverse.g4.G4PlayerAstarTest

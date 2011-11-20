@@ -83,8 +83,11 @@ public class Node implements Comparable<Node>{
 		p1HasReached = false;
 		p2HasReached = false;
 		
-		p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
-		p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);
+		if (parent!=null)
+		{
+			p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
+			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);	
+		}
 		
 		if(parent == null){
 			depth = 0;
@@ -122,12 +125,12 @@ public class Node implements Comparable<Node>{
 		System.out.println("Degree is now: " + degree);
 		ArrayList<Node> newSet = new ArrayList<Node>();
 		for(Node n : set){
-			if(n.getValue() > 9999){
+//			if(n.getValue() > 9999){
 				n.value = n.heuristic();
 				newSet.add(n);
-			} else if (n.getValue() <= degree){
-				newSet.add(n);
-			}
+//			} else if (n.getValue() <= degree){
+//				newSet.add(n);
+//			}
 		}
 		set = newSet;
 		System.out.println();
