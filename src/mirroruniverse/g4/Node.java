@@ -124,12 +124,12 @@ public class Node implements Comparable<Node>{
 		System.out.println("Degree is now: " + degree);
 		ArrayList<Node> newSet = new ArrayList<Node>();
 		for(Node n : set){
-			if(n.getValue() > 9999){
+//			if(n.getValue() > 9999){
 				n.value = n.heuristic();
 				newSet.add(n);
-			} else if (n.getValue() <= degree){
-				newSet.add(n);
-			}
+//			} else if (n.getValue() <= degree){
+//				newSet.add(n);
+//			}
 		}
 		set = newSet;
 		System.out.println();
