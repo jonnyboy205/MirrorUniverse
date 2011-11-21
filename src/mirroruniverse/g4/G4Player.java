@@ -23,8 +23,8 @@ public class G4Player implements Player {
 	public int[][] kb_p2;
 	private int[] p1Pos;
 	private int[] p2Pos;
-	private int[][] aintLocalViewL;
-	private int[][] aintLocalViewR;
+	//private int[][] aintLocalViewL;
+	//private int[][] aintLocalViewR;
 	private AStar myAStar;
 	private int leftExitX;
 	private int leftExitY;
@@ -49,6 +49,74 @@ public class G4Player implements Player {
 		if (!started) {
 			initialize(aintViewL);
 		}
+		
+		//left
+//				aintLocalViewL = new int[ 3 ][ 3 ];
+//				//aintLocalViewL = new int[sightRadiusL*2 + 1][sightRadiusL*2 + 1];
+//				int intMid = aintViewL.length / 2;
+//				for ( int i = -1; i <= 1; i ++ )
+//				{
+//					for ( int j = -1; j <= 1; j ++ )
+//					{
+//						//setting kb here
+//				//		kb_p1[ p1Pos[0] + i ][ p1Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
+//
+//						aintLocalViewL[ 1 + j ][ 1 + i ] = aintViewL[ intMid + j ][ intMid + i ];
+//						if ( aintLocalViewL[ 1 + j ][ 1 + i ] == 2 )
+//						{
+//							if ( i == 0 && j == 0 )
+//								continue;
+//							//let Nate know about exit here
+//							//AStar.setExit1()
+//					//		leftExitX = p1Pos[0] + i;
+//						//	leftExitY = p1Pos[1] + j;
+//							//leftExitSet = true;
+//							//check if right Exit has been set
+//							//if (rightExitSet == true)
+//								//let AStar know it can take over now
+//							/**
+//							 * Nate, we currently move to the exit as soon as we see it.
+//							 * This is so that it would actually compile and so MirrorUniverse would stop.
+//							 * But should comment out this line once you're ready to pass on the movements
+//							 * to AStar's algorithm.
+//							 */
+//							//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
+//						}
+//					}
+//				}
+//				//right
+//				intMid = aintViewR.length / 2;
+//				aintLocalViewR = new int[ 3 ][ 3 ];
+//				for ( int i = -1; i <= 1; i ++ )
+//				{
+//					for ( int j = -1; j <= 1; j ++ )
+//					{
+//						//setting kb here
+////						kb_p2[ p2Pos[0] + i ][ p2Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
+//						
+//						aintLocalViewR[ 1 + j ][ 1 + i ] = aintViewR[ intMid + j ][ intMid + i ];
+//						if ( aintViewR[ intMid + j ][ intMid + i ] == 2 )
+//						{
+//							if ( i == 0 && j == 0 )
+//								continue;
+//							//let Nate know about exit here
+//							//AStar.setExit2()
+////							rightExitX = p2Pos[0] + i;
+////							rightExitY = p2Pos[1] + j;
+////							rightExitSet = true;
+//							//if (leftExitSet == true)
+//								//letAStar know it can now take over
+//							/**
+//							 * Nate, we currently move to the exit as soon as we see it.
+//							 * This is so that it would actually compile and so MirrorUniverse would stop.
+//							 * But should comment out this line once you're ready to pass on the movements
+//							 * to AStar's algorithm.
+//							 */
+//							//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
+//						}
+//					}
+//				}
+		
 		int sightRadius1 = sightRadius;
 		int sightRadius2 = (aintViewR.length-1)/2;
 		for(int y = 0; y < aintViewL.length; ++y){
@@ -87,72 +155,7 @@ public class G4Player implements Player {
 		 * If you find the exit, go in immediately
 		 * @author From RandomPlayer, Shen
 		 */
-		//left
-		aintLocalViewL = new int[ 3 ][ 3 ];
-		//aintLocalViewL = new int[sightRadiusL*2 + 1][sightRadiusL*2 + 1];
-		int intMid = aintViewL.length / 2;
-		for ( int i = -1; i <= 1; i ++ )
-		{
-			for ( int j = -1; j <= 1; j ++ )
-			{
-				//setting kb here
-		//		kb_p1[ p1Pos[0] + i ][ p1Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
-
-				aintLocalViewL[ 1 + j ][ 1 + i ] = aintViewL[ intMid + j ][ intMid + i ];
-				if ( aintLocalViewL[ 1 + j ][ 1 + i ] == 2 )
-				{
-					if ( i == 0 && j == 0 )
-						continue;
-					//let Nate know about exit here
-					//AStar.setExit1()
-			//		leftExitX = p1Pos[0] + i;
-				//	leftExitY = p1Pos[1] + j;
-					//leftExitSet = true;
-					//check if right Exit has been set
-					//if (rightExitSet == true)
-						//let AStar know it can take over now
-					/**
-					 * Nate, we currently move to the exit as soon as we see it.
-					 * This is so that it would actually compile and so MirrorUniverse would stop.
-					 * But should comment out this line once you're ready to pass on the movements
-					 * to AStar's algorithm.
-					 */
-					//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
-				}
-			}
-		}
-		//right
-		intMid = aintViewR.length / 2;
-		aintLocalViewR = new int[ 3 ][ 3 ];
-		for ( int i = -1; i <= 1; i ++ )
-		{
-			for ( int j = -1; j <= 1; j ++ )
-			{
-				//setting kb here
-//				kb_p2[ p2Pos[0] + i ][ p2Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
-				
-				aintLocalViewR[ 1 + j ][ 1 + i ] = aintViewR[ intMid + j ][ intMid + i ];
-				if ( aintViewR[ intMid + j ][ intMid + i ] == 2 )
-				{
-					if ( i == 0 && j == 0 )
-						continue;
-					//let Nate know about exit here
-					//AStar.setExit2()
-//					rightExitX = p2Pos[0] + i;
-//					rightExitY = p2Pos[1] + j;
-//					rightExitSet = true;
-					//if (leftExitSet == true)
-						//letAStar know it can now take over
-					/**
-					 * Nate, we currently move to the exit as soon as we see it.
-					 * This is so that it would actually compile and so MirrorUniverse would stop.
-					 * But should comment out this line once you're ready to pass on the movements
-					 * to AStar's algorithm.
-					 */
-					//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
-				}
-			}
-		}
+		
 		int direction;
 		if(rightExitSet && leftExitSet){
 			if(path.isEmpty()){
@@ -170,7 +173,7 @@ public class G4Player implements Player {
 		turn++;
 		
 		//set new current position here
-		setNewCurrentPosition();
+		setNewCurrentPosition(aintViewL, aintViewR);
 		
 		return direction;
 	}
@@ -210,17 +213,17 @@ public class G4Player implements Player {
 		path = new ArrayList<Integer>();
 	}
 
-	private void setNewCurrentPosition() {
+	private void setNewCurrentPosition(int[][] aintLocalViewL, int[][] aintLocalViewR) {
 		//p1Pos[0] += intDeltaX;
 		//p1Pos[1] += intDeltaY;
 		
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewL[1 + intDeltaX][1 + intDeltaY] == 0){
+		if (aintLocalViewL[sightRadius + intDeltaX][sightRadius + intDeltaY] == 0){
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewL[1 + intDeltaX][1 + intDeltaY] == 1){
+		else if(aintLocalViewL[sightRadius + intDeltaX][sightRadius + intDeltaY] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
@@ -232,11 +235,11 @@ public class G4Player implements Player {
 		
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewR[1 + intDeltaX][1 + intDeltaY] == 0){
+		if (aintLocalViewR[sightRadius + intDeltaX][sightRadius + intDeltaY] == 0){
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewR[1 + intDeltaX][1 + intDeltaY] == 1){
+		else if(aintLocalViewR[sightRadius + intDeltaX][sightRadius + intDeltaY] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
@@ -265,14 +268,14 @@ public class G4Player implements Player {
 			stepCounter = 0;
 		}
 
-		while(!isDirectionCorrect(currentDir, aintViewL)){
+		while(!isDirectionCorrect(currentDir, aintViewL, aintViewR)){
 			currentDir-=1;
 			if (currentDir <= 0) {
 				currentDir = 8;
 			}
-		}
+		}	
 
-		if (turn > 500)
+		if (turn > 100)
 			return myRandomPlayer.lookAndMove(aintViewL, aintViewR);
 		
 		return currentDir;
@@ -301,12 +304,27 @@ public class G4Player implements Player {
 		return (numPath / 2 + 1) * (2 * sightRadius - 1);
 	}
 
-	private boolean isDirectionCorrect(int currentDirection, int[][] aintViewL) {
+	private boolean isDirectionCorrect(int currentDirection, int[][] aintViewL, int[][] aintViewR) {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
-		if (aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 1) {
+		if (aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 1 //||
+				//aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 2 ||
+//				|| isDirectionExit(currentDirection, aintViewL, aintViewR)
+					) {
 			return false;
 		}
 		return true;
+	}
+	
+	private boolean isDirectionExit(int currentDirection, int[][] aintViewL, int[][] aintViewR){
+		intDeltaX = MUMap.aintDToM[currentDirection][0];
+		intDeltaY = MUMap.aintDToM[currentDirection][1];
+		if (aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 2 ||
+				aintViewR[midElement + intDeltaY][midElement + intDeltaX] == 2// ||
+					) {
+			return true;
+		}
+		return false;
+		
 	}
 }
