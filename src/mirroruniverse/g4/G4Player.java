@@ -47,6 +47,39 @@ public class G4Player implements Player {
 		if (!started) {
 			initialize(aintViewL);
 		}
+		int sightRadius1 = sightRadius;
+		int sightRadius2 = (aintViewR.length-1)/2;
+		for(int y = 0; y < aintViewL.length; ++y){
+			for(int x = 0; x < aintViewL[0].length; ++x){
+				try{
+				kb_p1[p1Pos[1] - sightRadius1 + y][p1Pos[0] - sightRadius1 + x] = aintViewL[y][x];
+				} catch(Exception e){
+					System.out.println();
+				}
+				if(aintViewL[y][x] == 2){
+					leftExitX = p1Pos[0] - sightRadius1 + x;
+					leftExitY = p1Pos[1] - sightRadius1 + y;
+					leftExitSet = true;
+				}
+			}
+		}
+		
+		for(int y = 0; y < aintViewR.length; ++y){
+			for(int x = 0; x < aintViewR[0].length; ++x){
+				kb_p2[p2Pos[1] - sightRadius2 + y][p2Pos[0] - sightRadius2 + x] = aintViewR[y][x];
+				
+				if(aintViewR[y][x] == 2){
+					rightExitX = p2Pos[0] - sightRadius2 + x;
+					rightExitY = p2Pos[1] - sightRadius2 + y;
+					rightExitSet = true;
+				}
+			}
+		}
+		
+		
+		
+		
+		
 		
 		/**
 		 * If you find the exit, go in immediately
@@ -60,7 +93,7 @@ public class G4Player implements Player {
 			for ( int j = -1; j <= 1; j ++ )
 			{
 				//setting kb here
-				kb_p1[ p1Pos[0] + i ][ p1Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
+		//		kb_p1[ p1Pos[0] + i ][ p1Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
 
 				aintLocalViewL[ 1 + j ][ 1 + i ] = aintViewL[ intMid + j ][ intMid + i ];
 				if ( aintLocalViewL[ 1 + j ][ 1 + i ] == 2 )
@@ -69,9 +102,9 @@ public class G4Player implements Player {
 						continue;
 					//let Nate know about exit here
 					//AStar.setExit1()
-					leftExitX = p1Pos[0] + i;
-					leftExitY = p1Pos[1] + j;
-					leftExitSet = true;
+			//		leftExitX = p1Pos[0] + i;
+				//	leftExitY = p1Pos[1] + j;
+					//leftExitSet = true;
 					//check if right Exit has been set
 					//if (rightExitSet == true)
 						//let AStar know it can take over now
@@ -93,7 +126,7 @@ public class G4Player implements Player {
 			for ( int j = -1; j <= 1; j ++ )
 			{
 				//setting kb here
-				kb_p2[ p2Pos[0] + i ][ p2Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
+//				kb_p2[ p2Pos[0] + i ][ p2Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
 				
 				aintLocalViewR[ 1 + j ][ 1 + i ] = aintViewR[ intMid + j ][ intMid + i ];
 				if ( aintViewR[ intMid + j ][ intMid + i ] == 2 )
@@ -102,9 +135,9 @@ public class G4Player implements Player {
 						continue;
 					//let Nate know about exit here
 					//AStar.setExit2()
-					rightExitX = p2Pos[0] + i;
-					rightExitY = p2Pos[1] + j;
-					rightExitSet = true;
+//					rightExitX = p2Pos[0] + i;
+//					rightExitY = p2Pos[1] + j;
+//					rightExitSet = true;
 					//if (leftExitSet == true)
 						//letAStar know it can now take over
 					/**
@@ -120,7 +153,10 @@ public class G4Player implements Player {
 		int direction;
 		if(rightExitSet && leftExitSet){
 			if(path.isEmpty()){
+				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1] + "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: " + leftExitX + "," + leftExitY + "  " + rightExitX + "," + rightExitY);
 				AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
+				a.setExit1(leftExitX, leftExitY);
+				a.setExit2(rightExitX, rightExitY);
 				path = a.findPath();
 			}
 			direction = path.remove(0);
@@ -151,8 +187,8 @@ public class G4Player implements Player {
 
 		for (int i = 0; i < kb_p1.length; ++i) {
 			for (int j = 0; j < kb_p1.length; ++j) {
-				kb_p1[i][j] = -5;
-				kb_p2[i][j] = -5;
+				kb_p1[i][j] = 1;
+				kb_p2[i][j] = 1;
 			}
 		}
 		//myAStar = new AStar();
@@ -171,8 +207,24 @@ public class G4Player implements Player {
 	}
 
 	private void setNewCurrentPosition() {
-		p1Pos[0] += intDeltaX;
-		p1Pos[1] += intDeltaY;
+		//p1Pos[0] += intDeltaX;
+		//p1Pos[1] += intDeltaY;
+		
+		//if the right player's next move is an empty space
+		//update new position
+		if (aintLocalViewL[1 + intDeltaX][1 + intDeltaY] == 0){
+			p1Pos[0] += intDeltaX;
+			p1Pos[1] += intDeltaY;
+		}
+		else if(aintLocalViewL[1 + intDeltaX][1 + intDeltaY] == 1){
+			//nothing changes, you couldn't move, and so you are in the same place
+		}
+		else{ //you hit the exit which means you go normally
+		//maybe i'll lock up the p2Pos so it can't be edited again, but for now
+		//intDeltaX and intDeltaY were set in isDirectionCorrect in move
+			p1Pos[0] += intDeltaX;
+			p1Pos[1] += intDeltaY;
+		}
 		
 		//if the right player's next move is an empty space
 		//update new position
