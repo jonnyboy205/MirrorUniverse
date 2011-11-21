@@ -8,6 +8,8 @@ import mirroruniverse.sim.Player;
 public class G4Player implements Player {
 
 	public boolean started = false;
+	//public int sightRadiusL;
+	//public int sightRadiusR;
 	public int sightRadius;
 	
 	//local information
@@ -54,6 +56,7 @@ public class G4Player implements Player {
 		 */
 		//left
 		aintLocalViewL = new int[ 3 ][ 3 ];
+		//aintLocalViewL = new int[sightRadiusL*2 + 1][sightRadiusL*2 + 1];
 		int intMid = aintViewL.length / 2;
 		for ( int i = -1; i <= 1; i ++ )
 		{
@@ -142,6 +145,7 @@ public class G4Player implements Player {
 		intDeltaY = 0;
 		started = true;
 		sightRadius = (aintViewL[0].length - 1) / 2;
+		
 		midElement = sightRadius;
 		kb_p1 = new int[2 * MAX_SIZE/* - 1*/][2 * MAX_SIZE/* - 1*/];
 		kb_p2 = new int[2 * MAX_SIZE/* - 1*/][2 * MAX_SIZE/* - 1*/];
