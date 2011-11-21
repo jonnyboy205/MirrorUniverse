@@ -2,5 +2,4 @@
 .gitignore~
 bin/*
 bin/mirroruniverse/g4/*
-replays/*
 *.class
