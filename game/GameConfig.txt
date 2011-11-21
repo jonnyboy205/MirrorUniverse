@@ -1,2 +1,2 @@
-20, 20, 2, -1, maps/RightMapSimple.txt, 5
-20, 20, 2, -1, maps/RightMapSimple.txt, 5
+5, 5, 2, -1, maps/testMap.txt, 5
+5, 5, 2, -1, maps/testMap.txt, 5
