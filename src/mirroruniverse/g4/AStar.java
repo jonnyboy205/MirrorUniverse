@@ -182,7 +182,7 @@ public class AStar {
 	private boolean shouldIAdd(Node n){
 		for(Node q: queue){
 			if(n.equals(q)){
-				if( n.getDepth() < q.getDepth()){
+				if(n.getDepth() < q.getDepth()){
 					queue.remove(q);
 					--numAdded;
 					return true;

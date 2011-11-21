@@ -83,10 +83,9 @@ public class Node implements Comparable<Node>{
 		p1HasReached = false;
 		p2HasReached = false;
 		
-		if (parent!=null)
-		{
+		if(parent != null){
 			p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
-			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);	
+			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);
 		}
 		
 		if(parent == null){
