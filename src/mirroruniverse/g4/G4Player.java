@@ -1,5 +1,7 @@
 package mirroruniverse.g4;
 
+import java.util.ArrayList;
+
 import mirroruniverse.sim.MUMap;
 import mirroruniverse.sim.Player;
 
@@ -37,6 +39,8 @@ public class G4Player implements Player {
 	private int currentDir;
 	
 	private RandomPlayer myRandomPlayer; 
+	
+	private ArrayList<Integer> path;
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
@@ -69,7 +73,7 @@ public class G4Player implements Player {
 					leftExitY = p1Pos[1] + j;
 					leftExitSet = true;
 					//check if right Exit has been set
-					if (rightExitSet == true)
+					//if (rightExitSet == true)
 						//let AStar know it can take over now
 					/**
 					 * Nate, we currently move to the exit as soon as we see it.
@@ -77,7 +81,7 @@ public class G4Player implements Player {
 					 * But should comment out this line once you're ready to pass on the movements
 					 * to AStar's algorithm.
 					 */
-					return MUMap.aintMToD[ j + 1 ][ i + 1 ];
+					//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
 				}
 			}
 		}
@@ -101,7 +105,7 @@ public class G4Player implements Player {
 					rightExitX = p2Pos[0] + i;
 					rightExitY = p2Pos[1] + j;
 					rightExitSet = true;
-					if (leftExitSet == true)
+					//if (leftExitSet == true)
 						//letAStar know it can now take over
 					/**
 					 * Nate, we currently move to the exit as soon as we see it.
@@ -109,12 +113,20 @@ public class G4Player implements Player {
 					 * But should comment out this line once you're ready to pass on the movements
 					 * to AStar's algorithm.
 					 */
-					return MUMap.aintMToD[ j + 1 ][ i + 1 ];
+					//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
 				}
 			}
 		}
-		
-		int direction = move(aintViewL, aintViewR);
+		int direction;
+		if(rightExitSet && leftExitSet){
+			if(path.isEmpty()){
+				AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
+				path = a.findPath();
+			}
+			direction = path.remove(0);
+		}else{
+			direction = move(aintViewL, aintViewR);
+		}
 		stepCounter++;
 		turn++;
 		
@@ -154,6 +166,8 @@ public class G4Player implements Player {
 		
 		rightExitSet = false;
 		leftExitSet = false;
+		
+		path = new ArrayList<Integer>();
 	}
 
 	private void setNewCurrentPosition() {

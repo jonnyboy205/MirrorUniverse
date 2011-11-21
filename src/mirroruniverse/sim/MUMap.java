@@ -197,7 +197,7 @@ public class MUMap
 	public String getConfigForGui()
 	{
 		String strReturn = "";
-		strReturn += intXLength + ", " + intYLength + ", " + intSightRadius + ", " + lngMapSeed + ", ";
+		strReturn += intXLength + ", " + intYLength + ", " + (1+intSightRadius) + ", " + lngMapSeed + ", ";
 		if ( lngMapSeed >= 0 )
 		{
 			strReturn += dblThresh + ", " + lngInitialSeed;
