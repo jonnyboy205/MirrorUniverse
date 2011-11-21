@@ -40,6 +40,9 @@ public class G4Player implements Player {
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
+		if (!started) {
+			initialize(aintViewL);
+		}
 		
 		/**
 		 * If you find the exit, go in immediately
@@ -53,7 +56,7 @@ public class G4Player implements Player {
 			for ( int j = -1; j <= 1; j ++ )
 			{
 				//setting kb here
-				//kb_p1[ p1Pos[0] + j ][ p1Pos[1] + i ] = aintViewL[ intMid + j ][ intMid + i ];
+				kb_p1[ p1Pos[0] + i ][ p1Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
 
 				aintLocalViewL[ 1 + j ][ 1 + i ] = aintViewL[ intMid + j ][ intMid + i ];
 				if ( aintLocalViewL[ 1 + j ][ 1 + i ] == 2 )
@@ -62,8 +65,8 @@ public class G4Player implements Player {
 						continue;
 					//let Nate know about exit here
 					//AStar.setExit1()
-					leftExitX = intMid + j;
-					leftExitY = intMid + i;
+					leftExitX = p1Pos[0] + i;
+					leftExitY = p1Pos[1] + j;
 					leftExitSet = true;
 					//check if right Exit has been set
 					if (rightExitSet == true)
@@ -86,7 +89,7 @@ public class G4Player implements Player {
 			for ( int j = -1; j <= 1; j ++ )
 			{
 				//setting kb here
-				//kb_p2[ p2Pos[0] + j ][ p2Pos[1] + i ] = aintViewL[ intMid + j ][ intMid + i ];
+				kb_p2[ p2Pos[0] + i ][ p2Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
 				
 				aintLocalViewR[ 1 + j ][ 1 + i ] = aintViewR[ intMid + j ][ intMid + i ];
 				if ( aintViewR[ intMid + j ][ intMid + i ] == 2 )
@@ -95,8 +98,8 @@ public class G4Player implements Player {
 						continue;
 					//let Nate know about exit here
 					//AStar.setExit2()
-					rightExitX = intMid + j;
-					rightExitY = intMid + i;
+					rightExitX = p2Pos[0] + i;
+					rightExitY = p2Pos[1] + j;
 					rightExitSet = true;
 					if (leftExitSet == true)
 						//letAStar know it can now take over
@@ -111,19 +114,12 @@ public class G4Player implements Player {
 			}
 		}
 		
-		/**
-		 * @author our code starts here
-		 */
-		if (!started) {
-			initialize(aintViewL);
-		}
-		
 		int direction = move(aintViewL, aintViewR);
 		stepCounter++;
 		turn++;
 		
 		//set new current position here
-		//setNewCurrentPosition();
+		setNewCurrentPosition();
 		
 		return direction;
 	}
@@ -157,17 +153,20 @@ public class G4Player implements Player {
 		myRandomPlayer = new RandomPlayer();
 		
 		rightExitSet = false;
-		leftExitSet = true;
+		leftExitSet = false;
 	}
 
 	private void setNewCurrentPosition() {
+		p1Pos[0] += intDeltaX;
+		p1Pos[1] += intDeltaY;
+		
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewR[p2Pos[0] + intDeltaX][p2Pos[1] + intDeltaY] == 0){
+		if (aintLocalViewR[1 + intDeltaX][1 + intDeltaY] == 0){
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewR[p2Pos[0] + intDeltaX][p2Pos[1] + intDeltaY] == 1){
+		else if(aintLocalViewR[1 + intDeltaX][1 + intDeltaY] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
