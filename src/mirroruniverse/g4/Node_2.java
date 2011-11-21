@@ -115,13 +115,13 @@ public class Node_2 implements Comparable<Node_2>{
 		if(p1ExitX == -1000 || p2ExitX == -1000){
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
-		int toReturn = Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
+		int toReturn = selfDegree + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
 		if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
-			if (toReturn > depth && selfDegree > degree) {
+			if (selfDegree > degree) {
 				toReturn += 10000;
 			}
 		} else if (x2 == p2ExitX && y2 == p2ExitY && (x1 != p1ExitX || y1 != p1ExitY)){
-			if (toReturn > depth && selfDegree > degree) {
+			if (selfDegree > degree) {
 				toReturn += 10000;
 			}
 		}
@@ -174,6 +174,10 @@ public class Node_2 implements Comparable<Node_2>{
 			return 1;
 		} else if(this.getValue() < n.getValue()){
 			return -1;
+		} else if(this.getDepth() > n.getDepth()){
+			return 1;
+		} else if(this.getDepth() < n.getDepth()){
+			return -1;
 		} else {
 		return 0;
 		}
@@ -181,11 +185,11 @@ public class Node_2 implements Comparable<Node_2>{
 	
 	public boolean closeEnough(){
 		if(x1 == p1ExitX && y1 == p1ExitY){
-			if(getValue() <= degree){
+			if(selfDegree <= degree){
 				return p2HasReached;
 			}
 		} else if(x2 == p2ExitX && y2 == p2ExitY){
-			if(getValue() <= degree){
+			if(selfDegree <= degree){
 				return p1HasReached;
 			}
 		}
