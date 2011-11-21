@@ -21,6 +21,8 @@ public class G4PlayerAstarTest implements Player{
 	private int stepCounter;
 	private int currentDir;
 	
+	private boolean debugging = false;
+	
 	private ArrayList<Integer> path = new ArrayList<Integer>();
 
 	@Override
@@ -49,17 +51,18 @@ public class G4PlayerAstarTest implements Player{
 					}
 				}
 			}
-			AStar a = new AStar(sightRadius1,sightRadius1,sightRadius2,sightRadius2,aintViewL,aintViewR);
+			AStar_2 a = new AStar_2(sightRadius1,sightRadius1,sightRadius2,sightRadius2,aintViewL,aintViewR);
 			a.setExit1(exit1[0], exit1[1]);
 			a.setExit2(exit2[0], exit2[1]);
 			path = a.findPath();
 			
 		}
 		int goTo = path.remove(0);
-		//if(path.isEmpty()){
-			for(int i = 0; i < aintViewL.length; ++i){
-				for(int j = 0; j < aintViewL[0].length; ++j){
-					if(i == sightRadius1 && j == sightRadius1){
+		if (debugging) {
+			//if(path.isEmpty()){
+			for (int i = 0; i < aintViewL.length; ++i) {
+				for (int j = 0; j < aintViewL[0].length; ++j) {
+					if (i == sightRadius1 && j == sightRadius1) {
 						System.out.print(3);
 					} else {
 						System.out.print(aintViewL[i][j]);
@@ -79,8 +82,9 @@ public class G4PlayerAstarTest implements Player{
 				System.out.println();
 			}
 			System.out.println("\n");
-		//}
-		System.out.println(goTo);
+			//}
+			System.out.println(goTo);
+		}
 		return goTo;
 		
 		//return 0;
