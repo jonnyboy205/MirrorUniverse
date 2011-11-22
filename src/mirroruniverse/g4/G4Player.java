@@ -130,11 +130,13 @@ public class G4Player implements Player {
 	private void setNewCurrentPosition(int[][] aintLocalViewL, int[][] aintLocalViewR) {
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 + intDeltaY] == 0){
+		//if (aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 + intDeltaY] == 0){
+		if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 0){
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 + intDeltaY] == 1){
+		//else if(aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 + intDeltaY] == 1){
+		else if(aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
@@ -146,11 +148,13 @@ public class G4Player implements Player {
 		
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 + intDeltaY] == 0){
+		//if (aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 + intDeltaY] == 0){
+		if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 0){
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 + intDeltaY] == 1){
+		//else if(aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 + intDeltaY] == 1){
+		else if(aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
@@ -217,7 +221,7 @@ public class G4Player implements Player {
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
 		if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1 //||
 				//aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 2 ||
-//				|| isDirectionExit(currentDirection, aintViewL, aintViewR)
+				|| isDirectionExit(currentDirection, aintViewL, aintViewR)
 					) {
 			return false;
 		}
