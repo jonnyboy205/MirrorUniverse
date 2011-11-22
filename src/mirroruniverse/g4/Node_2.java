@@ -57,8 +57,16 @@ public class Node_2 implements Comparable<Node_2>{
 	
 	private int selfDegree;
 	
+	public int getSelfDegree(){
+		return selfDegree;
+	}
+	
 	public static void incDegree(){
 		++degree;
+	}
+	
+	public static void resetDegree(){
+		degree = 0;
 	}
 	
 	public static int getDegree(){
@@ -116,7 +124,11 @@ public class Node_2 implements Comparable<Node_2>{
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
 		int toReturn = selfDegree + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
-		if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
+		
+		if(selfDegree > degree){
+			toReturn += 10000;
+		}
+		/*if(x1 == p1ExitX && y1 == p1ExitY && (x2 != p2ExitX || y2 != p2ExitY)){
 			if (selfDegree > degree) {
 				toReturn += 10000;
 			}
@@ -124,7 +136,7 @@ public class Node_2 implements Comparable<Node_2>{
 			if (selfDegree > degree) {
 				toReturn += 10000;
 			}
-		}
+		}*/
 		return toReturn + depth;
 	}
 	
