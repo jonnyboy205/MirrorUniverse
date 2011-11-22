@@ -12,8 +12,10 @@ public class AStar_2 {
 	Node_2 root;
 	PriorityQueue<Node_2> queue;
 	ArrayList<Node_2> closed;
+	ArrayList<Node_2> close;
 	private int numExitsFound = 0;
 	public boolean debugging = false;
+	private int maxNodes;
 	
 	private int numAdded = 0;
 	
@@ -21,10 +23,25 @@ public class AStar_2 {
 		root = new Node_2(initialX1, initialY1, initialX2, initialY2, null, 0);
 		map1 = kb_p1;
 		map2 = kb_p2;
+		
+		maxNodes = 0;
+		for(int i = 0; i < kb_p1.length; ++i){
+			for(int j = 0; j < kb_p1[0].length; ++j){
+				if(kb_p1[i][j] != 1){
+					++maxNodes;
+				}
+			}
+		}
+		maxNodes *= 4;
+		//maxNodes = (int)Math.pow(maxNodes, 2);
+		//maxNodes /= 4;
+		
+		
 		queue = new PriorityQueue<Node_2>();
 		queue.add(root);
 		closed = new ArrayList<Node_2>();
 		closed.add(root);
+		close = new ArrayList<Node_2>();
 		if(debugging){
 			prettyPrint(root);
 		}
@@ -34,7 +51,7 @@ public class AStar_2 {
 		Node_2.setExit1(x, y);
 		++numExitsFound;
 		if(numExitsFound == 2){
-			exitsFound();
+			//exitsFound();
 		}
 	}
 	
@@ -42,19 +59,29 @@ public class AStar_2 {
 		Node_2.setExit2(x, y);
 		++numExitsFound;
 		if(numExitsFound == 2){
-			exitsFound();
+			//exitsFound();
 		}
 	}
 	
 	public void exitsFound(){
-		Node_2.reRunHeuristic(closed);
-		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(closed);
+		Node_2.reRunHeuristic(close);
+		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(close);
 		queue = tempQ;
-		closed.clear();
+		if(queue.isEmpty()){
+			maxNodes *= 2;
+			queue.add(root);
+			Node_2.resetDegree();
+		}
+		close.clear();
+		//closed.clear();
 	}
 	
 	public ArrayList<Integer> findPath(){
 		while(!queue.isEmpty() && queue.peek().getValue() != 0 && !queue.peek().closeEnough()){
+			if(numAdded > maxNodes){
+				queue.clear();
+				break;
+			}
 			if (debugging) {
 				System.out.println(numAdded + " " + queue.size());
 				//System.out.println("Expanding:" + queue.peek().getValue());
@@ -207,6 +234,20 @@ public class AStar_2 {
 					return false;
 				//}
 			}
+		}
+		
+		/*for(Node_2 c: close){
+			if (n.equals(c)) {
+				if (n.getDepth() < c.getDepth()) {
+					close.remove(c);
+					close.add(n);
+				}
+				return false;
+			}
+		}*/
+		if(n.getValue() > 10000){
+			close.add(n);
+			return false;
 		}
 		return true;
 	}
