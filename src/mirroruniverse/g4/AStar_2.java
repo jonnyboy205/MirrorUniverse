@@ -68,9 +68,12 @@ public class AStar_2 {
 		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(close);
 		queue = tempQ;
 		if(queue.isEmpty()){
+			System.out.println("Increasing limit");
 			maxNodes *= 2;
-			queue.add(root);
 			Node_2.resetDegree();
+			Node_2.reRunHeuristic(closed);
+			queue.addAll(closed);
+			closed.clear();
 		}
 		close.clear();
 		//closed.clear();
@@ -246,6 +249,7 @@ public class AStar_2 {
 			}
 		}*/
 		if(n.getValue() > 10000){
+			++numAdded;
 			close.add(n);
 			return false;
 		}
