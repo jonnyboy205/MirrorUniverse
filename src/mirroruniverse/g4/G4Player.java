@@ -8,24 +8,16 @@ import mirroruniverse.sim.Player;
 public class G4Player implements Player {
 
 	public boolean started = false;
-	//public int sightRadiusL;
-	//public int sightRadiusR;
-	public int sightRadius;
 	
-	//local information
-	public int midElement;
+	public int sightRadius1;
+	public int sightRadius2;
 	public int intDeltaX;
 	public int intDeltaY;
-	
-	//knowledge base stuff
 	public static final int MAX_SIZE = 100;
 	public int[][] kb_p1;
 	public int[][] kb_p2;
 	private int[] p1Pos;
 	private int[] p2Pos;
-	//private int[][] aintLocalViewL;
-	//private int[][] aintLocalViewR;
-	private AStar myAStar;
 	private int leftExitX;
 	private int leftExitY;
 	private int rightExitX;
@@ -47,78 +39,9 @@ public class G4Player implements Player {
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
 		if (!started) {
-			initialize(aintViewL);
+			initialize(aintViewL, aintViewR);
 		}
 		
-		//left
-//				aintLocalViewL = new int[ 3 ][ 3 ];
-//				//aintLocalViewL = new int[sightRadiusL*2 + 1][sightRadiusL*2 + 1];
-//				int intMid = aintViewL.length / 2;
-//				for ( int i = -1; i <= 1; i ++ )
-//				{
-//					for ( int j = -1; j <= 1; j ++ )
-//					{
-//						//setting kb here
-//				//		kb_p1[ p1Pos[0] + i ][ p1Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
-//
-//						aintLocalViewL[ 1 + j ][ 1 + i ] = aintViewL[ intMid + j ][ intMid + i ];
-//						if ( aintLocalViewL[ 1 + j ][ 1 + i ] == 2 )
-//						{
-//							if ( i == 0 && j == 0 )
-//								continue;
-//							//let Nate know about exit here
-//							//AStar.setExit1()
-//					//		leftExitX = p1Pos[0] + i;
-//						//	leftExitY = p1Pos[1] + j;
-//							//leftExitSet = true;
-//							//check if right Exit has been set
-//							//if (rightExitSet == true)
-//								//let AStar know it can take over now
-//							/**
-//							 * Nate, we currently move to the exit as soon as we see it.
-//							 * This is so that it would actually compile and so MirrorUniverse would stop.
-//							 * But should comment out this line once you're ready to pass on the movements
-//							 * to AStar's algorithm.
-//							 */
-//							//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
-//						}
-//					}
-//				}
-//				//right
-//				intMid = aintViewR.length / 2;
-//				aintLocalViewR = new int[ 3 ][ 3 ];
-//				for ( int i = -1; i <= 1; i ++ )
-//				{
-//					for ( int j = -1; j <= 1; j ++ )
-//					{
-//						//setting kb here
-////						kb_p2[ p2Pos[0] + i ][ p2Pos[1] + j ] = aintViewL[ intMid + j ][ intMid + i ];
-//						
-//						aintLocalViewR[ 1 + j ][ 1 + i ] = aintViewR[ intMid + j ][ intMid + i ];
-//						if ( aintViewR[ intMid + j ][ intMid + i ] == 2 )
-//						{
-//							if ( i == 0 && j == 0 )
-//								continue;
-//							//let Nate know about exit here
-//							//AStar.setExit2()
-////							rightExitX = p2Pos[0] + i;
-////							rightExitY = p2Pos[1] + j;
-////							rightExitSet = true;
-//							//if (leftExitSet == true)
-//								//letAStar know it can now take over
-//							/**
-//							 * Nate, we currently move to the exit as soon as we see it.
-//							 * This is so that it would actually compile and so MirrorUniverse would stop.
-//							 * But should comment out this line once you're ready to pass on the movements
-//							 * to AStar's algorithm.
-//							 */
-//							//return MUMap.aintMToD[ j + 1 ][ i + 1 ];
-//						}
-//					}
-//				}
-		
-		int sightRadius1 = sightRadius;
-		int sightRadius2 = (aintViewR.length-1)/2;
 		for(int y = 0; y < aintViewL.length; ++y){
 			for(int x = 0; x < aintViewL[0].length; ++x){
 				try{
@@ -133,7 +56,7 @@ public class G4Player implements Player {
 				}
 			}
 		}
-		
+		//right player finding exit and updating kb
 		for(int y = 0; y < aintViewR.length; ++y){
 			for(int x = 0; x < aintViewR[0].length; ++x){
 				kb_p2[p2Pos[1] - sightRadius2 + y][p2Pos[0] - sightRadius2 + x] = aintViewR[y][x];
@@ -146,17 +69,8 @@ public class G4Player implements Player {
 			}
 		}
 		
-		
-		
-		
-		
-		
-		/**
-		 * If you find the exit, go in immediately
-		 * @author From RandomPlayer, Shen
-		 */
-		
 		int direction;
+		//after you find the exits, call AStar
 		if(rightExitSet && leftExitSet){
 			if(path.isEmpty()){
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1] + "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: " + leftExitX + "," + leftExitY + "  " + rightExitX + "," + rightExitY);
@@ -166,7 +80,8 @@ public class G4Player implements Player {
 				path = a.findPath();
 			}
 			direction = path.remove(0);
-		}else{
+		}
+		else{
 			direction = move(aintViewL, aintViewR);
 		}
 		stepCounter++;
@@ -178,14 +93,14 @@ public class G4Player implements Player {
 		return direction;
 	}
 
-	public void initialize(int[][] aintViewL) {
+	public void initialize(int[][] aintViewL, int[][] aintViewR) {
 
 		intDeltaX = 0;
 		intDeltaY = 0;
 		started = true;
-		sightRadius = (aintViewL[0].length - 1) / 2;
+		sightRadius1 = (aintViewL[0].length - 1) / 2;
+		sightRadius2 = (aintViewR[0].length - 1) / 2;
 		
-		midElement = sightRadius;
 		kb_p1 = new int[2 * MAX_SIZE/* - 1*/][2 * MAX_SIZE/* - 1*/];
 		kb_p2 = new int[2 * MAX_SIZE/* - 1*/][2 * MAX_SIZE/* - 1*/];
 		p1Pos = new int[2];
@@ -198,7 +113,6 @@ public class G4Player implements Player {
 				kb_p2[i][j] = 1;
 			}
 		}
-		//myAStar = new AStar();
 
 		numPath = 0;
 		initialDir = 2;
@@ -214,16 +128,13 @@ public class G4Player implements Player {
 	}
 
 	private void setNewCurrentPosition(int[][] aintLocalViewL, int[][] aintLocalViewR) {
-		//p1Pos[0] += intDeltaX;
-		//p1Pos[1] += intDeltaY;
-		
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewL[sightRadius + intDeltaX][sightRadius + intDeltaY] == 0){
+		if (aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 + intDeltaY] == 0){
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewL[sightRadius + intDeltaX][sightRadius + intDeltaY] == 1){
+		else if(aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 + intDeltaY] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
@@ -235,11 +146,11 @@ public class G4Player implements Player {
 		
 		//if the right player's next move is an empty space
 		//update new position
-		if (aintLocalViewR[sightRadius + intDeltaX][sightRadius + intDeltaY] == 0){
+		if (aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 + intDeltaY] == 0){
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 		}
-		else if(aintLocalViewR[sightRadius + intDeltaX][sightRadius + intDeltaY] == 1){
+		else if(aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 + intDeltaY] == 1){
 			//nothing changes, you couldn't move, and so you are in the same place
 		}
 		else{ //you hit the exit which means you go normally
@@ -252,13 +163,10 @@ public class G4Player implements Player {
 		//now I have to update the kb
 	}
 
-	// not currently taking into account obstacles
+	// not really taking into account obstacles well
 	public int move(int[][] aintViewL, int[][] aintViewR) {
 		currentDir = getNormalizedDir();
 		if (stepCounter == calcPathSteps()) {
-			
-//			if(currentDir%2!=0)
-//				currentDir+=1;
 			
 			currentDir -= 2;
 			if (currentDir <= 0) {
@@ -301,14 +209,14 @@ public class G4Player implements Player {
 	}
 
 	private int calcPathSteps() {
-		return (numPath / 2 + 1) * (2 * sightRadius - 1);
+		return (numPath / 2 + 1) * (2 * sightRadius1 - 1);
 	}
 
 	private boolean isDirectionCorrect(int currentDirection, int[][] aintViewL, int[][] aintViewR) {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
-		if (aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 1 //||
-				//aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 2 ||
+		if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1 //||
+				//aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 2 ||
 //				|| isDirectionExit(currentDirection, aintViewL, aintViewR)
 					) {
 			return false;
@@ -319,8 +227,8 @@ public class G4Player implements Player {
 	private boolean isDirectionExit(int currentDirection, int[][] aintViewL, int[][] aintViewR){
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
-		if (aintViewL[midElement + intDeltaY][midElement + intDeltaX] == 2 ||
-				aintViewR[midElement + intDeltaY][midElement + intDeltaX] == 2// ||
+		if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 2 ||
+				aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 2// ||
 					) {
 			return true;
 		}
