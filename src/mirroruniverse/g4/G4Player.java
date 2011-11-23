@@ -100,6 +100,7 @@ public class G4Player implements Player {
 		}
 		stepCounter++;
 		turn++;
+		System.out.println(turn);
 		// set new current position here
 		setNewCurrentPosition(direction, aintViewL, aintViewR);
 		return direction;
