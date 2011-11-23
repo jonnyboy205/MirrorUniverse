@@ -30,7 +30,7 @@ public class AStar_2 {
 				}
 			}
 		}
-		maxNodes *= 4;
+		maxNodes *= 16;
 		//maxNodes = (int)Math.pow(maxNodes, 2);
 		//maxNodes /= 4;
 		
@@ -170,7 +170,7 @@ public class AStar_2 {
 				y2 = n.getY2() + yChange;
 				
 				try {
-					if (map1[y1][x1] == 1 || map1[y1][x1] == -5) {
+					if (map1[y1][x1] == 1) {
 						x1 -= xChange;
 						y1 -= yChange;
 					}
@@ -179,7 +179,7 @@ public class AStar_2 {
 					y1 -= yChange;
 				}
 				try {
-					if (map2[y2][x2] == 1 || map1[y1][x1] == -5) {
+					if (map2[y2][x2] == 1) {
 						x2 -= xChange;
 						y2 -= yChange;
 					}
@@ -195,6 +195,12 @@ public class AStar_2 {
 					x2 = n.getX2();
 					y2 = n.getY2();
 				}
+				try {
+					if(map1[y1][x1] == -5 || map2[y2][x2] == -5){
+						++action;
+						continue;
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {}
 				Node_2 toAdd = new Node_2(x1, y1, x2, y2, n, indexOfAction[action]);
 				
 				if(!n.equals(toAdd) && shouldIAdd(toAdd)){
