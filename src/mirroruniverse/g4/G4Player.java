@@ -35,7 +35,7 @@ public class G4Player implements Player {
 	private RandomPlayer myRandomPlayer;
 
 	private ArrayList<Integer> path;
-
+	
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
 		if (!started) {
@@ -61,7 +61,12 @@ public class G4Player implements Player {
 		// right player finding exit and updating kb
 		for (int y = 0; y < aintViewR.length; ++y) {
 			for (int x = 0; x < aintViewR[0].length; ++x) {
-				kb_p2[p2Pos[1] - sightRadius2 + y][p2Pos[0] - sightRadius2 + x] = aintViewR[y][x];
+				try {
+					kb_p2[p2Pos[1] - sightRadius2 + y][p2Pos[0] - sightRadius2 + x] = aintViewR[y][x];
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println();
+				}
 
 				if (aintViewR[y][x] == 2 && !rightExitSet) {
 					rightExitX = p2Pos[0] - sightRadius2 + x;
@@ -75,7 +80,7 @@ public class G4Player implements Player {
 		// if not, call the normal move function, which is currently a spiral
 		int direction;
 		if (rightExitSet && leftExitSet) {
-			if (path.isEmpty()) {
+			if (path.isEmpty()) {				
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
 						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
 						+ leftExitX + "," + leftExitY + "  " + rightExitX + ","
