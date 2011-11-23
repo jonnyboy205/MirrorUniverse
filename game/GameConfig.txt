@@ -1,2 +1,2 @@
-10, 10, 10, -1, maps/ATestL2.txt, 5
-10, 10, 10, -1, maps/ATestR2.txt, 5
+10, 10, 2, -1, maps/ATestL2.txt, 5
+10, 10, 2, -1, maps/ATestR2.txt, 5
