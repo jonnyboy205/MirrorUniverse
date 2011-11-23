@@ -74,24 +74,24 @@ public class G4Player implements Player {
 		// after you find the exits, call AStar
 		// if not, call the normal move function, which is currently a spiral
 		int direction;
-		if (rightExitSet && leftExitSet) {
-			if (path.isEmpty()) {
-				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
-						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
-						+ leftExitX + "," + leftExitY + "  " + rightExitX + ","
-						+ rightExitY);
-//				 AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
-//				 kb_p1, kb_p2);
-				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
-						kb_p1, kb_p2);
-				a.setExit1(leftExitX, leftExitY);
-				a.setExit2(rightExitX, rightExitY);
-				path = a.findPath();
-			}
-			direction = path.remove(0);
-		} else {
+//		if (rightExitSet && leftExitSet) {
+//			if (path.isEmpty()) {
+//				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
+//						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
+//						+ leftExitX + "," + leftExitY + "  " + rightExitX + ","
+//						+ rightExitY);
+////				 AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
+////				 kb_p1, kb_p2);
+//				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
+//						kb_p1, kb_p2);
+//				a.setExit1(leftExitX, leftExitY);
+//				a.setExit2(rightExitX, rightExitY);
+//				path = a.findPath();
+//			}
+//			direction = path.remove(0);
+//		} else {
 			direction = move(aintViewL, aintViewR);
-		}
+		//}
 		stepCounter++;
 		turn++;
 		// set new current position here
@@ -198,9 +198,12 @@ public class G4Player implements Player {
 			}
 		}
 
-		if (turn > 100)
-			return myRandomPlayer.lookAndMove(aintViewL, aintViewR);
-
+		if (turn > 100){
+			currentDir = myRandomPlayer.lookAndMove(aintViewL, aintViewR);
+			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
+				currentDir = myRandomPlayer.lookAndMove(aintViewL, aintViewR);
+			}
+		}
 		return currentDir;
 	}
 
