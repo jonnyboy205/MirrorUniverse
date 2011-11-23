@@ -1,6 +1,7 @@
 package mirroruniverse.g4;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import mirroruniverse.sim.MUMap;
 import mirroruniverse.sim.Player;
@@ -105,8 +106,8 @@ public class G4Player implements Player {
 		started = true;
 		sightRadius1 = (aintViewL[0].length - 1) / 2;
 		sightRadius2 = (aintViewR[0].length - 1) / 2;
-		kb_p1 = new int[2 * MAX_SIZE/* / -1*/][2 * MAX_SIZE /*/ -1*/];
-		kb_p2 = new int[2 * MAX_SIZE /*/ -1*/][2 * MAX_SIZE /*/ -1*/];
+		kb_p1 = new int[2 * MAX_SIZE/* / -1 */][2 * MAX_SIZE /* / -1 */];
+		kb_p2 = new int[2 * MAX_SIZE /* / -1 */][2 * MAX_SIZE /* / -1 */];
 		p1Pos = new int[2];
 		p2Pos = new int[2];
 		p1Pos[0] = p2Pos[0] = p1Pos[1] = p2Pos[1] = 99;
@@ -191,15 +192,20 @@ public class G4Player implements Player {
 			stepCounter = 0;
 		}
 
-		while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
-			currentDir -= 1;
-			if (currentDir <= 0) {
-				currentDir = 8;
+		if (turn > 100) {
+			Random rdmTemp = new Random();
+			currentDir = rdmTemp.nextInt(8) + 1;
+			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
+				currentDir = rdmTemp.nextInt(8) + 1;
+			}
+		} else {
+			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
+				currentDir -= 1;
+				if (currentDir <= 0) {
+					currentDir = 8;
+				}
 			}
 		}
-
-		if (turn > 100)
-			return myRandomPlayer.lookAndMove(aintViewL, aintViewR);
 
 		return currentDir;
 	}
