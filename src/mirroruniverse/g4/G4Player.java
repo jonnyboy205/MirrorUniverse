@@ -42,6 +42,7 @@ public class G4Player implements Player {
 			initialize(aintViewL, aintViewR);
 		}
 		
+		//left player finding exit and updating kb
 		for(int y = 0; y < aintViewL.length; ++y){
 			for(int x = 0; x < aintViewL[0].length; ++x){
 				try{
@@ -69,12 +70,14 @@ public class G4Player implements Player {
 			}
 		}
 		
-		int direction;
 		//after you find the exits, call AStar
+		//if not, call the normal move function, which is currently a spiral
+		int direction;
 		if(rightExitSet && leftExitSet){
 			if(path.isEmpty()){
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1] + "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: " + leftExitX + "," + leftExitY + "  " + rightExitX + "," + rightExitY);
-				AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
+				//AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
+				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
 				path = a.findPath();
@@ -109,8 +112,8 @@ public class G4Player implements Player {
 
 		for (int i = 0; i < kb_p1.length; ++i) {
 			for (int j = 0; j < kb_p1.length; ++j) {
-				kb_p1[i][j] = 1;
-				kb_p2[i][j] = 1;
+				kb_p1[i][j] = -5;
+				kb_p2[i][j] = -5;
 			}
 		}
 
@@ -142,8 +145,8 @@ public class G4Player implements Player {
 		else{ //you hit the exit which means you go normally
 		//maybe i'll lock up the p2Pos so it can't be edited again, but for now
 		//intDeltaX and intDeltaY were set in isDirectionCorrect in move
-			p1Pos[0] += intDeltaX;
-			p1Pos[1] += intDeltaY;
+//			p1Pos[0] += intDeltaX;
+//			p1Pos[1] += intDeltaY;
 		}
 		
 		//if the right player's next move is an empty space
@@ -160,8 +163,8 @@ public class G4Player implements Player {
 		else{ //you hit the exit which means you go normally
 		//maybe i'll lock up the p2Pos so it can't be edited again, but for now
 		//intDeltaX and intDeltaY were set in isDirectionCorrect in move
-			p2Pos[0] += intDeltaX;
-			p2Pos[1] += intDeltaY;
+//			p2Pos[0] += intDeltaX;
+//			p2Pos[1] += intDeltaY;
 		}
 		
 		//now I have to update the kb
