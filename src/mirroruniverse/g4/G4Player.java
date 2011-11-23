@@ -80,8 +80,8 @@ public class G4Player implements Player {
 						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
 						+ leftExitX + "," + leftExitY + "  " + rightExitX + ","
 						+ rightExitY);
-				// AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
-				// kb_p1, kb_p2);
+//				 AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
+//				 kb_p1, kb_p2);
 				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
 						kb_p1, kb_p2);
 				a.setExit1(leftExitX, leftExitY);

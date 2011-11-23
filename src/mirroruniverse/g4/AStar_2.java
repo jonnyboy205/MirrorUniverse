@@ -3,8 +3,6 @@ package mirroruniverse.g4;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-import mirroruniverse.sim.MUMap;
-
 public class AStar_2 {
 
 	private int[][] map1;
@@ -27,7 +25,7 @@ public class AStar_2 {
 		maxNodes = 0;
 		for(int i = 0; i < kb_p1.length; ++i){
 			for(int j = 0; j < kb_p1[0].length; ++j){
-				if(kb_p1[i][j] != 1){
+				if(kb_p1[i][j] != 1 && kb_p1[i][j] != -5){
 					++maxNodes;
 				}
 			}
@@ -104,6 +102,7 @@ public class AStar_2 {
 			return findPath();
 		} else {
 			System.out.println("Found :)");
+			System.out.println(queue.peek());
 			System.out.println(queue.peek().getActionPath());
 			return queue.peek().getActionPath();
 		}
@@ -171,7 +170,7 @@ public class AStar_2 {
 				y2 = n.getY2() + yChange;
 				
 				try {
-					if (map1[y1][x1] == 1) {
+					if (map1[y1][x1] == 1 || map1[y1][x1] == -5) {
 						x1 -= xChange;
 						y1 -= yChange;
 					}
@@ -180,7 +179,7 @@ public class AStar_2 {
 					y1 -= yChange;
 				}
 				try {
-					if (map2[y2][x2] == 1) {
+					if (map2[y2][x2] == 1 || map1[y1][x1] == -5) {
 						x2 -= xChange;
 						y2 -= yChange;
 					}
