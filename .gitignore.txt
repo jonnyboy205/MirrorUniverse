@@ -2,5 +2,7 @@
 \bin\*
 .classpath
 \replays\*
+\game\*
 bin/*
 replays/*
+game/*
