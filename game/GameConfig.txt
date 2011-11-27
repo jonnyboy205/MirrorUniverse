@@ -1,2 +1,2 @@
-61, 60, 61, -1, maps/Board2_L.txt, 5
-61, 60, 61, -1, maps/Board2_R.txt, 5
+10, 10, 2, -1, maps/JonTestL1.txt, 5
+10, 10, 2, -1, maps/JonTestR1.txt, 5

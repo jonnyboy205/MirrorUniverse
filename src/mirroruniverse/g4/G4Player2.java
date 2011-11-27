@@ -6,7 +6,7 @@ import java.util.Random;
 import mirroruniverse.sim.MUMap;
 import mirroruniverse.sim.Player;
 
-public class G4Player implements Player {
+public class G4Player2 implements Player {
 
 	public boolean started = false;
 
