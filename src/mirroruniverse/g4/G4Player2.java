@@ -28,7 +28,7 @@ public class G4Player2 implements Player {
 
 	// used mainly with move function
 	private int numPath;
-	private int initialDir;
+	private static final int INITIAL_DIR = 2;
 	private int turn;
 	private int stepCounter;
 	private int currentDir;
@@ -118,8 +118,7 @@ public class G4Player2 implements Player {
 			}
 		}
 		numPath = 0;
-		initialDir = 2;
-		currentDir = initialDir;
+		currentDir = INITIAL_DIR;
 		stepCounter = 0;
 		turn = 0;
 		myRandomPlayer = new RandomPlayer();
