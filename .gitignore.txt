@@ -1,3 +1,7 @@
+
+\player\*
+
+player/*
 .gitignore
 \bin\*
 .classpath
