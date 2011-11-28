@@ -4,3 +4,5 @@
 \replays\*
 bin/*
 replays/*
+\player\*
+player/*
