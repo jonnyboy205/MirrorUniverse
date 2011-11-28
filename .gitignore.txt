@@ -1,8 +1,12 @@
+
+\player\*
+
+player/*
 .gitignore
 \bin\*
 .classpath
 \replays\*
+\game\*
 bin/*
 replays/*
-\player\*
-player/*
+game/*
