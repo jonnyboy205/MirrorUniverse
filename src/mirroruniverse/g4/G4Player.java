@@ -238,14 +238,14 @@ public class G4Player implements Player {
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
 		if (!leftExitSet) {
 			if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1
-					|| aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1 //checks for misalignment on other player
+	//				|| aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1 //checks for misalignment on other player
 					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
 			return true;
 		} else {
 			if (aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1
-					|| aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1 //checks for misalignment on other player
+	//				|| aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1 //checks for misalignment on other player
 					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
