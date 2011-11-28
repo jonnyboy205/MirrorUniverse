@@ -261,4 +261,22 @@ public class G4Player2 implements Player {
 		return false;
 
 	}
+	
+	//for now just if the left player is looking for wall
+//	private int lookForWall(int[][] aintViewL, int[][] aintViewR){
+//		//pick an arbitrary direction
+//		
+//		int[] directions = {};
+//		
+//		int d = 2;
+//		
+//		intDeltaX = MUMap.aintDToM[d][0];
+//		intDeltaY = MUMap.aintDToM[d][1];
+//		
+//		//if moving northeast you hit an obstacle
+//		if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1)
+//			
+//		
+//		return d;
+//	}
 }
