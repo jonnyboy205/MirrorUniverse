@@ -41,7 +41,7 @@ public class AStar_2 {
 		if(numZeros < 300){
 			maxNodes = 8 * (numOnes + numZeros);
 		} else {
-			maxNodes = 2 * numZeros;
+			maxNodes = 4 * numZeros;
 		}
 		
 		queue = new PriorityQueue<Node_2>();
