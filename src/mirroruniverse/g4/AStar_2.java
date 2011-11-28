@@ -10,7 +10,7 @@ public class AStar_2 {
 	Node_2 root;
 	PriorityQueue<Node_2> queue;
 	ArrayList<Node_2> closed;
-	ArrayList<Node_2> close;
+	ArrayList<Node_2> nodesToPutOff;
 	private int numExitsFound = 0;
 	public boolean debugging = false;
 	private int maxNodes;
@@ -23,23 +23,32 @@ public class AStar_2 {
 		map2 = kb_p2;
 		
 		maxNodes = 0;
+		int numOnes = 0;
+		int numZeros = 0;
 		for(int i = 0; i < kb_p1.length; ++i){
 			for(int j = 0; j < kb_p1[0].length; ++j){
-				if(kb_p1[i][j] != 1 && kb_p1[i][j] != -5){
+				/*if(/*kb_p1[i][j] != 1 && *//*kb_p1[i][j] != -5){
 					++maxNodes;
+				}*/
+				if(kb_p1[i][j] == 1){
+					++numOnes;
+				}
+				if(kb_p1[i][j] == 0){
+					++numZeros;
 				}
 			}
 		}
-		maxNodes *= 16;
-		//maxNodes = (int)Math.pow(maxNodes, 2);
-		//maxNodes /= 4;
-		
+		if(numZeros < 300){
+			maxNodes = 8 * (numOnes + numZeros);
+		} else {
+			maxNodes = 2 * numZeros;
+		}
 		
 		queue = new PriorityQueue<Node_2>();
 		queue.add(root);
 		closed = new ArrayList<Node_2>();
 		closed.add(root);
-		close = new ArrayList<Node_2>();
+		nodesToPutOff = new ArrayList<Node_2>();
 		if(debugging){
 			prettyPrint(root);
 		}
@@ -62,8 +71,8 @@ public class AStar_2 {
 	}
 	
 	public void exitsFound(){
-		Node_2.reRunHeuristic(close);
-		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(close);
+		Node_2.reRunHeuristic(nodesToPutOff);
+		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(nodesToPutOff);
 		queue = tempQ;
 		if(queue.isEmpty()){
 			System.out.println("Increasing limit");
@@ -71,9 +80,10 @@ public class AStar_2 {
 			Node_2.resetDegree();
 			Node_2.reRunHeuristic(closed);
 			queue.addAll(closed);
+			queue.add(root);
 			closed.clear();
 		}
-		close.clear();
+		nodesToPutOff.clear();
 		//closed.clear();
 	}
 	
@@ -89,6 +99,10 @@ public class AStar_2 {
 				System.out.println("Looking at:");
 				System.out.println(queue.peek().getActionPath());
 				prettyPrint(queue.peek());
+			}
+			if(queue.peek().getValue() > 10000){
+				nodesToPutOff.add(queue.poll());
+				continue;
 			}
 			ArrayList<Node_2> nexts = successors(queue.poll());
 			queue.addAll(nexts);
@@ -202,6 +216,7 @@ public class AStar_2 {
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {}
 				Node_2 toAdd = new Node_2(x1, y1, x2, y2, n, indexOfAction[action]);
+				//Node_2.addPathCost(toAdd, 1, map1, map2);
 				
 				if(!n.equals(toAdd) && shouldIAdd(toAdd)){
 					nexts.add(toAdd);
@@ -243,19 +258,19 @@ public class AStar_2 {
 				//}
 			}
 		}
-		
-		/*for(Node_2 c: close){
-			if (n.equals(c)) {
-				if (n.getDepth() < c.getDepth()) {
-					close.remove(c);
-					close.add(n);
-				}
-				return false;
-			}
-		}*/
+
 		if(n.getValue() > 10000){
+			for(Node_2 o : nodesToPutOff){
+				if (n.equals(o)){
+					if(n.getDepth() < o.getDepth()){
+						nodesToPutOff.remove(o);
+						break;
+					}
+					return false;
+				}
+			}
 			++numAdded;
-			close.add(n);
+			nodesToPutOff.add(n);
 			return false;
 		}
 		return true;

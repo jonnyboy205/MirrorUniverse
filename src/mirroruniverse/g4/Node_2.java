@@ -38,7 +38,7 @@ public class Node_2 implements Comparable<Node_2>{
 	
 
 	// The value of this node
-	private int value;
+	private double value;
 	
 	// The depth of this node
 	private int depth;
@@ -51,6 +51,8 @@ public class Node_2 implements Comparable<Node_2>{
 	private static int p1ExitY = -1000;
 	private static int p2ExitX = -1000;
 	private static int p2ExitY = -1000;
+	
+	private Node_2 parent;
 	
 	// This integer represents the degree away from perfect we can look at
 	private static int degree = 0;
@@ -85,24 +87,16 @@ public class Node_2 implements Comparable<Node_2>{
 	
 	
 	// Constructor, for the first node, have parent = null;
-	public Node_2(int p1X, int p1Y, int p2X, int p2Y, Node_2 parent, int action){
+	public Node_2(int p1X, int p1Y, int p2X, int p2Y, Node_2 expanded, int action){
 		x1 = p1X;
 		y1 = p1Y;
 		x2 = p2X;
 		y2 = p2Y;
 		p1HasReached = false;
 		p2HasReached = false;
+		parent = expanded;
 		
-		if(parent != null){
-			p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
-			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);
-		}
-		
-		if((!p1HasReached || !p2HasReached) && (p1HasReached || p2HasReached)){
-			selfDegree = parent.selfDegree + 1;
-		} else {
-			selfDegree = 0;
-		}
+		updateSelfDegree();
 		
 		if(parent == null){
 			depth = 0;
@@ -115,15 +109,37 @@ public class Node_2 implements Comparable<Node_2>{
 
 		// Set the value of this node equal to our heuristic rating for it
 		value = this.heuristic();
+	}
+	
+	private void updateSelfDegree(){
+		if(parent != null){
+			p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
+			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);
+		}
 		
+		if((!p1HasReached || !p2HasReached) && (p1HasReached || p2HasReached)){
+			selfDegree = parent.selfDegree + 1;
+		} else {
+			selfDegree = 0;
+		}
 	}
 
 	//Implement our actual heuristic here, right now just takes the total distance both players are away from the goal
-	private int heuristic(){
+	private double heuristic(){
 		if(p1ExitX == -1000 || p2ExitX == -1000){
 			return 10000 + depth;//Integer.MAX_VALUE;
 		}
-		int toReturn = selfDegree + Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY)) + Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
+		
+		int diffExitX = p1ExitX - p2ExitX;
+		int diffPX = x1-x2;
+		int diffExitY = p1ExitY - p2ExitY;
+		int diffPY = y1-y2;
+		
+		int diff = Math.abs(diffExitX - diffPX) + Math.abs(diffExitY - diffPY);
+		
+		int p1Distance = Math.max(Math.abs(x1 - p1ExitX), Math.abs(y1 - p1ExitY));
+		int p2Distance = Math.max(Math.abs(x2 - p2ExitX), Math.abs(y2 - p2ExitY));
+		int toReturn = /*diff + */selfDegree + p1Distance + p2Distance;// + Math.max(p1Distance, p2Distance);
 		
 		if(selfDegree > degree){
 			toReturn += 10000;
@@ -137,7 +153,7 @@ public class Node_2 implements Comparable<Node_2>{
 				toReturn += 10000;
 			}
 		}*/
-		return toReturn + depth;
+		return toReturn + (0.8 * depth);
 	}
 	
 	public static void reRunHeuristic(ArrayList<Node_2> set){
@@ -146,6 +162,7 @@ public class Node_2 implements Comparable<Node_2>{
 		for(Node_2 n : set){
 //			if(n.getValue() > 9999){
 				n.value = n.heuristic();
+				n.updateSelfDegree();
 				newSet.add(n);
 //			} else if (n.getValue() <= degree){
 //				newSet.add(n);
@@ -155,9 +172,53 @@ public class Node_2 implements Comparable<Node_2>{
 		System.out.println();
 	}
 
-
-	public int getValue() {
-		return value - depth;
+	public static void addPathCost(Node_2 n, int playerNum, int[][] map1, int[][] map2){
+		int x;
+		int y;
+		int exitX;
+		int exitY;
+		int[][] map;
+		if(playerNum == 1){
+			x = n.getX1();
+			y = n.getY1();
+			exitX = p1ExitX;
+			exitY = p1ExitY;
+			map = map1;
+		} else {
+			x = n.getX2();
+			y = n.getY2();
+			exitX = p2ExitX;
+			exitY = p2ExitY;
+			map = map2;
+		}
+		int toAdd = 0;
+		while(x != exitX && y != exitY){
+			if (x != exitX){
+				if(exitX > x){
+					++x;
+				} else {
+					--x;
+				}
+			}
+			if (y != exitY){
+				if(exitY > y){
+					++y;
+				} else {
+					--y;
+				}
+			}
+			if(map[y][x] != 0){
+				++toAdd;
+			}
+		}
+		n.value += toAdd;
+		if(playerNum == 1){
+			addPathCost(n, playerNum+1, map1, map2);
+		}
+	}
+	
+	public double getValue() {
+		return value;// - depth;
 	}
 
 
@@ -186,9 +247,9 @@ public class Node_2 implements Comparable<Node_2>{
 			return 1;
 		} else if(this.getValue() < n.getValue()){
 			return -1;
-		} else if(this.getDepth() > n.getDepth()){
-			return 1;
 		} else if(this.getDepth() < n.getDepth()){
+			return 1;
+		} else if(this.getDepth() > n.getDepth()){
 			return -1;
 		} else {
 		return 0;
