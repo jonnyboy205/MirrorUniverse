@@ -55,7 +55,7 @@ public class AStar_Single {
 		if(queue.isEmpty()){
 			//System.out.println("Empty :(");
 			//exitsFound();
-			return findPath();
+			return null;
 		} else {
 			//System.out.println("Found :)");
 			//System.out.println(queue.peek());
