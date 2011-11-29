@@ -70,6 +70,7 @@ public class G4Player2 implements Player {
 				}
 			}
 		}
+		
 
 		// after you find the exits, call AStar
 		// if not, call the normal move function, which is currently a spiral
@@ -88,7 +89,16 @@ public class G4Player2 implements Player {
 			}
 			direction = path.remove(0);
 		} else {
-			direction = move(aintViewL, aintViewR);
+			Point p = getNewSpace(1);
+			AStar_Single myAStarSingle = new AStar_Single(p1Pos[0], p1Pos[1], p.x, p.y, kb_p1);
+			path = myAStarSingle.findPath().getActionPath();
+			direction = path.remove(0);
+			while (isDirectionCorrect(direction, aintViewL, aintViewR)){
+				path.clear();
+				Random rdmTemp = new Random();
+				direction = rdmTemp.nextInt(8) + 1;
+			}
+			//direction = move(aintViewL, aintViewR);
 		}
 		stepCounter++;
 		turn++;
@@ -126,58 +136,43 @@ public class G4Player2 implements Player {
 		path = new ArrayList<Integer>();
 	}
 
-	private void setNewCurrentPosition(int direction, int[][] aintLocalViewL,
-			int[][] aintLocalViewR) {
+	private void setNewCurrentPosition(int direction, int[][] aintLocalViewL, int[][] aintLocalViewR) {
+		
 		intDeltaX = MUMap.aintDToM[direction][0];
 		intDeltaY = MUMap.aintDToM[direction][1];
+		
 		// if the right player's next move is an empty space
 		// update new position
-		// if (aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 +
-		// intDeltaY] == 0){
 		if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 0) {
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
 		}
-		// else if(aintLocalViewL[sightRadius1 + intDeltaX][sightRadius1 +
-		// intDeltaY] == 1){
 		else if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1
 				+ intDeltaX] == 1) {
 			// nothing changes, you couldn't move, and so you are in the same
 			// place
-		} else { // you hit the exit which means you go normally
-			// maybe i'll lock up the p2Pos so it can't be edited again, but for
-			// now
-			// intDeltaX and intDeltaY were set in isDirectionCorrect in move
+		} else { // you hit the exit
 			// p1Pos[0] += intDeltaX;
 			// p1Pos[1] += intDeltaY;
 		}
 
 		// if the right player's next move is an empty space
 		// update new position
-		// if (aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 +
-		// intDeltaY] == 0){
 		if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 0) {
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 		}
-		// else if(aintLocalViewR[sightRadius2 + intDeltaX][sightRadius2 +
-		// intDeltaY] == 1){
 		else if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2
 				+ intDeltaX] == 1) {
 			// nothing changes, you couldn't move, and so you are in the same
 			// place
-		} else { // you hit the exit which means you go normally
-			// maybe i'll lock up the p2Pos so it can't be edited again, but for
-			// now
-			// intDeltaX and intDeltaY were set in isDirectionCorrect in move
+		} else { // you hit the exit
 			// p2Pos[0] += intDeltaX;
 			// p2Pos[1] += intDeltaY;
 		}
-
-		// now I have to update the kb
 	}
 
-	// not really taking into account obstacles well
+	//not really taking into account obstacles well
 	//spiral while avoid boundaries
 	//we first focus on left player
 	private int move(int[][] aintViewL, int[][] aintViewR) {
@@ -192,18 +187,29 @@ public class G4Player2 implements Player {
 			stepCounter = 0;
 		}
 
-		if (turn > 1000) {
+		if (turn > 10000) {
 			Random rdmTemp = new Random();
 			currentDir = rdmTemp.nextInt(8) + 1;
 			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
 				currentDir = rdmTemp.nextInt(8) + 1;
 			}
 		} else {
+			int counter = 1;
 			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
+				if (counter == 9){
+					break;
+				}
+				counter++;
 				currentDir -= 1;
 				if (currentDir <= 0) {
 					currentDir = 8;
 				}
+				counter++;
+			}
+			if (counter==9){
+				//Call Nate's method
+				currentDir = 2; //random default value for compilation sake
+				//output of calling AStar on x and y i give for one of the players, same position for the other player
 			}
 		}
 
@@ -354,7 +360,7 @@ public class G4Player2 implements Player {
 			for (int a=-1; a<=1; a++){ //3 to capture entire immediate surroundings
 				for (int b=-1; b<=1; b++){
 					//skips checking current cell when past bounds in kb array
-					if ((i+a<0) || (i+a>=kb_p1.length) || (i+b<0) || (i+b>=kb_p1.length))
+					if ((i+a<0) || (i+a>=kb_p1.length) || (j+b<0) || (j+b>=kb_p1.length))
 						continue;
 					if (kb_p1[i + a][j + b] == -5)
 						return true;
@@ -393,10 +399,20 @@ public class G4Player2 implements Player {
 						return new Point(j, i);
 					}
 				}
+				for (int j=p1Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
 			}
 			//loop through kb, starting near your current pos
 			for (int i=p1Pos[1]; i>=0; i--){
 				for (int j=p1Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+				for (int j=p1Pos[0]; j<kb_p1.length; j++){
 					if (checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
@@ -411,11 +427,21 @@ public class G4Player2 implements Player {
 						return new Point(j, i);
 					}
 				}
+				for (int j=p2Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
 			}
 			//loop through kb, starting near your current pos
 			for (int i=p2Pos[1]; i>=0; i--){
 				for (int j=p2Pos[0]; j>=0; j--){
 					if (checkSurroundingCellsForFives(2, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+				for (int j=p2Pos[0]; j<kb_p2.length; j++){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
 				}
@@ -426,5 +452,85 @@ public class G4Player2 implements Player {
 		}
 		
 		return p;
+	}
+
+	private boolean checkForMisAlignment(int currentDir2, int[][] aintLocalViewL, int[][] aintLocalViewR){
+		
+		int intDeltaX2 = MUMap.aintDToM[currentDir2][0];
+		int intDeltaY2 = MUMap.aintDToM[currentDir2][1];
+		int[] p1PosFuture = p1Pos.clone();
+		int[] p2PosFuture = p2Pos.clone();
+		
+		// if the right player's next move is an empty space
+			// update new position
+			if (aintLocalViewL[sightRadius1 + intDeltaY2][sightRadius1 + intDeltaX2] == 0) {
+				p1PosFuture[0] += intDeltaX2;
+				p1PosFuture[1] += intDeltaY2;
+			}
+			else if (aintLocalViewL[sightRadius1 + intDeltaY2][sightRadius1 + intDeltaX2] == 1) {
+				// nothing changes, you couldn't move, and so you are in the same
+				// place
+			} else { // you hit the exit
+				// p1PosFuture[0] += intDeltaX2;
+				// p1PosFuture[1] += intDeltaY2;
+			}
+
+			// if the right player's next move is an empty space
+			// update new position
+			if (aintLocalViewR[sightRadius2 + intDeltaY2][sightRadius2 + intDeltaX2] == 0) {
+				p2PosFuture[0] += intDeltaX2;
+				p2PosFuture[1] += intDeltaY2;
+			}
+			else if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2
+					+ intDeltaX] == 1) {
+				// nothing changes, you couldn't move, and so you are in the same
+				// place
+			} else { // you hit the exit
+				// p2PosFuture[0] += intDeltaX2;
+				// p2PosFuture[1] += intDeltaY2;
+			}
+		
+		int currentDir3 = currentDir2 + 4;
+		currentDir3 = currentDir3%8;
+			
+		int intDeltaX3 = MUMap.aintDToM[currentDir3][0];
+		int intDeltaY3 = MUMap.aintDToM[currentDir3][1];
+		
+		// if the right player's next move is an empty space
+			// update new position
+			if (aintLocalViewL[sightRadius1 + intDeltaY3][sightRadius1 + intDeltaX3] == 0) {
+				p1PosFuture[0] += intDeltaX3;
+				p1PosFuture[1] += intDeltaY3;
+			}
+			else if (aintLocalViewL[sightRadius1 + intDeltaY3][sightRadius1 + intDeltaX3] == 1) {
+				// nothing changes, you couldn't move, and so you are in the same
+				// place
+			} else { // you hit the exit
+				// p1PosFuture[0] += intDeltaX3;
+				// p1PosFuture[1] += intDeltaY3;
+			}
+
+			// if the right player's next move is an empty space
+			// update new position
+			if (aintLocalViewR[sightRadius2 + intDeltaY3][sightRadius2 + intDeltaX3] == 0) {
+				p2PosFuture[0] += intDeltaX3;
+				p2PosFuture[1] += intDeltaY3;
+			}
+			else if (aintLocalViewR[sightRadius2 + intDeltaY3][sightRadius2 + intDeltaX3] == 1) {
+				// nothing changes, you couldn't move, and so you are in the same
+				// place
+			} else { // you hit the exit
+				// p2PosFuture[0] += intDeltaX3;
+				// p2PosFuture[1] += intDeltaY3;
+			}
+			
+		if (p1Pos[0] == p1PosFuture[0] && p1Pos[1] == p1PosFuture[1] 
+				&& p2Pos[0] == p2PosFuture[0] && p2Pos[1] == p2PosFuture[1]){
+			//not misaligned
+			return false;
+		}
+		
+		return true;
+		
 	}
 }
