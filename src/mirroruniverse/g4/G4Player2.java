@@ -70,6 +70,7 @@ public class G4Player2 implements Player {
 				}
 			}
 		}
+		
 
 		// after you find the exits, call AStar
 		// if not, call the normal move function, which is currently a spiral
@@ -88,7 +89,16 @@ public class G4Player2 implements Player {
 			}
 			direction = path.remove(0);
 		} else {
-			direction = move(aintViewL, aintViewR);
+			Point p = getNewSpace(1);
+			AStar_Single myAStarSingle = new AStar_Single(p1Pos[0], p1Pos[1], p.x, p.y, kb_p1);
+			path = myAStarSingle.findPath().getActionPath();
+			direction = path.remove(0);
+			while (isDirectionCorrect(direction, aintViewL, aintViewR)){
+				path.clear();
+				Random rdmTemp = new Random();
+				direction = rdmTemp.nextInt(8) + 1;
+			}
+			//direction = move(aintViewL, aintViewR);
 		}
 		stepCounter++;
 		turn++;
@@ -350,9 +360,9 @@ public class G4Player2 implements Player {
 			for (int a=-1; a<=1; a++){ //3 to capture entire immediate surroundings
 				for (int b=-1; b<=1; b++){
 					//skips checking current cell when past bounds in kb array
-					if ((i+a<0) || (i+a>=kb_p1.length) || (i+b<0) || (i+b>=kb_p1.length))
+					if ((i+a<0) || (i+a>=kb_p1.length) || (j+b<0) || (j+b>=kb_p1.length))
 						continue;
-					if (kb_p1[i + a][i + b] == -5)
+					if (kb_p1[i + a][j + b] == -5)
 						return true;
 				}	
 			}	
@@ -389,10 +399,20 @@ public class G4Player2 implements Player {
 						return new Point(j, i);
 					}
 				}
+				for (int j=p1Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
 			}
 			//loop through kb, starting near your current pos
 			for (int i=p1Pos[1]; i>=0; i--){
 				for (int j=p1Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+				for (int j=p1Pos[0]; j<kb_p1.length; j++){
 					if (checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
@@ -407,11 +427,21 @@ public class G4Player2 implements Player {
 						return new Point(j, i);
 					}
 				}
+				for (int j=p2Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
 			}
 			//loop through kb, starting near your current pos
 			for (int i=p2Pos[1]; i>=0; i--){
 				for (int j=p2Pos[0]; j>=0; j--){
 					if (checkSurroundingCellsForFives(2, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+				for (int j=p2Pos[0]; j<kb_p2.length; j++){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
 				}
