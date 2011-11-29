@@ -1,2 +1,2 @@
-5, 5, 5, -1, maps/Board3_L.txt, 5
-5, 5, 5, -1, maps/Board3_R.txt, 5
+5, 50, 2, -1, maps/Board3_L.txt, 5
+5, 23, 2, -1, maps/Board3_R.txt, 5
