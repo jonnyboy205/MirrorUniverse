@@ -116,9 +116,14 @@ public class G4Player implements Player {
 		for (int i = 0; i < kb_p1.length; ++i) {
 			for (int j = 0; j < kb_p1.length; ++j) {
 				kb_p1[i][j] = -5;
+			}
+		}
+		for(int i = 0; i < kb_p2.length; ++i){
+			for(int j = 0; j < kb_p2.length; ++j){
 				kb_p2[i][j] = -5;
 			}
 		}
+		
 		numPath = 0;
 		initialDir = 2;
 		currentDir = initialDir;
