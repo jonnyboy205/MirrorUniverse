@@ -1,10 +1,8 @@
 //mirroruniverse.dumpplayer.RandomPlayer
-//mirroruniverse.g4.G4PlayerAstarTest
-mirroruniverse.g4.G4Player
-//mirroruniverse.dumpplayer.RandomPlayer
 //mirroruniverse.g1.g1Player_new
 //mirroruniverse.g2.WallFlower
 //mirroruniverse.aiplayer.AiPlayer
+mirroruniverse.g4.G4Player
 //mirroruniverse.G5Player.G5Player
 //mirroruniverse.g6.G6Player
 //mirroruniverse.g7.Player

@@ -5,8 +5,8 @@ import java.util.PriorityQueue;
 
 public class AStar_2 {
 
-	private int[][] map1;
-	private int[][] map2;
+	private static int[][] map1;
+	private static int[][] map2;
 	Node_2 root;
 	PriorityQueue<Node_2> queue;
 	ArrayList<Node_2> closed;
@@ -14,13 +14,22 @@ public class AStar_2 {
 	private int numExitsFound = 0;
 	public boolean debugging = false;
 	private int maxNodes;
+	private boolean increase;
 	
 	private int numAdded = 0;
 	
+	public static int[][] getMap1(){
+		return map1;
+	}
+	
+	public static int[][] getMap2(){
+		return map2;
+	}
+	
 	public AStar_2(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
-		root = new Node_2(initialX1, initialY1, initialX2, initialY2, null, 0);
 		map1 = kb_p1;
 		map2 = kb_p2;
+		root = new Node_2(initialX1, initialY1, initialX2, initialY2, null, 0);
 		
 		maxNodes = 0;
 		int numOnes = 0;
@@ -45,20 +54,19 @@ public class AStar_2 {
 		}
 		
 		queue = new PriorityQueue<Node_2>();
-		queue.add(root);
 		closed = new ArrayList<Node_2>();
-		closed.add(root);
 		nodesToPutOff = new ArrayList<Node_2>();
 		if(debugging){
 			prettyPrint(root);
 		}
+		increase = false;
 	}
 	
 	public void setExit1(int x, int y){
 		Node_2.setExit1(x, y);
 		++numExitsFound;
 		if(numExitsFound == 2){
-			//exitsFound();
+			bothExits();
 		}
 	}
 	
@@ -66,24 +74,38 @@ public class AStar_2 {
 		Node_2.setExit2(x, y);
 		++numExitsFound;
 		if(numExitsFound == 2){
-			//exitsFound();
+			bothExits();
 		}
 	}
 	
+	private void bothExits(){
+		root.resetHeuristic();
+		queue.add(root);
+	}
+	
 	public void exitsFound(){
-		Node_2.reRunHeuristic(nodesToPutOff);
-		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(nodesToPutOff);
-		queue = tempQ;
-		if(queue.isEmpty()){
-			System.out.println("Increasing limit");
-			maxNodes *= 2;
-			Node_2.resetDegree();
-			Node_2.reRunHeuristic(closed);
-			queue.addAll(closed);
-			queue.add(root);
+		if (increase) {
+			Node_2.incDegree();
+			Node_2.reRunHeuristic(nodesToPutOff);
+			PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(nodesToPutOff);
+			queue = tempQ;
+			if (queue.isEmpty()) {
+				System.out.println("Increasing limit");
+				maxNodes *= 2;
+				Node_2.resetDegree();
+				Node_2.reRunHeuristic(closed);
+				queue.addAll(closed);
+				queue.add(root);
+				closed.clear();
+			}
+			nodesToPutOff.clear();
+		} else {
+			Node_2.addDiff(closed);
+			PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(closed);
+			queue = tempQ;
 			closed.clear();
 		}
-		nodesToPutOff.clear();
+		increase = !increase;
 		//closed.clear();
 	}
 	
@@ -93,12 +115,12 @@ public class AStar_2 {
 				queue.clear();
 				break;
 			}
-			if (debugging) {
+			if (true) {
 				System.out.println(numAdded + " " + queue.size());
 				//System.out.println("Expanding:" + queue.peek().getValue());
 				System.out.println("Looking at:");
-				System.out.println(queue.peek().getActionPath());
-				prettyPrint(queue.peek());
+				System.out.println(queue.peek());//.getActionPath());
+				//prettyPrint(queue.peek());
 			}
 			if(queue.peek().getValue() > 10000){
 				nodesToPutOff.add(queue.poll());
@@ -111,7 +133,7 @@ public class AStar_2 {
 		if(queue.isEmpty()){
 			numAdded = 0;
 			System.out.println("Empty :(");
-			Node_2.incDegree();
+			increase = true;
 			exitsFound();
 			return findPath();
 		} else {
