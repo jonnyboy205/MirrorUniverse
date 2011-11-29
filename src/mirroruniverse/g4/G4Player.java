@@ -106,8 +106,8 @@ public class G4Player implements Player {
 		started = true;
 		sightRadius1 = (aintViewL[0].length - 1) / 2;
 		sightRadius2 = (aintViewR[0].length - 1) / 2;
-		kb_p1 = new int[2 * (MAX_SIZE + sightRadius1)/* / -1 */][2 * (MAX_SIZE + sightRadius1) /* / -1 */];
-		kb_p2 = new int[2 * (MAX_SIZE + sightRadius2) /* / -1 */][2 * (MAX_SIZE + sightRadius2) /* / -1 */];
+		kb_p1 = new int[2 * (MAX_SIZE + sightRadius1) -1 ][2 * (MAX_SIZE + sightRadius1) -1 ];
+		kb_p2 = new int[2 * (MAX_SIZE + sightRadius2) -1 ][2 * (MAX_SIZE + sightRadius2) -1 ];
 		
 		p1Pos = new int[2];
 		p2Pos = new int[2];
@@ -187,6 +187,8 @@ public class G4Player implements Player {
 	}
 
 	// not really taking into account obstacles well
+	//spiral while avoid boundaries
+	//we first focus on left player
 	public int move(int[][] aintViewL, int[][] aintViewR) {
 		currentDir = getNormalizedDir();
 		if (stepCounter == calcPathSteps()) {
@@ -199,7 +201,7 @@ public class G4Player implements Player {
 			stepCounter = 0;
 		}
 
-		if (turn > 100) {
+		if (turn > 1000) {
 			Random rdmTemp = new Random();
 			currentDir = rdmTemp.nextInt(8) + 1;
 			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
@@ -258,6 +260,7 @@ public class G4Player implements Player {
 		}
 	}
 
+	//isDirectionExit for either player
 	private boolean isDirectionExit(int currentDirection, int[][] aintViewL,
 			int[][] aintViewR) {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];

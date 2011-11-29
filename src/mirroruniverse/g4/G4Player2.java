@@ -1,5 +1,6 @@
 package mirroruniverse.g4;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,12 +29,10 @@ public class G4Player2 implements Player {
 
 	// used mainly with move function
 	private int numPath;
-	private static final int INITIAL_DIR = 2;
+	private int initialDir;
 	private int turn;
 	private int stepCounter;
 	private int currentDir;
-
-	private RandomPlayer myRandomPlayer;
 
 	private ArrayList<Integer> path;
 
@@ -81,8 +80,6 @@ public class G4Player2 implements Player {
 						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
 						+ leftExitX + "," + leftExitY + "  " + rightExitX + ","
 						+ rightExitY);
-//				 AStar a = new AStar(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
-//				 kb_p1, kb_p2);
 				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
 						kb_p1, kb_p2);
 				a.setExit1(leftExitX, leftExitY);
@@ -100,17 +97,19 @@ public class G4Player2 implements Player {
 		return direction;
 	}
 
-	public void initialize(int[][] aintViewL, int[][] aintViewR) {
+	private void initialize(int[][] aintViewL, int[][] aintViewR) {
 		intDeltaX = 0;
 		intDeltaY = 0;
 		started = true;
 		sightRadius1 = (aintViewL[0].length - 1) / 2;
 		sightRadius2 = (aintViewR[0].length - 1) / 2;
-		kb_p1 = new int[2 * MAX_SIZE/* / -1 */][2 * MAX_SIZE /* / -1 */];
-		kb_p2 = new int[2 * MAX_SIZE /* / -1 */][2 * MAX_SIZE /* / -1 */];
+		kb_p1 = new int[2 * (MAX_SIZE + sightRadius1) -1 ][2 * (MAX_SIZE + sightRadius1) -1 ];
+		kb_p2 = new int[2 * (MAX_SIZE + sightRadius2) -1 ][2 * (MAX_SIZE + sightRadius2) -1 ];
+		
 		p1Pos = new int[2];
 		p2Pos = new int[2];
-		p1Pos[0] = p2Pos[0] = p1Pos[1] = p2Pos[1] = 99;
+		p1Pos[0] = p2Pos[0] = MAX_SIZE - 1 + sightRadius1;
+		p1Pos[1] = p2Pos[1] = MAX_SIZE - 1 + sightRadius2;
 		for (int i = 0; i < kb_p1.length; ++i) {
 			for (int j = 0; j < kb_p1.length; ++j) {
 				kb_p1[i][j] = -5;
@@ -118,10 +117,10 @@ public class G4Player2 implements Player {
 			}
 		}
 		numPath = 0;
-		currentDir = INITIAL_DIR;
+		initialDir = 2;
+		currentDir = initialDir;
 		stepCounter = 0;
 		turn = 0;
-		myRandomPlayer = new RandomPlayer();
 		rightExitSet = false;
 		leftExitSet = false;
 		path = new ArrayList<Integer>();
@@ -179,7 +178,9 @@ public class G4Player2 implements Player {
 	}
 
 	// not really taking into account obstacles well
-	public int move(int[][] aintViewL, int[][] aintViewR) {
+	//spiral while avoid boundaries
+	//we first focus on left player
+	private int move(int[][] aintViewL, int[][] aintViewR) {
 		currentDir = getNormalizedDir();
 		if (stepCounter == calcPathSteps()) {
 
@@ -191,7 +192,7 @@ public class G4Player2 implements Player {
 			stepCounter = 0;
 		}
 
-		if (turn > 100) {
+		if (turn > 1000) {
 			Random rdmTemp = new Random();
 			currentDir = rdmTemp.nextInt(8) + 1;
 			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
@@ -235,14 +236,14 @@ public class G4Player2 implements Player {
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
 		if (!leftExitSet) {
 			if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1
-					|| aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1 //checks for misalignment on other player
+	//				|| aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1 //checks for misalignment on other player
 					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
 			return true;
 		} else {
 			if (aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1
-					|| aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1 //checks for misalignment on other player
+	//				|| aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1 //checks for misalignment on other player
 					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
@@ -250,6 +251,7 @@ public class G4Player2 implements Player {
 		}
 	}
 
+	//isDirectionExit for either player
 	private boolean isDirectionExit(int currentDirection, int[][] aintViewL,
 			int[][] aintViewR) {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
@@ -262,21 +264,167 @@ public class G4Player2 implements Player {
 
 	}
 	
-	//for now just if the left player is looking for wall
-//	private int lookForWall(int[][] aintViewL, int[][] aintViewR){
-//		//pick an arbitrary direction
-//		
-//		int[] directions = {};
-//		
-//		int d = 2;
-//		
-//		intDeltaX = MUMap.aintDToM[d][0];
-//		intDeltaY = MUMap.aintDToM[d][1];
-//		
-//		//if moving northeast you hit an obstacle
-//		if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1)
-//			
-//		
-//		return d;
-//	}
+	/**
+	 * Checks to see if there is nothing left to explore for a player's map
+	 * @param player
+	 * @return
+	 */
+	private boolean isMapComplete(int player){
+		
+		if (player == 1){
+			//loop through kb, looking for walls of 1 surrounded by -5
+			for (int i=0; i<kb_p1[0].length; i++){
+				for (int j=0; j<kb_p1[0].length; j++){
+					
+					if (kb_p1[i][j] == 0){ 
+						//start looking for 5's around that cell
+						if (checkSurroundingCellsForFives(1, i, j) == true){
+							//you can still move somewhere on the board
+							return false;
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+		
+		else if (player == 2){
+			//loop through kb, looking for walls of 1 surrounded by -5
+			for (int i=0; i<kb_p2[0].length; i++){
+				for (int j=0; j<kb_p2[0].length; j++){
+					
+					if (kb_p2[i][j] == 0){ 
+						//start looking for 5's around that cell
+						if (checkSurroundingCellsForFives(2, i, j) == true){
+							//you can still move somewhere on the board
+							return false;
+						}
+					}
+				}
+				
+			}
+			
+			return true;
+		}
+		
+		else{ //check to see if both players' maps are complete
+			//check left player
+			//loop through kb, looking for walls of 1 surrounded by -5
+			for (int i=0; i<kb_p1[0].length; i++){
+				for (int j=0; j<kb_p1[0].length; j++){
+					
+					if (kb_p1[i][j] == 0){ 
+						//start looking for 5's around that cell
+						if (checkSurroundingCellsForFives(1, i, j) == true){
+							//you can still move somewhere on the board
+							return false;
+						}
+					}
+				}
+			}
+			
+			//check right player
+			//loop through kb, looking for walls of 1 surrounded by -5
+			for (int i=0; i<kb_p2[0].length; i++){
+				for (int j=0; j<kb_p2[0].length; j++){
+					
+					if (kb_p2[i][j] == 0){ 
+						//start looking for 5's around that cell
+						if (checkSurroundingCellsForFives(2, i, j) == true){
+							//you can still move somewhere on the board
+							return false;
+						}
+					}
+				}
+			}
+			
+			return true;
+		}
+			
+	}
+	/**
+	 * Checks whether a particular cell had a -5 surrounding it
+	 * @param i, x coordinate in kb
+	 * @param j, y coordinate in kb
+	 * @return boolean whether any 0's had surrounding -5's
+	 */
+	private boolean checkSurroundingCellsForFives(int player, int i, int j){
+		if (player == 1){ //check player 1's surroundingCells
+			for (int a=-1; a<=1; a++){ //3 to capture entire immediate surroundings
+				for (int b=-1; b<=1; b++){
+					//skips checking current cell when past bounds in kb array
+					if ((i+a<0) || (i+a>=kb_p1.length) || (i+b<0) || (i+b>=kb_p1.length))
+						continue;
+					if (kb_p1[i + a][i + b] == -5)
+						return true;
+				}	
+			}	
+		}
+		else if(player==2){ //check player 2's surroundingCells
+			for (int a=-1; a<=1; a++){ //3 to capture entire immediate surroundings
+				for (int b=-1; b<=1; b++){
+					//skips checking current cell when past bounds in kb array
+					if ((i+a<0) || (i+a>=kb_p2.length) || (i+b<0) || (i+b>=kb_p2.length))
+						continue;
+					if (kb_p1[i + a][i + b] == -5)
+						return true;
+				}	
+			}	
+		}
+		else{
+			return true;
+		}
+		
+		return false;
+	}
+
+	//So if there is more to explore in the map, then explore more.
+	//Which node should you explore?
+	//Let's try the one closest to you that's available
+	private Point getNewSpace(int player){
+		Point p = new Point(99, 99);
+		
+		if (player==1){
+			//loop through kb, starting near your current pos
+			for (int i=p1Pos[1]; i<kb_p1.length; i++){
+				for (int j=p1Pos[0]; j<kb_p1.length; j++){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+			}
+			//loop through kb, starting near your current pos
+			for (int i=p1Pos[1]; i>=0; i--){
+				for (int j=p1Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(1, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+			}
+		}
+		else if(player==2){
+			//loop through kb, starting near your current pos
+			for (int i=p2Pos[1]; i<kb_p2.length; i++){
+				for (int j=p2Pos[0]; j<kb_p2.length; j++){
+					if (checkSurroundingCellsForFives(2, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+			}
+			//loop through kb, starting near your current pos
+			for (int i=p2Pos[1]; i>=0; i--){
+				for (int j=p2Pos[0]; j>=0; j--){
+					if (checkSurroundingCellsForFives(2, i, j) == true){
+						return new Point(j, i);
+					}
+				}
+			}
+		}
+		else{
+			return p;
+		}
+		
+		return p;
+	}
 }
