@@ -55,8 +55,12 @@ public class G4Player2 implements Player {
 				if (aintViewL[y][x] == 2 && !leftExitSet) {
 					leftExitX = p1Pos[0] - sightRadius1 + x;
 					leftExitY = p1Pos[1] - sightRadius1 + y;
-					leftExitSet = true;
-					path.clear();
+					AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1);
+					Node_Single ns = as.findPath();
+					if(ns != null){
+						leftExitSet = true;
+						path.clear();
+					}
 				}
 			}
 		}
@@ -68,8 +72,12 @@ public class G4Player2 implements Player {
 				if (aintViewR[y][x] == 2 && !rightExitSet) {
 					rightExitX = p2Pos[0] - sightRadius2 + x;
 					rightExitY = p2Pos[1] - sightRadius2 + y;
-					rightExitSet = true;
-					path.clear();
+					AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX, rightExitY, kb_p2);
+					Node_Single ns = as.findPath();
+					if(ns != null){
+						rightExitSet = true;
+						path.clear();
+					}
 				}
 			}
 		}
@@ -86,6 +94,7 @@ public class G4Player2 implements Player {
 						+ rightExitY);
 				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
 						kb_p1, kb_p2);
+				AStar_2.invertGoNextToExit();
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
 				path = a.findPath();
