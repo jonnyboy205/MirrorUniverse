@@ -104,6 +104,7 @@ public class G4Player2 implements Player {
 					if (pathNode != null) {
 						path = pathNode.getActionPath();
 						direction = path.remove(0);
+						myPoints.clear();
 						break;
 					}
 				}
@@ -132,6 +133,7 @@ public class G4Player2 implements Player {
 					if (pathNode != null) {
 						path = pathNode.getActionPath();
 						direction = path.remove(0);
+						myPoints.clear();
 						break;
 					}
 				}
@@ -433,7 +435,7 @@ public class G4Player2 implements Player {
 	}
 
 	
-	private class OurPoint extends Point{
+	private class OurPoint extends Point implements Comparable{
 		int dist;
 		
 		public OurPoint(int x, int y, int currX, int currY){
@@ -441,7 +443,16 @@ public class G4Player2 implements Player {
 			dist = Math.max(Math.abs(x - currX), Math.abs(y - currY));
 		}
 		
-		public int compareTo(OurPoint p){
+		public String toString(){
+			return "x: " + super.x + "  y: " + super.y + "  dist: " + dist;
+		}
+		
+		@Override
+		public int compareTo(Object o){
+			if (!(o instanceof OurPoint)){
+				return -1;
+			}
+			OurPoint p = (OurPoint) o;
 			if(this.dist > p.dist){
 				return 1;
 			} else if (this.dist < p.dist){
