@@ -2,6 +2,7 @@ package mirroruniverse.g4;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import mirroruniverse.sim.MUMap;
@@ -94,9 +95,9 @@ public class G4Player2 implements Player {
 			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
-				ArrayList<Point> myPoints = getNewSpace(1);
+				PriorityQueue<OurPoint> myPoints = getNewSpace(1);
 				while (!myPoints.isEmpty()) {
-					Point p = myPoints.remove(0);
+					OurPoint p = myPoints.poll();
 					AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
 							p1Pos[1], p.x, p.y, kb_p1);
 					pathNode = myAStarSingle.findPath();
@@ -122,9 +123,9 @@ public class G4Player2 implements Player {
 			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
-				ArrayList<Point> myPoints = getNewSpace(2);
+				PriorityQueue<OurPoint> myPoints = getNewSpace(2);
 				while (!myPoints.isEmpty()) {
-					Point p = myPoints.remove(0);
+					OurPoint p = myPoints.poll();
 					AStar_Single myAStarSingle = new AStar_Single(p2Pos[0],
 							p2Pos[1], p.x, p.y, kb_p2);
 					pathNode = myAStarSingle.findPath();
@@ -431,11 +432,29 @@ public class G4Player2 implements Player {
 		return false;
 	}
 
+	
+	private class OurPoint extends Point{
+		int dist;
+		
+		public OurPoint(int x, int y, int currX, int currY){
+			super(x,y);
+			dist = Math.max(Math.abs(x - currX), Math.abs(y - currY));
+		}
+		
+		public int compareTo(OurPoint p){
+			if(this.dist > p.dist){
+				return 1;
+			} else if (this.dist < p.dist){
+				return -1;
+			}
+			return 0;
+		}
+	}
 	//So if there is more to explore in the map, then explore more.
 	//Which node should you explore?
 	//Let's try the one closest to you that's available
-	private ArrayList<Point> getNewSpace(int player){
-		ArrayList<Point> points = new ArrayList<Point>();
+	private PriorityQueue<OurPoint> getNewSpace(int player){
+		PriorityQueue<OurPoint> points = new PriorityQueue<OurPoint>();
 		
 		if (player==1){
 			//loop through kb, starting near your current pos
@@ -444,14 +463,14 @@ public class G4Player2 implements Player {
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
 					}
 				}
 				for (int j=p1Pos[0]; j>=0; j--){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
 					}
 				}
 			}
@@ -461,14 +480,14 @@ public class G4Player2 implements Player {
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
 					}
 				}
 				for (int j=p1Pos[0]; j<kb_p1.length; j++){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
 					}
 				}
 			}
@@ -480,14 +499,14 @@ public class G4Player2 implements Player {
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
 				for (int j=p2Pos[0]; j>=0; j--){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
 			}
@@ -497,14 +516,14 @@ public class G4Player2 implements Player {
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
 				for (int j=p2Pos[0]; j<kb_p2.length; j++){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						points.add(new Point(j, i));
+						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
 			}
