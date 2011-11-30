@@ -81,6 +81,27 @@ public class AStar_2 {
 	private void bothExits(){
 		root.resetHeuristic();
 		queue.add(root);
+		if(!exitTogether()){
+			Node_2.incDegree();
+		}
+	}
+	
+	private boolean exitTogether(){
+		int exit1X = Node_2.getExit1X();
+		int exit2X = Node_2.getExit2X();
+		int exit1Y = Node_2.getExit1Y();
+		int exit2Y = Node_2.getExit2Y();
+		for(int y = -1; y <= 1; ++y){
+			for(int x = -1; x <= 1; ++x){
+				if(y == 0 && x == 0){
+					continue;
+				}
+				if(map1[exit1Y + y][exit1X + x] == 0 && map2[exit2Y + y][exit2X + x] == 0){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public void exitsFound(){

@@ -84,6 +84,18 @@ public class Node_2 implements Comparable<Node_2>{
 		p2ExitX = x;
 		p2ExitY = y;
 	}
+	public static int getExit1X(){
+		return p1ExitX;
+	}
+	public static int getExit1Y(){
+		return p1ExitY;
+	}
+	public static int getExit2X(){
+		return p2ExitX;
+	}
+	public static int getExit2Y(){
+		return p2ExitY;
+	}
 	
 	
 	// Constructor, for the first node, have parent = null;
