@@ -75,8 +75,8 @@ public class G4Player2 implements Player {
 		
 
 		// after you find the exits, call AStar
-		// if not, call the normal move function, which is currently a spiral
-		int direction;
+		// if not, call the modified AStar on some point given by getNewSpace(playerNum)
+		int direction = 0;
 		if (rightExitSet && leftExitSet) {
 			if (path.isEmpty()) {
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
@@ -93,15 +93,21 @@ public class G4Player2 implements Player {
 		} else if(!leftExitSet) {
 			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
-				Point p = getNewSpace(1);
-				AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
-						p1Pos[1], p.x, p.y, kb_p1);
-				Node_Single pathNode = myAStarSingle.findPath();
+				Node_Single pathNode = null;
+				ArrayList<Point> myPoints = getNewSpace(1);
+				while (!myPoints.isEmpty()) {
+					Point p = myPoints.remove(0);
+					AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
+							p1Pos[1], p.x, p.y, kb_p1);
+					pathNode = myAStarSingle.findPath();
+					if (pathNode != null) {
+						path = pathNode.getActionPath();
+						direction = path.remove(0);
+						break;
+					}
+				}
 				if (pathNode == null) {
 					direction = rdmTemp.nextInt(8) + 1;
-				} else {
-					path = pathNode.getActionPath();
-					direction = path.remove(0);
 				}
 			} else {
 				direction = path.remove(0);
@@ -113,16 +119,28 @@ public class G4Player2 implements Player {
 			}
 			//direction = move(aintViewL, aintViewR);
 		} else {
-			Point p = getNewSpace(2);
-			AStar_Single myAStarSingle = new AStar_Single(p2Pos[0], p2Pos[1], p.x, p.y, kb_p2);
-			Node_Single pathNode = myAStarSingle.findPath();
 			Random rdmTemp = new Random();
-			if(pathNode == null){
-				direction = rdmTemp.nextInt(8) + 1;
+			if (path.isEmpty()) {
+				Node_Single pathNode = null;
+				ArrayList<Point> myPoints = getNewSpace(2);
+				while (!myPoints.isEmpty()) {
+					Point p = myPoints.remove(0);
+					AStar_Single myAStarSingle = new AStar_Single(p2Pos[0],
+							p2Pos[1], p.x, p.y, kb_p2);
+					pathNode = myAStarSingle.findPath();
+					if (pathNode != null) {
+						path = pathNode.getActionPath();
+						direction = path.remove(0);
+						break;
+					}
+				}
+				if (pathNode == null) {
+					direction = rdmTemp.nextInt(8) + 1;
+				}
 			} else {
-				path = pathNode.getActionPath();
 				direction = path.remove(0);
 			}
+			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
@@ -416,8 +434,8 @@ public class G4Player2 implements Player {
 	//So if there is more to explore in the map, then explore more.
 	//Which node should you explore?
 	//Let's try the one closest to you that's available
-	private Point getNewSpace(int player){
-		Point p = new Point(99, 99);
+	private ArrayList<Point> getNewSpace(int player){
+		ArrayList<Point> points = new ArrayList<Point>();
 		
 		if (player==1){
 			//loop through kb, starting near your current pos
@@ -426,14 +444,14 @@ public class G4Player2 implements Player {
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 				for (int j=p1Pos[0]; j>=0; j--){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 			}
@@ -443,14 +461,14 @@ public class G4Player2 implements Player {
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 				for (int j=p1Pos[0]; j<kb_p1.length; j++){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 			}
@@ -462,14 +480,14 @@ public class G4Player2 implements Player {
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 				for (int j=p2Pos[0]; j>=0; j--){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 			}
@@ -479,23 +497,21 @@ public class G4Player2 implements Player {
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 				for (int j=p2Pos[0]; j<kb_p2.length; j++){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
-						return new Point(j, i);
+						points.add(new Point(j, i));
 					}
 				}
 			}
 		}
-		else{
-			return p;
-		}
+
 		
-		return p;
+		return points;
 	}
 
 	private boolean checkForMisAlignment(int currentDir2, int[][] aintLocalViewL, int[][] aintLocalViewR){
