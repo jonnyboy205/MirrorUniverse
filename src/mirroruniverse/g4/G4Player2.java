@@ -97,21 +97,6 @@ public class G4Player2 implements Player {
 				AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
 						p1Pos[1], p.x, p.y, kb_p1);
 				Node_Single pathNode = myAStarSingle.findPath();
-				if (turn > 320) {
-					System.out.println(p1Pos[0] + " " + p1Pos[1]);
-					for (int y = 0; y < aintViewL.length; ++y) {
-						for (int x = 0; x < aintViewL[0].length; ++x) {
-							if (y == sightRadius1 && x == sightRadius1) {
-								System.out.print("* ");
-							} else {
-								System.out.print(kb_p1[p1Pos[1] - sightRadius1
-										+ y][p1Pos[0] - sightRadius1 + x]
-										+ " ");
-							}
-						}
-						System.out.println();
-					}
-				}
 				if (pathNode == null) {
 					direction = rdmTemp.nextInt(8) + 1;
 				} else {
