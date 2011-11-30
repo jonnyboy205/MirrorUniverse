@@ -422,7 +422,7 @@ public class G4Player2 implements Player {
 					//skips checking current cell when past bounds in kb array
 					if ((i+a<0) || (i+a>=kb_p2.length) || (i+b<0) || (i+b>=kb_p2.length))
 						continue;
-					if (kb_p1[i + a][j + b] == -5)
+					if (kb_p2[i + a][j + b] == -5)
 						return true;
 				}	
 			}	
