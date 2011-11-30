@@ -505,7 +505,7 @@ public class G4Player2 implements Player {
 				for (int j=p2Pos[0]; j>=0; j--){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
-					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
+					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
 						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
@@ -522,7 +522,7 @@ public class G4Player2 implements Player {
 				for (int j=p2Pos[0]; j<kb_p2.length; j++){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
-					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
+					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
 						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
