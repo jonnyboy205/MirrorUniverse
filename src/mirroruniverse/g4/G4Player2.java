@@ -422,12 +422,16 @@ public class G4Player2 implements Player {
 		if (player==1){
 			//loop through kb, starting near your current pos
 			for (int i=p1Pos[1]; i<kb_p1.length; i++){
-				for (int j=p1Pos[0] + 1; j<kb_p1.length; j++){
+				for (int j=p1Pos[0]; j<kb_p1.length; j++){
+					if (p1Pos[0] == j && p1Pos[1] == i)
+						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
 				}
-				for (int j=p1Pos[0] - 1; j>=0; j--){
+				for (int j=p1Pos[0]; j>=0; j--){
+					if (p1Pos[0] == j && p1Pos[1] == i)
+						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
@@ -435,12 +439,16 @@ public class G4Player2 implements Player {
 			}
 			//loop through kb, starting near your current pos
 			for (int i=p1Pos[1]; i>=0; i--){
-				for (int j=p1Pos[0] - 1; j>=0; j--){
+				for (int j=p1Pos[0]; j>=0; j--){
+					if (p1Pos[0] == j && p1Pos[1] == i)
+						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
 				}
-				for (int j=p1Pos[0] + 1; j<kb_p1.length; j++){
+				for (int j=p1Pos[0]; j<kb_p1.length; j++){
+					if (p1Pos[0] == j && p1Pos[1] == i)
+						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
@@ -450,12 +458,16 @@ public class G4Player2 implements Player {
 		else if(player==2){
 			//loop through kb, starting near your current pos
 			for (int i=p2Pos[1]; i<kb_p2.length; i++){
-				for (int j=p2Pos[0] + 1; j<kb_p2.length; j++){
+				for (int j=p2Pos[0]; j<kb_p2.length; j++){
+					if (p2Pos[0] == j && p2Pos[1] == i)
+						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
 						return new Point(j, i);
 					}
 				}
-				for (int j=p2Pos[0] - 1; j>=0; j--){
+				for (int j=p2Pos[0]; j>=0; j--){
+					if (p2Pos[0] == j && p2Pos[1] == i)
+						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
@@ -463,12 +475,16 @@ public class G4Player2 implements Player {
 			}
 			//loop through kb, starting near your current pos
 			for (int i=p2Pos[1]; i>=0; i--){
-				for (int j=p2Pos[0] - 1; j>=0; j--){
+				for (int j=p2Pos[0]; j>=0; j--){
+					if (p2Pos[0] == j && p2Pos[1] == i)
+						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
 						return new Point(j, i);
 					}
 				}
-				for (int j=p2Pos[0] + 1; j<kb_p2.length; j++){
+				for (int j=p2Pos[0]; j<kb_p2.length; j++){
+					if (p2Pos[0] == j && p2Pos[1] == i)
+						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
 						return new Point(j, i);
 					}
