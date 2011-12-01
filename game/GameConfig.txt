@@ -1,2 +1,2 @@
-5, 50, 2, -1, maps/Board3_L.txt, 5
-5, 23, 2, -1, maps/Board3_R.txt, 5
+5, 50, 2, -1, maps/g1Maps/secondbigmap1.txt, 5
+5, 23, 2, -1, maps/g1Maps/secondbigmap2.txt, 5

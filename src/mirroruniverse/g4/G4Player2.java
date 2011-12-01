@@ -11,7 +11,6 @@ import mirroruniverse.sim.Player;
 public class G4Player2 implements Player {
 
 	public boolean started = false;
-
 	public int sightRadius1;
 	public int sightRadius2;
 	public int intDeltaX;
@@ -34,7 +33,6 @@ public class G4Player2 implements Player {
 	private int turn;
 	private int stepCounter;
 	private int currentDir;
-
 	private ArrayList<Integer> path;
 
 	@Override
@@ -78,6 +76,7 @@ public class G4Player2 implements Player {
 		// after you find the exits, call AStar
 		// if not, call the modified AStar on some point given by getNewSpace(playerNum)
 		int direction = 0;
+		Random rdmTemp = new Random();
 		if (rightExitSet && leftExitSet) {
 			if (path.isEmpty()) {
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
@@ -92,7 +91,6 @@ public class G4Player2 implements Player {
 			}
 			direction = path.remove(0);
 		} else if(!leftExitSet) {
-			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
 				PriorityQueue<OurPoint> myPoints = getNewSpace(1);
@@ -121,7 +119,6 @@ public class G4Player2 implements Player {
 			}
 			//direction = move(aintViewL, aintViewR);
 		} else {
-			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
 				PriorityQueue<OurPoint> myPoints = getNewSpace(2);
@@ -422,7 +419,7 @@ public class G4Player2 implements Player {
 					//skips checking current cell when past bounds in kb array
 					if ((i+a<0) || (i+a>=kb_p2.length) || (i+b<0) || (i+b>=kb_p2.length))
 						continue;
-					if (kb_p1[i + a][j + b] == -5)
+					if (kb_p2[i + a][j + b] == -5)
 						return true;
 				}	
 			}	
@@ -457,6 +454,8 @@ public class G4Player2 implements Player {
 				return 1;
 			} else if (this.dist < p.dist){
 				return -1;
+			}else{
+				
 			}
 			return 0;
 		}
