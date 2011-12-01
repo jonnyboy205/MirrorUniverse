@@ -166,6 +166,10 @@ public class Node_2 implements Comparable<Node_2>{
 		return toReturn + (0.8 * depth);
 	}
 	
+	public int getRealValue(){
+		return (int) (value - (0.8 * depth));
+	}
+	
 	//Implement our actual heuristic here, right now just takes the total distance both players are away from the goal
 	private double heuristic(){
 		if(p1ExitX == -1000 || p2ExitX == -1000){

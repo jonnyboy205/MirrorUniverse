@@ -15,6 +15,8 @@ public class AStar_2 {
 	public boolean debugging = false;
 	private int maxNodes;
 	private boolean increase;
+	private boolean addedToDegree = false;
+	private static boolean goNextToExit = false;
 	
 	private int numAdded = 0;
 	
@@ -62,6 +64,10 @@ public class AStar_2 {
 		increase = false;
 	}
 	
+	public static void invertGoNextToExit(){
+		goNextToExit = !goNextToExit;
+	}
+	
 	public void setExit1(int x, int y){
 		Node_2.setExit1(x, y);
 		++numExitsFound;
@@ -82,7 +88,9 @@ public class AStar_2 {
 		root.resetHeuristic();
 		queue.add(root);
 		if(!exitTogether()){
-			Node_2.incDegree();
+			//addedToDegree = true;
+			maxNodes /= 2;
+			//Node_2.incDegree();
 		}
 	}
 	
@@ -106,7 +114,11 @@ public class AStar_2 {
 	
 	public void exitsFound(){
 		if (increase) {
-			Node_2.incDegree();
+			if(addedToDegree){
+				addedToDegree = false;
+			} else {
+				Node_2.incDegree();
+			}
 			Node_2.reRunHeuristic(nodesToPutOff);
 			PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(nodesToPutOff);
 			queue = tempQ;
@@ -136,7 +148,11 @@ public class AStar_2 {
 				queue.clear();
 				break;
 			}
-			if (true) {
+			if(goNextToExit && queue.peek().getRealValue() == 2){
+				//queue.clear();
+				break;
+			}
+			if (debugging) {
 				System.out.println(numAdded + " " + queue.size());
 				//System.out.println("Expanding:" + queue.peek().getValue());
 				System.out.println("Looking at:");
@@ -253,6 +269,26 @@ public class AStar_2 {
 					y2 = n.getY2();
 				}
 				try {
+					if(x1 == 55 && y1 == 104){
+						for(int y = -5; y < 6; ++y){
+							for(int x = -5; x < 6; ++x){
+								if(x == 0 && y == 0){
+									System.out.print("* ");
+								} else {
+									System.out.print(map1[n.getY1() + y][n.getX1() + x] + " ");
+								}
+							}
+							System.out.print("\t");
+							for(int x = -5; x < 6; ++x){
+								if(x == 0 && y == 0){
+									System.out.print("* ");
+								} else {
+									System.out.print(map2[n.getY2() + y][n.getX2() + x] + " ");
+								}
+							}
+							System.out.println();
+						}
+					}
 					if(map1[y1][x1] == -5 || map2[y2][x2] == -5){
 						++action;
 						continue;
@@ -260,7 +296,9 @@ public class AStar_2 {
 				} catch (ArrayIndexOutOfBoundsException e) {}
 				Node_2 toAdd = new Node_2(x1, y1, x2, y2, n, indexOfAction[action]);
 				//Node_2.addPathCost(toAdd, 1, map1, map2);
-				
+				if(x1 == 56 && y1 == 103 && x2 == 125 && y2 == 126){
+					System.out.println();
+				}
 				if(!n.equals(toAdd) && shouldIAdd(toAdd)){
 					nexts.add(toAdd);
 					++numAdded;
