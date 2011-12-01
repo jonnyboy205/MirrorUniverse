@@ -11,7 +11,6 @@ import mirroruniverse.sim.Player;
 public class G4Player2 implements Player {
 
 	public boolean started = false;
-
 	public int sightRadius1;
 	public int sightRadius2;
 	public int intDeltaX;
@@ -27,14 +26,13 @@ public class G4Player2 implements Player {
 	private int rightExitY;
 	private boolean leftExitSet;
 	private boolean rightExitSet;
-
+	private OurPoint p;
 	// used mainly with move function
 	private int numPath;
 	private int initialDir;
 	private int turn;
 	private int stepCounter;
 	private int currentDir;
-
 	private ArrayList<Integer> path;
 
 	@Override
@@ -86,6 +84,7 @@ public class G4Player2 implements Player {
 		// after you find the exits, call AStar
 		// if not, call the modified AStar on some point given by getNewSpace(playerNum)
 		int direction = 0;
+		Random rdmTemp = new Random();
 		if (rightExitSet && leftExitSet) {
 			if (path.isEmpty()) {
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
@@ -101,12 +100,11 @@ public class G4Player2 implements Player {
 			}
 			direction = path.remove(0);
 		} else if(!leftExitSet) {
-			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
 				PriorityQueue<OurPoint> myPoints = getNewSpace(1);
 				while (!myPoints.isEmpty()) {
-					OurPoint p = myPoints.poll();
+					p = myPoints.poll();
 					AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
 							p1Pos[1], p.x, p.y, kb_p1);
 					pathNode = myAStarSingle.findPath();
@@ -126,6 +124,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
+				if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
+					if (!path.isEmpty())
+						path.clear();
+				}
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -134,12 +136,11 @@ public class G4Player2 implements Player {
 			}
 			//direction = move(aintViewL, aintViewR);
 		} else {
-			Random rdmTemp = new Random();
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
 				PriorityQueue<OurPoint> myPoints = getNewSpace(2);
 				while (!myPoints.isEmpty()) {
-					OurPoint p = myPoints.poll();
+					p = myPoints.poll();
 					AStar_Single myAStarSingle = new AStar_Single(p2Pos[0],
 							p2Pos[1], p.x, p.y, kb_p2);
 					pathNode = myAStarSingle.findPath();
@@ -159,6 +160,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
+				if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
+					if (!path.isEmpty())
+						path.clear();
+				}
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -174,6 +179,7 @@ public class G4Player2 implements Player {
 	}
 
 	private void initialize(int[][] aintViewL, int[][] aintViewR) {
+		p=null;
 		intDeltaX = 0;
 		intDeltaY = 0;
 		started = true;
@@ -494,7 +500,7 @@ public class G4Player2 implements Player {
 						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
 					}
 				}
-				for (int j=p1Pos[0]; j>=0; j--){
+				for (int j=p1Pos[0]-1; j>=0; j--){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
@@ -503,7 +509,7 @@ public class G4Player2 implements Player {
 				}
 			}
 			//loop through kb, starting near your current pos
-			for (int i=p1Pos[1]; i>=0; i--){
+			for (int i=p1Pos[1]-1; i>=0; i--){
 				for (int j=p1Pos[0]; j>=0; j--){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
@@ -511,7 +517,7 @@ public class G4Player2 implements Player {
 						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
 					}
 				}
-				for (int j=p1Pos[0]; j<kb_p1.length; j++){
+				for (int j=p1Pos[0]+1; j<kb_p1.length; j++){
 					if (p1Pos[0] == j && p1Pos[1] == i)
 						continue;
 					if (kb_p1[i][j] == 0 && checkSurroundingCellsForFives(1, i, j) == true){
@@ -530,7 +536,7 @@ public class G4Player2 implements Player {
 						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
-				for (int j=p2Pos[0]; j>=0; j--){
+				for (int j=p2Pos[0]-1; j>=0; j--){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
@@ -539,7 +545,7 @@ public class G4Player2 implements Player {
 				}
 			}
 			//loop through kb, starting near your current pos
-			for (int i=p2Pos[1]; i>=0; i--){
+			for (int i=p2Pos[1]-1; i>=0; i--){
 				for (int j=p2Pos[0]; j>=0; j--){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
@@ -547,7 +553,7 @@ public class G4Player2 implements Player {
 						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
 					}
 				}
-				for (int j=p2Pos[0]; j<kb_p2.length; j++){
+				for (int j=p2Pos[0]+1; j<kb_p2.length; j++){
 					if (p2Pos[0] == j && p2Pos[1] == i)
 						continue;
 					if (kb_p2[i][j] == 0 && checkSurroundingCellsForFives(2, i, j) == true){
