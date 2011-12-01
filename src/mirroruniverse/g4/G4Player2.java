@@ -113,6 +113,10 @@ public class G4Player2 implements Player {
 					if (pathNode != null) {
 						path = pathNode.getActionPath();
 						direction = path.remove(0);
+						if(!isDirectionCorrect(direction, aintViewL, aintViewR)){
+							path.clear();
+							continue;
+						}
 						myPoints.clear();
 						break;
 					}
@@ -142,6 +146,10 @@ public class G4Player2 implements Player {
 					if (pathNode != null) {
 						path = pathNode.getActionPath();
 						direction = path.remove(0);
+						if(!isDirectionCorrect(direction, aintViewL, aintViewR)){
+							path.clear();
+							continue;
+						}
 						myPoints.clear();
 						break;
 					}
