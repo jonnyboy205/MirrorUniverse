@@ -49,13 +49,16 @@ public class G4Player2 implements Player {
 				if (aintViewL[y][x] == 2 && !leftExitSet) {
 					leftExitX = p1Pos[0] - sightRadius1 + x;
 					leftExitY = p1Pos[1] - sightRadius1 + y;
-					AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1);
-					Node_Single ns = as.findPath();
-					if(ns != null){
-						leftExitSet = true;
-						path.clear();
-					}
+					
 				}
+			}
+		}
+		if(!leftExitSet&&leftExitX!=-1){
+			AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1);
+			Node_Single ns = as.findPath();
+			if(ns != null){
+				leftExitSet = true;
+				path.clear();
 			}
 		}
 		// right player finding exit and updating kb
@@ -66,16 +69,18 @@ public class G4Player2 implements Player {
 				if (aintViewR[y][x] == 2 && !rightExitSet) {
 					rightExitX = p2Pos[0] - sightRadius2 + x;
 					rightExitY = p2Pos[1] - sightRadius2 + y;
-					AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX, rightExitY, kb_p2);
-					Node_Single ns = as.findPath();
-					if(ns != null){
-						rightExitSet = true;
-						path.clear();
-					}
+					
 				}
 			}
 		}
-		
+		if(!rightExitSet&&rightExitX!=-1){
+			AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX, rightExitY, kb_p2);
+			Node_Single ns = as.findPath();
+			if(ns != null){
+				rightExitSet = true;
+				path.clear();
+			}
+		}
 
 		// after you find the exits, call AStar
 		// if not, call the modified AStar on some point given by getNewSpace(playerNum)
@@ -116,10 +121,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
+				/*if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}
+				}*/
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -148,10 +153,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
+				/*if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}
+				}*/
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -169,6 +174,7 @@ public class G4Player2 implements Player {
 		p=null;
 		intDeltaX = 0;
 		intDeltaY = 0;
+		leftExitX=leftExitY=rightExitX=rightExitY=-1;
 		started = true;
 		sightRadius1 = (aintViewL[0].length - 1) / 2;
 		sightRadius2 = (aintViewR[0].length - 1) / 2;
