@@ -646,4 +646,71 @@ public class G4Player2 implements Player {
 		return true;
 		
 	}
+	
+	public int checkRadiusForFives(int player, int px, int py){
+		int[][] map;
+		int radius;
+		if(player == 1){
+			if(leftExitSet){
+				return 0;
+			}
+			radius = sightRadius1;
+			map = kb_p1;
+		} else {
+			if(rightExitSet){
+				return 0;
+			}
+			radius = sightRadius2;
+			map = kb_p2;
+		}
+		
+		int total = 0;
+		for(int y = 0; y < (2*radius) + 1; ++y){
+			for(int x = 0; x < (2*radius) + 1; ++x){
+				if(map[py-radius + y][px - radius + x] == -5){
+					++total;
+				}
+			}
+		}
+		
+		return total;
+		
+	}
+	
+	public int[] ifPlayerFollowedPath(int player, ArrayList<Integer> pathToFollow){
+		int[][] map;
+		int x;
+		int y;
+		if(player == 1){
+			map = kb_p1;
+			x = p1Pos[0];
+			y = p1Pos[1];
+		} else {
+			map = kb_p2;
+			x = p2Pos[0];
+			y = p2Pos[1];
+		}
+		
+		for(int i = 0; i < pathToFollow.size(); ++i){
+			int changeX = MUMap.aintDToM[pathToFollow.get(i)][0];
+			int changeY = MUMap.aintDToM[pathToFollow.get(i)][1];
+			x += changeX;
+			y += changeY;
+			if(map[y][x] == 1 || map[y][x] == -5){
+				x -= changeX;
+				y -= changeY;
+			}
+			if(map[y][x] == 2){
+				int[] temp = {-1,-1};
+				return temp;
+			}
+		}
+		
+		int[] toReturn = new int[2];
+		toReturn[0] = x;
+		toReturn[1] = y;
+		
+		return toReturn;
+	}
+	
 }
