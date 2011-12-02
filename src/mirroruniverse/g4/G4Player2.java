@@ -418,6 +418,7 @@ public class G4Player2 implements Player {
 			return 0;
 		}
 	}
+	
 	//So if there is more to explore in the map, then explore more.
 	//Which node should you explore?
 	//Let's try the one closest to you that's available
