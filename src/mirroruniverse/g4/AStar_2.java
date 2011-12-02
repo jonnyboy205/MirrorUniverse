@@ -269,26 +269,6 @@ public class AStar_2 {
 					y2 = n.getY2();
 				}
 				try {
-					if(x1 == 55 && y1 == 104){
-						for(int y = -5; y < 6; ++y){
-							for(int x = -5; x < 6; ++x){
-								if(x == 0 && y == 0){
-									System.out.print("* ");
-								} else {
-									System.out.print(map1[n.getY1() + y][n.getX1() + x] + " ");
-								}
-							}
-							System.out.print("\t");
-							for(int x = -5; x < 6; ++x){
-								if(x == 0 && y == 0){
-									System.out.print("* ");
-								} else {
-									System.out.print(map2[n.getY2() + y][n.getX2() + x] + " ");
-								}
-							}
-							System.out.println();
-						}
-					}
 					if(map1[y1][x1] == -5 || map2[y2][x2] == -5){
 						++action;
 						continue;
