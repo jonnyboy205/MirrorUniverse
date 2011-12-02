@@ -27,12 +27,8 @@ public class G4Player2 implements Player {
 	private boolean leftExitSet;
 	private boolean rightExitSet;
 	private OurPoint p;
-	// used mainly with move function
-	private int numPath;
-	private int initialDir;
+	//private int initialDir;
 	private int turn;
-	private int stepCounter;
-	private int currentDir;
 	private ArrayList<Integer> path;
 
 	@Override
@@ -163,7 +159,6 @@ public class G4Player2 implements Player {
 				direction = rdmTemp.nextInt(8) + 1;
 			}
 		}
-		stepCounter++;
 		turn++;
 		// set new current position here
 		setNewCurrentPosition(direction, aintViewL, aintViewR);
@@ -190,10 +185,7 @@ public class G4Player2 implements Player {
 				kb_p2[i][j] = -5;
 			}
 		}
-		numPath = 0;
-		initialDir = 2;
-		currentDir = initialDir;
-		stepCounter = 0;
+		//initialDir = 2;
 		turn = 0;
 		rightExitSet = false;
 		leftExitSet = false;
@@ -234,70 +226,6 @@ public class G4Player2 implements Player {
 			// p2Pos[0] += intDeltaX;
 			// p2Pos[1] += intDeltaY;
 		}
-	}
-
-	//not really taking into account obstacles well
-	//spiral while avoid boundaries
-	//we first focus on left player
-	private int move(int[][] aintViewL, int[][] aintViewR) {
-		currentDir = getNormalizedDir();
-		if (stepCounter == calcPathSteps()) {
-
-			currentDir -= 2;
-			if (currentDir <= 0) {
-				currentDir = 8;
-			}
-			numPath++;
-			stepCounter = 0;
-		}
-
-		if (turn > 10000) {
-			Random rdmTemp = new Random();
-			currentDir = rdmTemp.nextInt(8) + 1;
-			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
-				currentDir = rdmTemp.nextInt(8) + 1;
-			}
-		} else {
-			int counter = 1;
-			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
-				if (counter == 9){
-					break;
-				}
-				counter++;
-				currentDir -= 1;
-				if (currentDir <= 0) {
-					currentDir = 8;
-				}
-				counter++;
-			}
-			if (counter==9){
-				//Call Nate's method
-				currentDir = 2; //random default value for compilation sake
-				//output of calling AStar on x and y i give for one of the players, same position for the other player
-			}
-		}
-
-		return currentDir;
-	}
-
-	private int getNormalizedDir() {
-		int temp = 0;
-		int mod = numPath % 4;
-		if (mod == 0) {
-			temp = 2;
-		} else if (mod == 1) {
-			temp = 8;
-		} else if (mod == 2) {
-			temp = 6;
-		} else if (mod == 3) {
-			temp = 4;
-		}
-
-		return temp;
-	}
-
-	private int calcPathSteps() {
-		return (numPath / 2 + 1) * (2 * sightRadius1 - 1);
 	}
 
 	private boolean isDirectionCorrect(int currentDirection, int[][] aintViewL,
