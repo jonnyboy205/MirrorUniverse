@@ -27,12 +27,8 @@ public class G4Player2 implements Player {
 	private boolean leftExitSet;
 	private boolean rightExitSet;
 	private OurPoint p;
-	// used mainly with move function
-	private int numPath;
-	private int initialDir;
+	//private int initialDir;
 	private int turn;
-	private int stepCounter;
-	private int currentDir;
 	private ArrayList<Integer> path;
 
 	@Override
@@ -53,13 +49,16 @@ public class G4Player2 implements Player {
 				if (aintViewL[y][x] == 2 && !leftExitSet) {
 					leftExitX = p1Pos[0] - sightRadius1 + x;
 					leftExitY = p1Pos[1] - sightRadius1 + y;
-					AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1);
-					Node_Single ns = as.findPath();
-					if(ns != null){
-						leftExitSet = true;
-						path.clear();
-					}
+					
 				}
+			}
+		}
+		if(!leftExitSet&&leftExitX!=-1){
+			AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1);
+			Node_Single ns = as.findPath();
+			if(ns != null){
+				leftExitSet = true;
+				path.clear();
 			}
 		}
 		// right player finding exit and updating kb
@@ -70,16 +69,18 @@ public class G4Player2 implements Player {
 				if (aintViewR[y][x] == 2 && !rightExitSet) {
 					rightExitX = p2Pos[0] - sightRadius2 + x;
 					rightExitY = p2Pos[1] - sightRadius2 + y;
-					AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX, rightExitY, kb_p2);
-					Node_Single ns = as.findPath();
-					if(ns != null){
-						rightExitSet = true;
-						path.clear();
-					}
+					
 				}
 			}
 		}
-		
+		if(!rightExitSet&&rightExitX!=-1){
+			AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX, rightExitY, kb_p2);
+			Node_Single ns = as.findPath();
+			if(ns != null){
+				rightExitSet = true;
+				path.clear();
+			}
+		}
 
 		// after you find the exits, call AStar
 		// if not, call the modified AStar on some point given by getNewSpace(playerNum)
@@ -124,10 +125,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
+				/*if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}
+				}*/
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -160,10 +161,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
+				/*if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}
+				}*/
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -171,7 +172,6 @@ public class G4Player2 implements Player {
 				direction = rdmTemp.nextInt(8) + 1;
 			}
 		}
-		stepCounter++;
 		turn++;
 		// set new current position here
 		setNewCurrentPosition(direction, aintViewL, aintViewR);
@@ -182,6 +182,7 @@ public class G4Player2 implements Player {
 		p=null;
 		intDeltaX = 0;
 		intDeltaY = 0;
+		leftExitX=leftExitY=rightExitX=rightExitY=-1;
 		started = true;
 		sightRadius1 = (aintViewL[0].length - 1) / 2;
 		sightRadius2 = (aintViewR[0].length - 1) / 2;
@@ -198,10 +199,7 @@ public class G4Player2 implements Player {
 				kb_p2[i][j] = -5;
 			}
 		}
-		numPath = 0;
-		initialDir = 2;
-		currentDir = initialDir;
-		stepCounter = 0;
+		//initialDir = 2;
 		turn = 0;
 		rightExitSet = false;
 		leftExitSet = false;
@@ -242,70 +240,6 @@ public class G4Player2 implements Player {
 			// p2Pos[0] += intDeltaX;
 			// p2Pos[1] += intDeltaY;
 		}
-	}
-
-	//not really taking into account obstacles well
-	//spiral while avoid boundaries
-	//we first focus on left player
-	private int move(int[][] aintViewL, int[][] aintViewR) {
-		currentDir = getNormalizedDir();
-		if (stepCounter == calcPathSteps()) {
-
-			currentDir -= 2;
-			if (currentDir <= 0) {
-				currentDir = 8;
-			}
-			numPath++;
-			stepCounter = 0;
-		}
-
-		if (turn > 10000) {
-			Random rdmTemp = new Random();
-			currentDir = rdmTemp.nextInt(8) + 1;
-			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
-				currentDir = rdmTemp.nextInt(8) + 1;
-			}
-		} else {
-			int counter = 1;
-			while (!isDirectionCorrect(currentDir, aintViewL, aintViewR)) {
-				if (counter == 9){
-					break;
-				}
-				counter++;
-				currentDir -= 1;
-				if (currentDir <= 0) {
-					currentDir = 8;
-				}
-				counter++;
-			}
-			if (counter==9){
-				//Call Nate's method
-				currentDir = 2; //random default value for compilation sake
-				//output of calling AStar on x and y i give for one of the players, same position for the other player
-			}
-		}
-
-		return currentDir;
-	}
-
-	private int getNormalizedDir() {
-		int temp = 0;
-		int mod = numPath % 4;
-		if (mod == 0) {
-			temp = 2;
-		} else if (mod == 1) {
-			temp = 8;
-		} else if (mod == 2) {
-			temp = 6;
-		} else if (mod == 3) {
-			temp = 4;
-		}
-
-		return temp;
-	}
-
-	private int calcPathSteps() {
-		return (numPath / 2 + 1) * (2 * sightRadius1 - 1);
 	}
 
 	private boolean isDirectionCorrect(int currentDirection, int[][] aintViewL,
