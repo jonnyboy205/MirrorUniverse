@@ -121,10 +121,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				/*if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
+				if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}*/
+				}
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -153,10 +153,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				/*if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
+				if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}*/
+				}
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
