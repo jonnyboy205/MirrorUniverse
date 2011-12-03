@@ -68,6 +68,10 @@ public class AStar_2 {
 		goNextToExit = !goNextToExit;
 	}
 	
+	public static void setGoNextToExit(boolean b){
+		goNextToExit = b;
+	}
+	
 	public void setExit1(int x, int y){
 		Node_2.setExit1(x, y);
 		++numExitsFound;
@@ -142,13 +146,37 @@ public class AStar_2 {
 		//closed.clear();
 	}
 	
+	public Node_2 findZeroPath(){
+		if(!exitTogether()){
+			return null;
+		}
+		while(!queue.isEmpty() && queue.peek().getValue() != 0 && !queue.peek().closeEnough()){
+			if(numAdded > maxNodes){
+				queue.clear();
+				break;
+			}
+			if(queue.peek().getValue() > 10000){
+				nodesToPutOff.add(queue.poll());
+				continue;
+			}
+			ArrayList<Node_2> nexts = successors(queue.poll());
+			queue.addAll(nexts);
+		}
+		Node_2 toReturn = null;
+		if(!queue.isEmpty()){
+			toReturn = queue.poll();
+		}
+		queue.clear();
+		return toReturn;
+	}
+	
 	public ArrayList<Integer> findPath(){
 		while(!queue.isEmpty() && queue.peek().getValue() != 0 && !queue.peek().closeEnough()){
 			if(numAdded > maxNodes){
 				queue.clear();
 				break;
 			}
-			if(goNextToExit && queue.peek().getRealValue() == 2){
+			if(goNextToExit && queue.peek().getRealValue() == 2 && !(queue.peek().getP1HasReached() || queue.peek().getP2HasReached())){
 				//queue.clear();
 				break;
 			}
