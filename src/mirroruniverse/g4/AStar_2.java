@@ -150,6 +150,9 @@ public class AStar_2 {
 		if(!exitTogether()){
 			return null;
 		}
+		if(!closed.isEmpty()){
+			queue.addAll(closed);
+		}
 		while(!queue.isEmpty() && queue.peek().getValue() != 0 && !queue.peek().closeEnough()){
 			if(numAdded > maxNodes){
 				queue.clear();
@@ -168,6 +171,13 @@ public class AStar_2 {
 		}
 		queue.clear();
 		return toReturn;
+	}
+	
+	public ArrayList<Integer> startFinding(){
+		if(!closed.isEmpty()){
+			queue.addAll(closed);
+		}
+		return findPath();
 	}
 	
 	public ArrayList<Integer> findPath(){
