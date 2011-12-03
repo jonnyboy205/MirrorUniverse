@@ -98,8 +98,14 @@ public class G4Player2 implements Player {
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
 				path = a.findPath();
+				
+				/*if(a.findZeroPath() != null && isMapComplete(3)){
+					path = a.startFinding();
+				*/
 			}
+			if(!path.isEmpty()){
 			direction = path.remove(0);
+			}
 		} else if(!leftExitSet) {
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
@@ -112,6 +118,10 @@ public class G4Player2 implements Player {
 					if (pathNode != null) {
 						path = pathNode.getActionPath();
 						direction = path.remove(0);
+						if(!isDirectionCorrect(direction, aintViewL, aintViewR)){
+							path.clear();
+							continue;
+						}
 						myPoints.clear();
 						break;
 					}
@@ -121,7 +131,7 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
+				if (p != null && !checkSurroundingCellsForFives(1, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
 				}
@@ -144,6 +154,10 @@ public class G4Player2 implements Player {
 					if (pathNode != null) {
 						path = pathNode.getActionPath();
 						direction = path.remove(0);
+						if(!isDirectionCorrect(direction, aintViewL, aintViewR)){
+							path.clear();
+							continue;
+						}
 						myPoints.clear();
 						break;
 					}
@@ -153,7 +167,7 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
+				if (p != null && !checkSurroundingCellsForFives(2, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
 				}
@@ -165,6 +179,7 @@ public class G4Player2 implements Player {
 			}
 		}
 		turn++;
+		
 		// set new current position here
 		setNewCurrentPosition(direction, aintViewL, aintViewR);
 		return direction;
@@ -192,7 +207,7 @@ public class G4Player2 implements Player {
 			}
 		}
 		//initialDir = 2;
-		turn = 0;
+		turn = 1;
 		rightExitSet = false;
 		leftExitSet = false;
 		path = new ArrayList<Integer>();
@@ -410,6 +425,7 @@ public class G4Player2 implements Player {
 			return 0;
 		}
 	}
+	
 	//So if there is more to explore in the map, then explore more.
 	//Which node should you explore?
 	//Let's try the one closest to you that's available
@@ -572,4 +588,71 @@ public class G4Player2 implements Player {
 		return true;
 		
 	}
+	
+	public int checkRadiusForFives(int player, int px, int py){
+		int[][] map;
+		int radius;
+		if(player == 1){
+			if(leftExitSet){
+				return 0;
+			}
+			radius = sightRadius1;
+			map = kb_p1;
+		} else {
+			if(rightExitSet){
+				return 0;
+			}
+			radius = sightRadius2;
+			map = kb_p2;
+		}
+		
+		int total = 0;
+		for(int y = 0; y < (2*radius) + 1; ++y){
+			for(int x = 0; x < (2*radius) + 1; ++x){
+				if(map[py-radius + y][px - radius + x] == -5){
+					++total;
+				}
+			}
+		}
+		
+		return total;
+		
+	}
+	
+	public int[] ifPlayerFollowedPath(int player, ArrayList<Integer> pathToFollow){
+		int[][] map;
+		int x;
+		int y;
+		if(player == 1){
+			map = kb_p1;
+			x = p1Pos[0];
+			y = p1Pos[1];
+		} else {
+			map = kb_p2;
+			x = p2Pos[0];
+			y = p2Pos[1];
+		}
+		
+		for(int i = 0; i < pathToFollow.size(); ++i){
+			int changeX = MUMap.aintDToM[pathToFollow.get(i)][0];
+			int changeY = MUMap.aintDToM[pathToFollow.get(i)][1];
+			x += changeX;
+			y += changeY;
+			if(map[y][x] == 1 || map[y][x] == -5){
+				x -= changeX;
+				y -= changeY;
+			}
+			if(map[y][x] == 2){
+				int[] temp = {-1,-1};
+				return temp;
+			}
+		}
+		
+		int[] toReturn = new int[2];
+		toReturn[0] = x;
+		toReturn[1] = y;
+		
+		return toReturn;
+	}
+	
 }
