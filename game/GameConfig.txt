@@ -1,2 +1,2 @@
-51, 12, 5, -1, maps/g1Maps/secondbigmap1.txt, 5
-51, 12, 5, -1, maps/g1Maps/secondbigmap2.txt, 3
+51, 12, 5, -1, maps/g1Maps/bigmap2.txt, 5
+51, 12, 5, -1, maps/g1Maps/secondbigmap1.txt, 3
