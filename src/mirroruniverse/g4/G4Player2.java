@@ -83,6 +83,10 @@ public class G4Player2 implements Player {
 				path.clear();
 			}
 		}
+		
+		if (isMapComplete(1)){
+			System.out.print("");
+		}
 
 		// after you find the exits, call AStar
 		// if not, call the modified AStar on some point given by
