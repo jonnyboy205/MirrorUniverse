@@ -101,6 +101,8 @@ public class G4Player2 implements Player {
 						+ rightExitY);
 				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
 						kb_p1, kb_p2);
+				int minRadius = Math.min(sightRadius1, sightRadius2);
+				AStar_2.setNextToVal(Math.max(3, minRadius/2));
 				AStar_2.invertGoNextToExit();
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
