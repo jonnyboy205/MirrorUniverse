@@ -98,8 +98,14 @@ public class G4Player2 implements Player {
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
 				path = a.findPath();
+				
+				/*if(a.findZeroPath() != null && isMapComplete(3)){
+					path = a.startFinding();
+				*/
 			}
+			if(!path.isEmpty()){
 			direction = path.remove(0);
+			}
 		} else if(!leftExitSet) {
 			if (path.isEmpty()) {
 				Node_Single pathNode = null;
@@ -125,10 +131,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				/*if (p != null && checkSurroundingCellsForFives(1, p.y, p.x)) {
+				if (p != null && !checkSurroundingCellsForFives(1, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}*/
+				}
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -161,10 +167,10 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
-				/*if (p != null && checkSurroundingCellsForFives(2, p.y, p.x)) {
+				if (p != null && !checkSurroundingCellsForFives(2, p.y, p.x)) {
 					if (!path.isEmpty())
 						path.clear();
-				}*/
+				}
 			}
 			
 			while (!isDirectionCorrect(direction, aintViewL, aintViewR)){
@@ -173,6 +179,7 @@ public class G4Player2 implements Player {
 			}
 		}
 		turn++;
+		
 		// set new current position here
 		setNewCurrentPosition(direction, aintViewL, aintViewR);
 		return direction;
@@ -200,7 +207,7 @@ public class G4Player2 implements Player {
 			}
 		}
 		//initialDir = 2;
-		turn = 0;
+		turn = 1;
 		rightExitSet = false;
 		leftExitSet = false;
 		path = new ArrayList<Integer>();
