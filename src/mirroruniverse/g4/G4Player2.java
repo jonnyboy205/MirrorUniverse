@@ -413,10 +413,29 @@ public class G4Player2 implements Player {
 
 	private class OurPoint extends Point implements Comparable {
 		int dist;
+		ArrayList<Integer> pathToFollow;
 
-		public OurPoint(int x, int y, int currX, int currY) {
+		public OurPoint(int x, int y, int currX, int currY, int player) {
 			super(x, y);
+			int[][] map;
+			if(player == 1){
+				map = kb_p1;
+			} else {
+				map = kb_p2;
+			}
 			dist = Math.max(Math.abs(x - currX), Math.abs(y - currY));
+			AStar_Single as = new AStar_Single(currX, currY, x, y, map);
+			Node_Single ns = as.findPath();
+			if(ns == null){
+				dist = Integer.MAX_VALUE;
+			} else {
+				pathToFollow = ns.getActionPath();
+				if(wouldEitherPlayerStepOnExit(pathToFollow)){
+					dist = Integer.MAX_VALUE;
+				} else {
+					dist = pathToFollow.size();
+				}
+			}
 		}
 
 		public String toString() {
@@ -452,7 +471,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
-						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
+						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 				for (int j = p1Pos[0] - 1; j >= 0; j--) {
@@ -460,7 +482,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
-						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
+						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 			}
@@ -471,7 +496,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
-						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
+						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 				for (int j = p1Pos[0] + 1; j < kb_p1.length; j++) {
@@ -479,7 +507,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
-						points.add(new OurPoint(j, i, p1Pos[0], p1Pos[1]));
+						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 			}
@@ -491,7 +522,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
-						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
+						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 				for (int j = p2Pos[0] - 1; j >= 0; j--) {
@@ -499,7 +533,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
-						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
+						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 			}
@@ -510,7 +547,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
-						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
+						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 				for (int j = p2Pos[0] + 1; j < kb_p2.length; j++) {
@@ -518,7 +558,10 @@ public class G4Player2 implements Player {
 						continue;
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
-						points.add(new OurPoint(j, i, p2Pos[0], p2Pos[1]));
+						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
+						if(op.dist < Integer.MAX_VALUE){
+							points.add(op);
+						}
 					}
 				}
 			}
@@ -635,6 +678,15 @@ public class G4Player2 implements Player {
 
 		return total;
 
+	}
+	
+	private boolean wouldEitherPlayerStepOnExit(ArrayList<Integer> aPath){
+		int testingX = ifPlayerFollowedPath(1, aPath)[0];
+		if(testingX == -1){
+			return true;
+		}
+		testingX = ifPlayerFollowedPath(2, aPath)[0];
+		return testingX == -1;
 	}
 
 	public int[] ifPlayerFollowedPath(int player,
