@@ -221,6 +221,8 @@ public class AStar_2 {
 			System.out.println("Found :)");
 			System.out.println(queue.peek());
 			System.out.println(queue.peek().getActionPath());
+			closed.clear();
+			nodesToPutOff.clear();
 			return queue.peek().getActionPath();
 		}
 	}
