@@ -1,2 +1,2 @@
-5, 50, 1, -1, maps/g2Maps/PipeMaze_A_51_12.txt, 5
-5, 23, 1, -1, maps/g2Maps/PipeMaze_B_51_12.txt, 5
+5, 50, 1, -1, maps/MisAlignmentLeft.txt, 5
+5, 23, 1, -1, maps/MisAlignmentRight.txt, 5
