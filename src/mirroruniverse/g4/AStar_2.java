@@ -17,6 +17,7 @@ public class AStar_2 {
 	private boolean increase;
 	private boolean addedToDegree = false;
 	private static boolean goNextToExit = false;
+	private static int nextToVal;
 	
 	private int numAdded = 0;
 	
@@ -62,6 +63,11 @@ public class AStar_2 {
 			prettyPrint(root);
 		}
 		increase = false;
+		nextToVal = 3;
+	}
+	
+	public static void setNextToVal(int n){
+		nextToVal = n;
 	}
 	
 	public static void invertGoNextToExit(){
@@ -186,7 +192,7 @@ public class AStar_2 {
 				queue.clear();
 				break;
 			}
-			if(goNextToExit && queue.peek().getRealValue() == 2 && !(queue.peek().getP1HasReached() || queue.peek().getP2HasReached())){
+			if(goNextToExit && queue.peek().getRealValue() == nextToVal && !(queue.peek().getP1HasReached() || queue.peek().getP2HasReached())){
 				//queue.clear();
 				break;
 			}
@@ -215,6 +221,8 @@ public class AStar_2 {
 			System.out.println("Found :)");
 			System.out.println(queue.peek());
 			System.out.println(queue.peek().getActionPath());
+			closed.clear();
+			nodesToPutOff.clear();
 			return queue.peek().getActionPath();
 		}
 	}
