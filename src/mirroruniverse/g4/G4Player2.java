@@ -150,7 +150,8 @@ public class G4Player2 implements Player {
 				 */
 			}
 
-			while (!isDirectionCorrect(direction, aintViewL, aintViewR)) {
+			while (!isDirectionCorrect(direction, aintViewL, aintViewR)
+					|| checkForMisAlignment(direction, aintViewL, aintViewR)) {
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
 			}
@@ -186,7 +187,8 @@ public class G4Player2 implements Player {
 				 */
 			}
 
-			while (!isDirectionCorrect(direction, aintViewL, aintViewR)) {
+			while (!isDirectionCorrect(direction, aintViewL, aintViewR)
+					|| checkForMisAlignment(direction, aintViewL, aintViewR)) {
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
 			}
