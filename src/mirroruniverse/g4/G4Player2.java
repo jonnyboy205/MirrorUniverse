@@ -30,9 +30,14 @@ public class G4Player2 implements Player {
 	// private int initialDir;
 	private int turn;
 	private ArrayList<Integer> path;
+	private boolean singleSetThisPath;
+	private boolean debugging = false;
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
+		if(turn == 133){
+			System.out.println();
+		}
 		if (!started) {
 			initialize(aintViewL, aintViewR);
 		}
@@ -44,7 +49,7 @@ public class G4Player2 implements Player {
 					kb_p1[p1Pos[1] - sightRadius1 + y][p1Pos[0] - sightRadius1
 							+ x] = aintViewL[y][x];
 				} catch (Exception e) {
-					System.out.println();
+					System.out.println("1");
 				}
 				if (aintViewL[y][x] == 2 && !leftExitSet) {
 					leftExitX = p1Pos[0] - sightRadius1 + x;
@@ -99,6 +104,26 @@ public class G4Player2 implements Player {
 						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
 						+ leftExitX + "," + leftExitY + "  " + rightExitX + ","
 						+ rightExitY);
+				if(debugging){
+					for (int y = 0; y < (2 * sightRadius1) - 1; ++y) {
+						for (int x = 0; x < (2 * sightRadius1) - 1; ++x) {
+							if (x == sightRadius1 && y == sightRadius1) {
+								System.out.print("* ");
+							} else {
+								System.out.print(Math.abs(kb_p1[p1Pos[1] - sightRadius1 + y][p1Pos[0] - sightRadius1 + x])	+ " ");
+							}
+						}
+						System.out.print("\t");
+						for (int x = 0; x < (2 * sightRadius1) - 1; ++x) {
+							if (x == sightRadius1 && y == sightRadius1) {
+								System.out.print("* ");
+							} else {
+								System.out.print(Math.abs(kb_p2[p2Pos[1] - sightRadius1 + y][p2Pos[0] - sightRadius1 + x]) + " ");
+							}
+						}
+						System.out.println();
+					}
+				}
 				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
 						kb_p1, kb_p2);
 				int minRadius = Math.min(sightRadius1, sightRadius2);
@@ -119,25 +144,27 @@ public class G4Player2 implements Player {
 
 		} else if (!leftExitSet) {
 			if (path.isEmpty()) {
+				singleSetThisPath = true;
 				Node_Single pathNode = null;
 				PriorityQueue<OurPoint> myPoints = getNewSpace(1);
 				while (!myPoints.isEmpty()) {
 					p = myPoints.poll();
-					AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
-							p1Pos[1], p.x, p.y, kb_p1);
-					pathNode = myAStarSingle.findPath();
-					if (pathNode != null) {
-						path = pathNode.getActionPath();
+					//AStar_Single myAStarSingle = new AStar_Single(p1Pos[0],
+							//p1Pos[1], p.x, p.y, kb_p1);
+					//pathNode = myAStarSingle.findPath();
+					//if (pathNode != null) {
+						path = p.pathToFollow;//pathNode.getActionPath();
 						direction = path.remove(0);
 						if (!isDirectionCorrect(direction, aintViewL, aintViewR)) {
 							path.clear();
 							continue;
 						}
 						myPoints.clear();
+						singleSetThisPath = p.setBySingle;
 						break;
-					}
+					//}
 				}
-				if (pathNode == null) {
+				if (path.isEmpty()) {
 					direction = rdmTemp.nextInt(8) + 1;
 				}
 			} else {
@@ -148,32 +175,34 @@ public class G4Player2 implements Player {
 				 */
 			}
 
-			while (!isDirectionCorrect(direction, aintViewL, aintViewR)) {
+			while (singleSetThisPath && !isDirectionCorrect(direction, aintViewL, aintViewR)) {
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
 			}
 			// direction = move(aintViewL, aintViewR);
 		} else {
 			if (path.isEmpty()) {
+				singleSetThisPath = true;
 				Node_Single pathNode = null;
 				PriorityQueue<OurPoint> myPoints = getNewSpace(2);
 				while (!myPoints.isEmpty()) {
 					p = myPoints.poll();
-					AStar_Single myAStarSingle = new AStar_Single(p2Pos[0],
-							p2Pos[1], p.x, p.y, kb_p2);
-					pathNode = myAStarSingle.findPath();
-					if (pathNode != null) {
-						path = pathNode.getActionPath();
+					//AStar_Single myAStarSingle = new AStar_Single(p2Pos[0],
+							//p2Pos[1], p.x, p.y, kb_p2);
+					//pathNode = myAStarSingle.findPath();
+					//if (pathNode != null) {
+						path = p.pathToFollow;//pathNode.getActionPath();
 						direction = path.remove(0);
 						if (!isDirectionCorrect(direction, aintViewL, aintViewR)) {
 							path.clear();
 							continue;
 						}
 						myPoints.clear();
+						singleSetThisPath = p.setBySingle;
 						break;
-					}
+					//}
 				}
-				if (pathNode == null) {
+				if (path.isEmpty()){//pathNode == null) {
 					direction = rdmTemp.nextInt(8) + 1;
 				}
 			} else {
@@ -184,7 +213,7 @@ public class G4Player2 implements Player {
 				 */
 			}
 
-			while (!isDirectionCorrect(direction, aintViewL, aintViewR)) {
+			while (singleSetThisPath && !isDirectionCorrect(direction, aintViewL, aintViewR)) {
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
 			}
@@ -420,16 +449,20 @@ public class G4Player2 implements Player {
 	private class OurPoint extends Point implements Comparable {
 		int dist;
 		ArrayList<Integer> pathToFollow;
+		int player;
+		boolean setBySingle;
 
 		public OurPoint(int x, int y, int currX, int currY, int player) {
 			super(x, y);
+			setBySingle = true;
 			int[][] map;
+			this.player = player;
 			if(player == 1){
 				map = kb_p1;
 			} else {
 				map = kb_p2;
 			}
-			dist = Math.max(Math.abs(x - currX), Math.abs(y - currY));
+			//dist = Math.max(Math.abs(x - currX), Math.abs(y - currY));
 			AStar_Single as = new AStar_Single(currX, currY, x, y, map);
 			Node_Single ns = as.findPath();
 			if(ns == null){
@@ -437,7 +470,7 @@ public class G4Player2 implements Player {
 			} else {
 				pathToFollow = ns.getActionPath();
 				if(wouldEitherPlayerStepOnExit(pathToFollow)){
-					dist = Integer.MAX_VALUE;
+					dist = Integer.MAX_VALUE - 1000 + pathToFollow.size();
 				} else {
 					dist = pathToFollow.size();
 				}
@@ -468,7 +501,7 @@ public class G4Player2 implements Player {
 	// Let's try the one closest to you that's available
 	private PriorityQueue<OurPoint> getNewSpace(int player) {
 		PriorityQueue<OurPoint> points = new PriorityQueue<OurPoint>();
-		ArrayList<OurPoint> badPoints = new ArrayList<OurPoint>();
+		PriorityQueue<OurPoint> badPoints = new PriorityQueue<OurPoint>();
 
 		if (player == 1) {
 			// loop through kb, starting near your current pos
@@ -479,9 +512,9 @@ public class G4Player2 implements Player {
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -492,9 +525,9 @@ public class G4Player2 implements Player {
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -508,9 +541,9 @@ public class G4Player2 implements Player {
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -521,9 +554,9 @@ public class G4Player2 implements Player {
 					if (kb_p1[i][j] == 0
 							&& checkSurroundingCellsForFives(1, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p1Pos[0], p1Pos[1], 1);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -538,9 +571,9 @@ public class G4Player2 implements Player {
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -551,9 +584,9 @@ public class G4Player2 implements Player {
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -567,9 +600,9 @@ public class G4Player2 implements Player {
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -580,9 +613,9 @@ public class G4Player2 implements Player {
 					if (kb_p2[i][j] == 0
 							&& checkSurroundingCellsForFives(2, i, j) == true) {
 						OurPoint op = new OurPoint(j, i, p2Pos[0], p2Pos[1], 2);
-						if(op.dist < Integer.MAX_VALUE){
+						if(op.dist < Integer.MAX_VALUE - 1000){
 							points.add(op);
-						} else {
+						} else if(op.dist < Integer.MAX_VALUE){
 							badPoints.add(op);
 						}
 					}
@@ -590,12 +623,72 @@ public class G4Player2 implements Player {
 			}
 		}
 
-		/*if(points.isEmpty()){
-			for()
+		if(points.isEmpty()){
+			while(!badPoints.isEmpty()){
+				OurPoint op = badPoints.poll(); 
+				if(op.pathToFollow.size() < 2){
+					continue;
+				}
+				do{
+					op.pathToFollow.remove(op.pathToFollow.size() - 1);
+				}while(wouldEitherPlayerStepOnExit(op.pathToFollow));
+				int[] p1 = new int[2];
+				int[] p2 = new int[2];
+				if(op.player == 1){
+					p2 = ifPlayerFollowedPath(2, op.pathToFollow);
+					p1[0] = op.x;
+					p1[1] = op.y;
+				} else {
+					p1 = ifPlayerFollowedPath(1, op.pathToFollow);
+					p2[0] = op.x;
+					p2[1] = op.y;
+				}
+				if (true) {
+					for (int y = 0; y < (6 * sightRadius1) - 1; ++y) {
+						for (int x = 0; x < (6 * sightRadius1) - 1; ++x) {
+							if (x == sightRadius1 * 3 && y == sightRadius1 * 3) {
+								System.out.print("* ");
+							} else if (p1Pos[1] - 3 * sightRadius1 + y == p1[1]
+									&& p1Pos[0] - 3 * sightRadius1 + x == p1[0]) {
+								System.out.print("@ ");
+							} else {
+								System.out.print(Math.abs(kb_p1[p1Pos[1] - 3
+										* sightRadius1 + y][p1Pos[0] - 3
+										* sightRadius1 + x])
+										+ " ");
+							}
+						}
+						System.out.print("\t");
+						for (int x = 0; x < (6 * sightRadius1) - 1; ++x) {
+							if (x == sightRadius1 * 3 && y == sightRadius1 * 3) {
+								System.out.print("* ");
+							} else if (p2Pos[1] - 3 * sightRadius1 + y == p2[1]
+									&& p2Pos[0] - 3 * sightRadius1 + x == p2[0]) {
+								System.out.print("@ ");
+							} else {
+								System.out.print(Math.abs(kb_p2[p2Pos[1] - 3
+										* sightRadius1 + y][p2Pos[0] - 3
+										* sightRadius1 + x])
+										+ " ");
+							}
+						}
+						System.out.println();
+					}
+					System.out.println("\n\n");
+				}
+				AStar_2 a2 = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
+				a2.setExit1(p1[0], p1[1]);
+				a2.setExit2(p2[0], p2[1]);
+				a2.setMaxNodes(4 * (op.dist - Integer.MAX_VALUE + 1000));
+				op.pathToFollow = a2.findPath();
+				op.setBySingle = false;
+				points.add(op);
+				break;
+			}
+			//OurPoint copOut = new OurPoint(p1Pos[0], p1Pos[1], p1Pos[0], p1Pos[1], 1);
+			//points.add(copOut);
 		}
-		/*do{
-						pathToFollow.remove(pathToFollow.size() - 1);
-					}while(wouldEitherPlayerStepOnExit(pathToFollow));
+		/*
 					int[] spotToBe;
 					AStar_2 a2 = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
 					if(player == 1){

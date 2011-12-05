@@ -52,6 +52,13 @@ public class Node_2 implements Comparable<Node_2>{
 	private static int p2ExitX = -1000;
 	private static int p2ExitY = -1000;
 	
+	public static void resetExits(){
+		p1ExitX = -1000;
+		p1ExitY = -1000;
+		p2ExitX = -1000;
+		p2ExitY = -1000;
+	}
+	
 	private Node_2 parent;
 	
 	// This integer represents the degree away from perfect we can look at
@@ -155,9 +162,21 @@ public class Node_2 implements Comparable<Node_2>{
 
 	private double heuristic_2(){
 		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1());
-		int first = as.findPath().getDepth();
+		Node_Single ns = as.findPath();
+		int first;
+		if(ns != null){
+			first = ns.getDepth();
+		} else {
+			first = 1000000;
+		}
 		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2());
-		int second = as.findPath().getDepth();
+		ns = as.findPath();
+		int second;
+		if(ns != null){
+			second = ns.getDepth();
+		} else {
+			second = 100000;
+		}
 		int toReturn = first + second;
 		if(selfDegree > degree){
 			toReturn += 10000;
