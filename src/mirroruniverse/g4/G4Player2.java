@@ -679,7 +679,8 @@ public class G4Player2 implements Player {
 				AStar_2 a2 = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
 				a2.setExit1(p1[0], p1[1]);
 				a2.setExit2(p2[0], p2[1]);
-				a2.setMaxNodes(4 * (op.dist - Integer.MAX_VALUE + 1000));
+				a2.setGoingToExit(false);
+				a2.setMaxNodes(32 * (op.dist - Integer.MAX_VALUE + 1000));
 				op.pathToFollow = a2.findPath();
 				op.setBySingle = false;
 				points.add(op);

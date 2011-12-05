@@ -18,6 +18,7 @@ public class AStar_2 {
 	private boolean addedToDegree = false;
 	private static boolean goNextToExit = false;
 	private static int nextToVal;
+	private boolean goingToExit;
 	
 	private int numAdded = 0;
 	
@@ -36,6 +37,7 @@ public class AStar_2 {
 		Node_2.resetDegree();
 		Node_2.resetExits();
 		numExitsFound = 0;
+		goingToExit = true;
 		
 		maxNodes = 0;
 		int numOnes = 0;
@@ -67,6 +69,10 @@ public class AStar_2 {
 		}
 		increase = false;
 		nextToVal = 2;
+	}
+	
+	public void setGoingToExit(boolean b){
+		goingToExit = b;
 	}
 	
 	public void setMaxNodes(int n){
@@ -328,14 +334,8 @@ public class AStar_2 {
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {}
 				try {
-					if(map1[y1][x1] == 2){
-						if(y1 != Node_2.getExit1Y() || x1 != Node_2.getExit1X()){
-							++action;
-							continue;
-						}
-					}
-					if(map2[y2][x2] == 2){
-						if(y2 != Node_2.getExit2Y() || x2 != Node_2.getExit2X()){
+					if(!goingToExit){
+						if(map1[y1][x1] == 2 || map2[y2][x2] == 2){
 							++action;
 							continue;
 						}
