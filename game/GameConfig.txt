@@ -1,2 +1,2 @@
-5, 50, 5, -1, maps/g2Maps/PipeMaze_A_51_12.txt, 5
-5, 23, 5, -1, maps/g2Maps/PipeMaze_B_51_12.txt, 5
+5, 50, 200, -1, maps/g3maps/LeftBig2.txt, 5
+5, 23, 200, -1, maps/g3maps/RightBig2.txt, 5
