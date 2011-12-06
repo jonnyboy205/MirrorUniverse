@@ -22,6 +22,10 @@ public class AStar_2 {
 	
 	private int numAdded = 0;
 	
+	public Node_2 getRoot(){
+		return root;
+	}
+	
 	public static int[][] getMap1(){
 		return map1;
 	}
@@ -118,7 +122,7 @@ public class AStar_2 {
 		}
 	}
 	
-	private boolean exitTogether(){
+	public boolean exitTogether(){
 		int exit1X = Node_2.getExit1X();
 		int exit2X = Node_2.getExit2X();
 		int exit1Y = Node_2.getExit1Y();

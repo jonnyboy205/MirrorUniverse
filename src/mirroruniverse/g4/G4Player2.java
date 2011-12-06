@@ -138,7 +138,8 @@ public class G4Player2 implements Player {
 				AStar_2 a = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1],
 						kb_p1, kb_p2);
 				int minRadius = Math.min(sightRadius1, sightRadius2);
-				AStar_2.setNextToVal(Math.max(2, minRadius/2));
+				int nextToVal = Math.max(2, minRadius/2);
+				AStar_2.setNextToVal(nextToVal);
 				AStar_2.invertGoNextToExit();
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
@@ -241,10 +242,14 @@ public class G4Player2 implements Player {
 				System.out.println("random4");
 			}
 		}
-		turn++;
+		if(direction == 0){
+			direction = this.lookAndMove(aintViewL, aintViewR);
+		} else {
+			turn++;
 
-		// set new current position here
-		setNewCurrentPosition(direction, aintViewL, aintViewR);
+			// set new current position here
+			setNewCurrentPosition(direction, aintViewL, aintViewR);
+		}
 		return direction;
 	}
 
