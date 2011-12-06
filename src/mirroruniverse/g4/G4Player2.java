@@ -164,7 +164,7 @@ public class G4Player2 implements Player {
 						break;
 					//}
 				}
-				if (path.isEmpty()) {
+				if (path.isEmpty() && direction == 0) {
 					direction = rdmTemp.nextInt(8) + 1;
 					if(true){
 						System.out.println("random1");
@@ -206,7 +206,7 @@ public class G4Player2 implements Player {
 						break;
 					//}
 				}
-				if (path.isEmpty()){//pathNode == null) {
+				if (path.isEmpty() && direction == 0){//pathNode == null) {
 					direction = rdmTemp.nextInt(8) + 1;
 					System.out.println("random3");
 				}
@@ -299,18 +299,18 @@ public class G4Player2 implements Player {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
 		if (!leftExitSet) {
-			if (//aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1
+			if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1
 					// || aintViewR[sightRadius2 + intDeltaY][sightRadius2 +
 					// intDeltaX] == 1 //checks for misalignment on other player
-					/*||*/ isDirectionExit(currentDirection, aintViewL, aintViewR)) {
+					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
 			return true;
 		} else {
-			if (//aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1
+			if (aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1
 					// || aintViewL[sightRadius1 + intDeltaY][sightRadius1 +
 					// intDeltaX] == 1 //checks for misalignment on other player
-					/*||*/ isDirectionExit(currentDirection, aintViewL, aintViewR)) {
+					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
 			return true;
@@ -649,7 +649,7 @@ public class G4Player2 implements Player {
 					p2[0] = op.x;
 					p2[1] = op.y;
 				}
-				if (true) {
+				if (debugging) {
 					for (int y = 0; y < (6 * sightRadius1) - 1; ++y) {
 						for (int x = 0; x < (6 * sightRadius1) - 1; ++x) {
 							if (x == sightRadius1 * 3 && y == sightRadius1 * 3) {

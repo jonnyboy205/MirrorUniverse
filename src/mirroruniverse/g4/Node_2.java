@@ -115,10 +115,6 @@ public class Node_2 implements Comparable<Node_2>{
 		p2HasReached = false;
 		parent = expanded;
 		
-		if(x1 == 148 && y1 == 150 && x2 == 155 && y2 == 149){
-			x1 += 0;
-		}
-		
 		updateSelfDegree();
 		
 		if(parent == null){
@@ -132,12 +128,6 @@ public class Node_2 implements Comparable<Node_2>{
 
 			// Set the value of this node equal to our heuristic rating for it
 			value = this.heuristic_2();
-		}
-		if(parent != null && parent.x1 == p1ExitX && parent.y1 == p1ExitY && parent.selfDegree == 0){
-			x1 += 0;
-		}
-		if(x1 == p1ExitX && y1 == p1ExitY && selfDegree == 0){
-			x1 += 0;
 		}
 	}
 	
@@ -175,7 +165,7 @@ public class Node_2 implements Comparable<Node_2>{
 		if(ns != null){
 			second = ns.getDepth();
 		} else {
-			second = 100000;
+			second = 1000000;
 		}
 		int toReturn = first + second;
 		if(selfDegree > degree){
