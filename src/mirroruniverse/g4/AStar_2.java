@@ -69,6 +69,7 @@ public class AStar_2 {
 		}
 		increase = false;
 		nextToVal = 2;
+		Node_2.setFocus(3);
 	}
 	
 	public void setGoingToExit(boolean b){

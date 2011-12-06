@@ -28,6 +28,24 @@ public class Node_2 implements Comparable<Node_2>{
 	
 	private boolean p1HasReached;
 	private boolean p2HasReached;
+	private static boolean focusOnP1;
+	private static boolean focusOnP2;
+	
+	public static void setFocus(int player){
+		switch(player){
+		case 1:
+			focusOnP1 = true;
+			focusOnP2 = false;
+			break;
+		case 2:
+			focusOnP1 = false;
+			focusOnP2 = true;
+			break;
+		default:
+			focusOnP1 = false;
+			focusOnP2 = false;
+		}
+	}
 	
 	public boolean getP1HasReached(){
 		return p1HasReached;
@@ -159,6 +177,9 @@ public class Node_2 implements Comparable<Node_2>{
 		} else {
 			first = 1000000;
 		}
+		if(focusOnP1){
+			first *= 3;
+		}
 		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2());
 		ns = as.findPath();
 		int second;
@@ -166,6 +187,9 @@ public class Node_2 implements Comparable<Node_2>{
 			second = ns.getDepth();
 		} else {
 			second = 1000000;
+		}
+		if(focusOnP2){
+			second *= 3;
 		}
 		int toReturn = first + second;
 		if(selfDegree > degree){
@@ -323,7 +347,11 @@ public class Node_2 implements Comparable<Node_2>{
 	}
 	
 	public boolean closeEnough(){
-		if(x1 == p1ExitX && y1 == p1ExitY){
+		if(focusOnP1){
+			return x1 == p1ExitX && y1 == p1ExitY;
+		} else if (focusOnP2){
+			return x2 == p2ExitX && y2 == p2ExitY;
+		} else if(x1 == p1ExitX && y1 == p1ExitY){
 			if(selfDegree <= degree){
 				return p2HasReached;
 			}

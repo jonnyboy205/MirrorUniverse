@@ -35,7 +35,7 @@ public class G4Player2 implements Player {
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
-		if(turn == 133){
+		if(turn == 45){
 			System.out.println();
 		}
 		if (!started) {
@@ -99,6 +99,15 @@ public class G4Player2 implements Player {
 		int direction = 0;
 		Random rdmTemp = new Random();
 		if (rightExitSet && leftExitSet) {
+			if(path.isEmpty()){
+				if(aintViewL[sightRadius1][sightRadius1] == 2){
+					AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX, rightExitY, kb_p2);
+					path = as.findPath().getActionPath();
+				} else if(aintViewR[sightRadius2][sightRadius2] == 2){
+					AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1);
+					path = as.findPath().getActionPath();
+				}
+			}
 			if (path.isEmpty()) {
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
 						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
@@ -172,6 +181,9 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
+				/*if(!isDirectionExit(direction, aintViewL, aintViewR)){
+					singleSetThisPath = true;
+				}*/
 				/*
 				 * if (p != null && !checkSurroundingCellsForFives(1, p.y, p.x))
 				 * { if (!path.isEmpty()) path.clear(); }
@@ -212,6 +224,9 @@ public class G4Player2 implements Player {
 				}
 			} else {
 				direction = path.remove(0);
+				/*if(!isDirectionExit(direction, aintViewL, aintViewR)){
+					singleSetThisPath = true;
+				}*/
 				/*
 				 * if (p != null && !checkSurroundingCellsForFives(2, p.y, p.x))
 				 * { if (!path.isEmpty()) path.clear(); }
@@ -267,7 +282,9 @@ public class G4Player2 implements Player {
 
 		// if the right player's next move is an empty space
 		// update new position
-		if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 0) {
+		if(aintLocalViewL[sightRadius1][sightRadius1] == 2){
+			//Dont update.
+		} else if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 0) {
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
 		} else if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1
@@ -281,7 +298,9 @@ public class G4Player2 implements Player {
 
 		// if the right player's next move is an empty space
 		// update new position
-		if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 0) {
+		if(aintLocalViewR[sightRadius2][sightRadius2] == 2){
+			//Dont update.
+		} else if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 0) {
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 		} else if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2
@@ -457,6 +476,7 @@ public class G4Player2 implements Player {
 		ArrayList<Integer> pathToFollow;
 		int player;
 		boolean setBySingle;
+		int offset;
 
 		public OurPoint(int x, int y, int currX, int currY, int player) {
 			super(x, y);
@@ -481,6 +501,27 @@ public class G4Player2 implements Player {
 					dist = pathToFollow.size();
 				}
 			}
+			
+			if(dist < Integer.MAX_VALUE - 1000){
+				int[] p1 = new int[2];
+				int[] p2 = new int[2];
+				if(player == 1){
+					p1[0] = x;
+					p1[1] = y;
+					p2 = ifPlayerFollowedPath(2, pathToFollow);
+				} else {
+					p2[0] = x;
+					p2[1] = y;
+					p1 = ifPlayerFollowedPath(1, pathToFollow);
+				}
+				int originalXDifference = p1Pos[0] - p2Pos[0];
+				int originalYDifference = p1Pos[1] - p1Pos[1];
+				int newXDifference = p1[0] - p2[0];
+				int newYDifference = p1[1] - p2[1];
+				int xOffset = originalXDifference - newXDifference;
+				int yOffset = originalYDifference - newYDifference;
+				offset = xOffset + yOffset;
+			}
 		}
 
 		public String toString() {
@@ -493,7 +534,11 @@ public class G4Player2 implements Player {
 				return -1;
 			}
 			OurPoint p = (OurPoint) o;
-			if (this.dist > p.dist) {
+			/*if (this.offset > p.offset){
+				return 1;
+			} else if (this.offset < p.offset){
+				return -1;
+			}else */if (this.dist > p.dist) {
 				return 1;
 			} else if (this.dist < p.dist) {
 				return -1;
@@ -509,7 +554,7 @@ public class G4Player2 implements Player {
 		PriorityQueue<OurPoint> points = new PriorityQueue<OurPoint>();
 		PriorityQueue<OurPoint> badPoints = new PriorityQueue<OurPoint>();
 
-		if (player == 1) {
+		if (player != 2) {
 			// loop through kb, starting near your current pos
 			for (int i = p1Pos[1]; i < kb_p1.length; i++) {
 				for (int j = p1Pos[0]; j < kb_p1.length; j++) {
@@ -568,7 +613,8 @@ public class G4Player2 implements Player {
 					}
 				}
 			}
-		} else if (player == 2) {
+		}
+		if (player != 1) {
 			// loop through kb, starting near your current pos
 			for (int i = p2Pos[1]; i < kb_p2.length; i++) {
 				for (int j = p2Pos[0]; j < kb_p2.length; j++) {
@@ -686,6 +732,7 @@ public class G4Player2 implements Player {
 				a2.setExit1(p1[0], p1[1]);
 				a2.setExit2(p2[0], p2[1]);
 				a2.setGoingToExit(false);
+				Node_2.setFocus(op.player);
 				a2.setMaxNodes(32 * (op.dist - Integer.MAX_VALUE + 1000));
 				op.pathToFollow = a2.findPath();
 				op.setBySingle = false;
