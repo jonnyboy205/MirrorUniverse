@@ -166,6 +166,9 @@ public class G4Player2 implements Player {
 				}
 				if (path.isEmpty()) {
 					direction = rdmTemp.nextInt(8) + 1;
+					if(true){
+						System.out.println("random1");
+					}
 				}
 			} else {
 				direction = path.remove(0);
@@ -178,6 +181,7 @@ public class G4Player2 implements Player {
 			while (singleSetThisPath && !isDirectionCorrect(direction, aintViewL, aintViewR)) {
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
+				System.out.println("random2");
 			}
 			// direction = move(aintViewL, aintViewR);
 		} else {
@@ -204,6 +208,7 @@ public class G4Player2 implements Player {
 				}
 				if (path.isEmpty()){//pathNode == null) {
 					direction = rdmTemp.nextInt(8) + 1;
+					System.out.println("random3");
 				}
 			} else {
 				direction = path.remove(0);
@@ -216,6 +221,7 @@ public class G4Player2 implements Player {
 			while (singleSetThisPath && !isDirectionCorrect(direction, aintViewL, aintViewR)) {
 				path.clear();
 				direction = rdmTemp.nextInt(8) + 1;
+				System.out.println("random4");
 			}
 		}
 		turn++;
@@ -293,18 +299,18 @@ public class G4Player2 implements Player {
 		intDeltaX = MUMap.aintDToM[currentDirection][0];
 		intDeltaY = MUMap.aintDToM[currentDirection][1];
 		if (!leftExitSet) {
-			if (aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1
+			if (//aintViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 1
 					// || aintViewR[sightRadius2 + intDeltaY][sightRadius2 +
 					// intDeltaX] == 1 //checks for misalignment on other player
-					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
+					/*||*/ isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
 			return true;
 		} else {
-			if (aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1
+			if (//aintViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 1
 					// || aintViewL[sightRadius1 + intDeltaY][sightRadius1 +
 					// intDeltaX] == 1 //checks for misalignment on other player
-					|| isDirectionExit(currentDirection, aintViewL, aintViewR)) {
+					/*||*/ isDirectionExit(currentDirection, aintViewL, aintViewR)) {
 				return false;
 			}
 			return true;
@@ -626,12 +632,12 @@ public class G4Player2 implements Player {
 		if(points.isEmpty()){
 			while(!badPoints.isEmpty()){
 				OurPoint op = badPoints.poll(); 
-				if(op.pathToFollow.size() < 2){
-					continue;
-				}
 				do{
 					op.pathToFollow.remove(op.pathToFollow.size() - 1);
-				}while(wouldEitherPlayerStepOnExit(op.pathToFollow));
+				}while(!op.pathToFollow.isEmpty() && wouldEitherPlayerStepOnExit(op.pathToFollow));
+				if(op.pathToFollow.isEmpty()){
+					continue;
+				}
 				int[] p1 = new int[2];
 				int[] p2 = new int[2];
 				if(op.player == 1){
