@@ -32,6 +32,8 @@ public class G4Player2 implements Player {
 	private ArrayList<Integer> path;
 	private boolean singleSetThisPath;
 	private boolean debugging = false;
+	private boolean p1Exited;
+	private boolean p2Exited;
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
@@ -271,6 +273,8 @@ public class G4Player2 implements Player {
 		turn = 1;
 		rightExitSet = false;
 		leftExitSet = false;
+		p1Exited = false;
+		p2Exited = false;
 		path = new ArrayList<Integer>();
 	}
 
@@ -283,7 +287,7 @@ public class G4Player2 implements Player {
 		// if the right player's next move is an empty space
 		// update new position
 		if(aintLocalViewL[sightRadius1][sightRadius1] == 2){
-			//Dont update.
+			p1Exited = true;
 		} else if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 0) {
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
@@ -299,7 +303,7 @@ public class G4Player2 implements Player {
 		// if the right player's next move is an empty space
 		// update new position
 		if(aintLocalViewR[sightRadius2][sightRadius2] == 2){
-			//Dont update.
+			p2Exited = true;
 		} else if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 0) {
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
@@ -483,6 +487,7 @@ public class G4Player2 implements Player {
 			setBySingle = true;
 			int[][] map;
 			this.player = player;
+			boolean ignoreOtherPlayer = p1Exited || p2Exited;
 			if(player == 1){
 				map = kb_p1;
 			} else {
@@ -495,7 +500,7 @@ public class G4Player2 implements Player {
 				dist = Integer.MAX_VALUE;
 			} else {
 				pathToFollow = ns.getActionPath();
-				if(wouldEitherPlayerStepOnExit(pathToFollow)){
+				if(!ignoreOtherPlayer && wouldEitherPlayerStepOnExit(pathToFollow)){
 					dist = Integer.MAX_VALUE - 1000 + pathToFollow.size();
 				} else {
 					dist = pathToFollow.size();
