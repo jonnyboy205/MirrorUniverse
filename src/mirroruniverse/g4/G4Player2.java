@@ -143,18 +143,6 @@ public class G4Player2 implements Player {
 					}
 				}
 			}
-			if(!path.isEmpty())
-			{
-//				direction = path.remove(0);
-				if (!readyToExit) {
-					if (counter >= 20) {
-						path.clear();
-						counter = 0;
-					} else {
-						counter++;
-					}
-				}
-			}
 			if (path.isEmpty()) {
 				System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1]
 						+ "   p2:" + p2Pos[0] + "," + p2Pos[1] + "   exits: "
@@ -197,6 +185,14 @@ public class G4Player2 implements Player {
 			}
 			if (!path.isEmpty()) {
 				direction = path.remove(0);
+				if (!readyToExit) {
+					if (counter >= 20) {
+						path.clear();
+						counter = 0;
+					} else {
+						counter++;
+					}
+				}
 			}
 
 		} else if (!leftExitSet) {
