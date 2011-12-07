@@ -43,7 +43,7 @@ public class G4Player2 implements Player {
 		if (!started) {
 			initialize(aintViewL, aintViewR);
 		}
-		turn++;
+		//turn++;
 
 		// left player finding exit and updating kb
 		for (int y = 0; y < aintViewL.length; ++y) {
@@ -744,9 +744,13 @@ public class G4Player2 implements Player {
 				a2.setExit1(p1[0], p1[1]);
 				a2.setExit2(p2[0], p2[1]);
 				a2.setGoingToExit(false);
-				Node_2.setFocus(op.player);
+				a2.setFocus(op.player);
 				a2.setMaxNodes(32 * (op.dist - Integer.MAX_VALUE + 1000));
-				op.pathToFollow = a2.findPath();
+				Node_2 n2 = a2.findZeroPath();
+				if(n2 == null){
+					continue;
+				}
+				op.pathToFollow = n2.getActionPath();
 				op.setBySingle = false;
 				points.add(op);
 				break;
