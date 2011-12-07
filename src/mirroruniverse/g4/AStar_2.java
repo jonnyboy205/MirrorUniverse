@@ -19,6 +19,7 @@ public class AStar_2 {
 	private static boolean goNextToExit = false;
 	private static int nextToVal;
 	private boolean goingToExit;
+	private boolean focus;
 	
 	private int numAdded = 0;
 	
@@ -74,6 +75,12 @@ public class AStar_2 {
 		increase = false;
 		nextToVal = 2;
 		Node_2.setFocus(3);
+		focus = false;
+	}
+	
+	public void setFocus(int player){
+		focus = true;
+		Node_2.setFocus(player);
 	}
 	
 	public void setGoingToExit(boolean b){
@@ -171,7 +178,7 @@ public class AStar_2 {
 	}
 	
 	public Node_2 findZeroPath(){
-		if(!exitTogether()){
+		if(!exitTogether() && !focus){
 			return null;
 		}
 		if(!closed.isEmpty()){
@@ -200,6 +207,7 @@ public class AStar_2 {
 	public ArrayList<Integer> startFinding(){
 		if(!closed.isEmpty()){
 			queue.addAll(closed);
+			closed.clear();
 		}
 		return findPath();
 	}

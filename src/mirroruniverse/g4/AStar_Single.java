@@ -12,8 +12,10 @@ public class AStar_Single {
 	public boolean debugging = false;
 	private int maxNodes = Integer.MAX_VALUE;
 	private int nodesExpanded;
+	private static ArrayList<Node_Single> continueClosed;
+	private boolean useClosed;
 	
-	public AStar_Single(int initialX, int initialY, int exitX, int exitY, int[][] kb){
+	public AStar_Single(int initialX, int initialY, int exitX, int exitY, int[][] kb, boolean useSeed){
 		root = new Node_Single(initialX, initialY, exitX, exitY);
 		map = kb;
 		
@@ -21,6 +23,17 @@ public class AStar_Single {
 		queue.add(root);
 		closed = new ArrayList<Node_Single>();
 		nodesExpanded = 0;
+		useClosed = useSeed;
+		
+		if(useClosed){
+			if(continueClosed == null){
+				continueClosed = new ArrayList<Node_Single>();
+			} else {
+				Node_Single.reRunHeuristic(continueClosed, exitX, exitY);
+				//System.out.println(continueClosed.size());
+				queue.addAll(continueClosed);
+			}
+		}
 	}
 	
 	public void setMaxNodes(int n){
@@ -60,6 +73,13 @@ public class AStar_Single {
 			}
 			ArrayList<Node_Single> nexts = successors(queue.poll());
 			queue.addAll(nexts);
+		}
+		if(useClosed){
+			for(Node_Single n : closed){
+				if(!continueClosed.contains(n)){
+					continueClosed.add(n);
+				}
+			}
 		}
 		//System.out.println("Done");
 		if(queue.isEmpty()){

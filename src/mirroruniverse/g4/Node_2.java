@@ -158,6 +158,10 @@ public class Node_2 implements Comparable<Node_2>{
 			p1HasReached = parent.p1HasReached || (x1 == p1ExitX && y1 == p1ExitY);
 			p2HasReached = parent.p2HasReached || (x2 == p2ExitX && y2 == p2ExitY);
 		}
+		if(focusOnP1 || focusOnP2){
+			p1HasReached = false;
+			p2HasReached = false;
+		}
 		
 		if((!p1HasReached || !p2HasReached) && (p1HasReached || p2HasReached)){
 			selfDegree = parent.selfDegree + 1;
@@ -169,7 +173,7 @@ public class Node_2 implements Comparable<Node_2>{
 	}
 
 	private double heuristic_2(){
-		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1());
+		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1(), false);
 		Node_Single ns = as.findPath();
 		int first;
 		if(ns != null){
@@ -180,7 +184,7 @@ public class Node_2 implements Comparable<Node_2>{
 		if(focusOnP1){
 			first *= 3;
 		}
-		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2());
+		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2(), false);
 		ns = as.findPath();
 		int second;
 		if(ns != null){

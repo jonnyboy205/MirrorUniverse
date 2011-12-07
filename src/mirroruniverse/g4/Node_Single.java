@@ -28,6 +28,11 @@ public class Node_Single implements Comparable<Node_Single> {
 	private int exitX;
 	private int exitY;
 	
+	public void setExits(int x, int y){
+		exitX = x;
+		exitY = y;
+	}
+	
 	// The path taken to get to this node
 	private ArrayList<Integer> actionPath;
 
@@ -72,6 +77,13 @@ public class Node_Single implements Comparable<Node_Single> {
 	private double heuristic() {
 		int distance = Math.max(Math.abs(x1 - exitX), Math.abs(y1 - exitY));
 		return distance + depth;
+	}
+	
+	public static void reRunHeuristic(ArrayList<Node_Single> set, int x, int y){
+		for(Node_Single n : set){
+			n.setExits(x, y);
+			n.value = n.heuristic();
+		}
 	}
 
 	public double getValue() {
