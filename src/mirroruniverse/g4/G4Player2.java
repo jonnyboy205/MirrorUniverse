@@ -300,7 +300,7 @@ public class G4Player2 implements Player {
 	private ArrayList<Integer> exploreMore(int player_n)
 	{
 		ArrayList<Integer> path_to_follow = new ArrayList<Integer>();
-		boolean valid = true;
+		boolean valid = false;
 		PriorityQueue<OurPoint> points_to_see = new PriorityQueue<OurPoint>();
 		points_to_see = getNewSpace(player_n);
 		OurPoint to_go = points_to_see.poll();
@@ -308,11 +308,13 @@ public class G4Player2 implements Player {
 		{
 			AStar_Single ast;
 			if(player_n == 1)
-				ast = new AStar_Single(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1);
+				ast = new AStar_Single(p1Pos[0], p1Pos[1], to_go.x, to_go.y, kb_p1);
 			else //player_n = 2
-				ast = new AStar_Single(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p2);
+				ast = new AStar_Single(p2Pos[0], p2Pos[1], to_go.x, to_go.y, kb_p2);
 			path_to_follow = ast.findPath().getActionPath();
 			valid = isPathValid(path_to_follow);
+			if(valid == false)
+				to_go = points_to_see.poll();
 		}
 		return path_to_follow;
 	}
