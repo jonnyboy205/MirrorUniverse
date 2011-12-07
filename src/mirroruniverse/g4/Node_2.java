@@ -173,7 +173,7 @@ public class Node_2 implements Comparable<Node_2>{
 	}
 
 	private double heuristic_2(){
-		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1(), false);
+		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1(), true);
 		Node_Single ns = as.findPath();
 		int first;
 		if(ns != null){
@@ -184,7 +184,7 @@ public class Node_2 implements Comparable<Node_2>{
 		if(focusOnP1){
 			first *= 3;
 		}
-		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2(), false);
+		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2(), true);
 		ns = as.findPath();
 		int second;
 		if(ns != null){
