@@ -25,6 +25,44 @@ public class G4PlayerAstarTest implements Player{
 	
 	private ArrayList<Integer> path = new ArrayList<Integer>();
 
+	public void printMaps(int[][] aintViewL, int[][] aintViewR){
+		for(int y = 0; y < aintViewL.length; ++y){
+			for(int x = 0; x < aintViewL[0].length; ++x){
+				if(x == sightRadius1 && y == sightRadius1){
+					System.out.print("*");
+				} else {
+					System.out.print(kb_p1[p1Pos[1] - sightRadius1 + y][p1Pos[0] - sightRadius1 + x]);
+				}
+			}
+			System.out.print("\t");
+			for(int x = 0; x < aintViewL[0].length; ++x){
+				if(x == sightRadius1 && y == sightRadius1){
+					System.out.print("*");
+				} else {
+					System.out.print(aintViewL[y][x]);
+				}
+			}
+			System.out.print("\t\t");
+			for(int x = 0; x < aintViewL[0].length; ++x){
+				if(x == sightRadius1 && y == sightRadius1){
+					System.out.print("*");
+				} else {
+					System.out.print(kb_p2[p2Pos[1] - sightRadius1 + y][p2Pos[0] - sightRadius1 + x]);
+				}
+			}
+			System.out.print("\t");
+			for(int x = 0; x < aintViewL[0].length; ++x){
+				if(x == sightRadius1 && y == sightRadius1){
+					System.out.print("*");
+				} else {
+					System.out.print(aintViewR[y][x]);
+				}
+			}
+			System.out.println();
+		}
+		System.out.println("p1: " + p1Pos[0] + "," + p1Pos[1] + "\tp2:" + p2Pos[0] + "," + p2Pos[1]);
+	}
+	
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
 		sightRadius1 = (aintViewL.length-1)/2;
@@ -32,7 +70,10 @@ public class G4PlayerAstarTest implements Player{
 		if (!started){
 			initialize(aintViewL);
 		}
+		p1Pos[0] = p1Pos[1] = sightRadius1;
+		p2Pos[0] = p2Pos[1] = sightRadius2;
 		if(path.isEmpty()){
+			printMaps(aintViewL, aintViewR);
 			int[] exit1 = new int[2];
 			int[] exit2 = new int[2];
 			for(int y = 0; y < aintViewL.length; ++y){
@@ -51,7 +92,7 @@ public class G4PlayerAstarTest implements Player{
 					}
 				}
 			}
-			AStar_2 a = new AStar_2(sightRadius1,sightRadius1,sightRadius2,sightRadius2,aintViewL,aintViewR);
+			AStar_2 a = new AStar_2(p1Pos[0],p1Pos[1],p2Pos[0],p2Pos[1],aintViewL,aintViewR);
 			a.setExit1(exit1[0], exit1[1]);
 			a.setExit2(exit2[0], exit2[1]);
 			path = a.findPath();

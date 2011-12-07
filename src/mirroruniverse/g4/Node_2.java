@@ -28,6 +28,24 @@ public class Node_2 implements Comparable<Node_2>{
 	
 	private boolean p1HasReached;
 	private boolean p2HasReached;
+	private static boolean focusOnP1;
+	private static boolean focusOnP2;
+	
+	public static void setFocus(int player){
+		switch(player){
+		case 1:
+			focusOnP1 = true;
+			focusOnP2 = false;
+			break;
+		case 2:
+			focusOnP1 = false;
+			focusOnP2 = true;
+			break;
+		default:
+			focusOnP1 = false;
+			focusOnP2 = false;
+		}
+	}
 	
 	public boolean getP1HasReached(){
 		return p1HasReached;
@@ -51,6 +69,13 @@ public class Node_2 implements Comparable<Node_2>{
 	private static int p1ExitY = -1000;
 	private static int p2ExitX = -1000;
 	private static int p2ExitY = -1000;
+	
+	public static void resetExits(){
+		p1ExitX = -1000;
+		p1ExitY = -1000;
+		p2ExitX = -1000;
+		p2ExitY = -1000;
+	}
 	
 	private Node_2 parent;
 	
@@ -108,10 +133,6 @@ public class Node_2 implements Comparable<Node_2>{
 		p2HasReached = false;
 		parent = expanded;
 		
-		if(x1 == 148 && y1 == 150 && x2 == 155 && y2 == 149){
-			x1 += 0;
-		}
-		
 		updateSelfDegree();
 		
 		if(parent == null){
@@ -125,12 +146,6 @@ public class Node_2 implements Comparable<Node_2>{
 
 			// Set the value of this node equal to our heuristic rating for it
 			value = this.heuristic_2();
-		}
-		if(parent != null && parent.x1 == p1ExitX && parent.y1 == p1ExitY && parent.selfDegree == 0){
-			x1 += 0;
-		}
-		if(x1 == p1ExitX && y1 == p1ExitY && selfDegree == 0){
-			x1 += 0;
 		}
 	}
 	
@@ -155,9 +170,27 @@ public class Node_2 implements Comparable<Node_2>{
 
 	private double heuristic_2(){
 		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1());
-		int first = as.findPath().getDepth();
+		Node_Single ns = as.findPath();
+		int first;
+		if(ns != null){
+			first = ns.getDepth();
+		} else {
+			first = 1000000;
+		}
+		if(focusOnP1){
+			first *= 3;
+		}
 		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2());
-		int second = as.findPath().getDepth();
+		ns = as.findPath();
+		int second;
+		if(ns != null){
+			second = ns.getDepth();
+		} else {
+			second = 1000000;
+		}
+		if(focusOnP2){
+			second *= 3;
+		}
 		int toReturn = first + second;
 		if(selfDegree > degree){
 			toReturn += 10000;
@@ -314,7 +347,11 @@ public class Node_2 implements Comparable<Node_2>{
 	}
 	
 	public boolean closeEnough(){
-		if(x1 == p1ExitX && y1 == p1ExitY){
+		if(focusOnP1){
+			return x1 == p1ExitX && y1 == p1ExitY;
+		} else if (focusOnP2){
+			return x2 == p2ExitX && y2 == p2ExitY;
+		} else if(x1 == p1ExitX && y1 == p1ExitY){
 			if(selfDegree <= degree){
 				return p2HasReached;
 			}

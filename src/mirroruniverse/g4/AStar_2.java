@@ -11,15 +11,20 @@ public class AStar_2 {
 	PriorityQueue<Node_2> queue;
 	ArrayList<Node_2> closed;
 	ArrayList<Node_2> nodesToPutOff;
-	private int numExitsFound = 0;
+	private int numExitsFound;
 	public boolean debugging = false;
 	private int maxNodes;
 	private boolean increase;
 	private boolean addedToDegree = false;
 	private static boolean goNextToExit = false;
 	private static int nextToVal;
+	private boolean goingToExit;
 	
 	private int numAdded = 0;
+	
+	public Node_2 getRoot(){
+		return root;
+	}
 	
 	public static int[][] getMap1(){
 		return map1;
@@ -33,6 +38,10 @@ public class AStar_2 {
 		map1 = kb_p1;
 		map2 = kb_p2;
 		root = new Node_2(initialX1, initialY1, initialX2, initialY2, null, 0);
+		Node_2.resetDegree();
+		Node_2.resetExits();
+		numExitsFound = 0;
+		goingToExit = true;
 		
 		maxNodes = 0;
 		int numOnes = 0;
@@ -63,7 +72,16 @@ public class AStar_2 {
 			prettyPrint(root);
 		}
 		increase = false;
-		nextToVal = 3;
+		nextToVal = 2;
+		Node_2.setFocus(3);
+	}
+	
+	public void setGoingToExit(boolean b){
+		goingToExit = b;
+	}
+	
+	public void setMaxNodes(int n){
+		maxNodes = n;
 	}
 	
 	public static void setNextToVal(int n){
@@ -104,7 +122,7 @@ public class AStar_2 {
 		}
 	}
 	
-	private boolean exitTogether(){
+	public boolean exitTogether(){
 		int exit1X = Node_2.getExit1X();
 		int exit2X = Node_2.getExit2X();
 		int exit1Y = Node_2.getExit1Y();
@@ -320,11 +338,16 @@ public class AStar_2 {
 						continue;
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {}
+				try {
+					if(!goingToExit){
+						if(map1[y1][x1] == 2 || map2[y2][x2] == 2){
+							++action;
+							continue;
+						}
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {}
 				Node_2 toAdd = new Node_2(x1, y1, x2, y2, n, indexOfAction[action]);
 				//Node_2.addPathCost(toAdd, 1, map1, map2);
-				if(x1 == 56 && y1 == 103 && x2 == 125 && y2 == 126){
-					System.out.println();
-				}
 				if(!n.equals(toAdd) && shouldIAdd(toAdd)){
 					nexts.add(toAdd);
 					++numAdded;
@@ -365,7 +388,9 @@ public class AStar_2 {
 				//}
 			}
 		}
-
+		if(n.getValue() > 1000000){
+			return false;
+		}
 		if(n.getValue() > 10000){
 			for(Node_2 o : nodesToPutOff){
 				if (n.equals(o)){

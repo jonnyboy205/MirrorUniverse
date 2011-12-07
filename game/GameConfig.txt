@@ -1,2 +1,2 @@
-5, 50, 5, -1, maps/g1Maps/secondbigmap1.txt, 5
-5, 23, 5, -1, maps/g1Maps/secondbigmap2.txt, 5
+5, 50, 1, -1, maps/MisAlignmentLeft.txt, 5
+5, 23, 1, -1, maps/MisAlignmentRight.txt, 5
