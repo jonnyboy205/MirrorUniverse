@@ -41,7 +41,7 @@ public class G4Player2 implements Player {
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
-		if(turn == 45){
+		if(turn == 581){
 			System.out.println();
 		}
 		if (!started) {
@@ -71,7 +71,9 @@ public class G4Player2 implements Player {
 			Node_Single ns = as.findPath();
 			if (ns != null) {
 				leftExitSet = true;
-				path.clear();
+				if(!p2Exited && singleSetThisPath){
+					path.clear();
+				}
 			}
 		}
 		// right player finding exit and updating kb
@@ -93,7 +95,9 @@ public class G4Player2 implements Player {
 			Node_Single ns = as.findPath();
 			if (ns != null) {
 				rightExitSet = true;
-				path.clear();
+				if(!p1Exited && singleSetThisPath){
+					path.clear();
+				}
 			}
 		}
 
@@ -118,6 +122,11 @@ public class G4Player2 implements Player {
 					AStar_Single as = new AStar_Single(p1Pos[0], p1Pos[1], leftExitX, leftExitY, kb_p1, false);
 					path = as.findPath().getActionPath();
 				}
+			}
+			if(readyToExit == true)
+			{
+				exploreFurtherLeft = false;
+				exploreFurtherRight = false;
 			}
 			if(path.isEmpty() && readyToExit == false) //whether to explore more
 			{
@@ -417,6 +426,7 @@ public class G4Player2 implements Player {
 		// update new position
 		if(aintLocalViewL[sightRadius1][sightRadius1] == 2){
 			p1Exited = true;
+			readyToExit = true;
 		} else if (aintLocalViewL[sightRadius1 + intDeltaY][sightRadius1 + intDeltaX] == 0) {
 			p1Pos[0] += intDeltaX;
 			p1Pos[1] += intDeltaY;
@@ -428,6 +438,7 @@ public class G4Player2 implements Player {
 			 p1Pos[0] += intDeltaX;
 			 p1Pos[1] += intDeltaY;
 			 p1Exited = true;
+			 readyToExit = true;
 		}
 		/*if(p1Pos[0] == leftExitX && p1Pos[1] == leftExitY){
 			p1Exited = true;
@@ -437,6 +448,7 @@ public class G4Player2 implements Player {
 		// update new position
 		if(aintLocalViewR[sightRadius2][sightRadius2] == 2){
 			p2Exited = true;
+			readyToExit = true;
 		} else if (aintLocalViewR[sightRadius2 + intDeltaY][sightRadius2 + intDeltaX] == 0) {
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
@@ -448,6 +460,7 @@ public class G4Player2 implements Player {
 			p2Pos[0] += intDeltaX;
 			p2Pos[1] += intDeltaY;
 			p2Exited = true;
+			readyToExit = true;
 		}
 		/*if(p2Pos[0] == rightExitX && p2Pos[1] == rightExitY){
 			p2Exited = true;
