@@ -28,6 +28,30 @@ public class Node_Single implements Comparable<Node_Single> {
 	private int exitX;
 	private int exitY;
 	
+	public void setExits(int x, int y){
+		exitX = x;
+		exitY = y;
+	}
+	
+	public int getExitX(){
+		return exitX;
+	}
+	
+	public int getExitY(){
+		return exitY;
+	}
+	
+	private int rootX;
+	private int rootY;
+	
+	public int getRootX(){
+		return rootX;
+	}
+	
+	public int getRootY(){
+		return rootY;
+	}
+	
 	// The path taken to get to this node
 	private ArrayList<Integer> actionPath;
 
@@ -43,6 +67,8 @@ public class Node_Single implements Comparable<Node_Single> {
 		exitX = parent.exitX;
 		exitY = parent.exitY;
 		depth = parent.getDepth() + 1;
+		rootX = parent.rootX;
+		rootY = parent.rootY;
 		
 
 		actionPath = (ArrayList<Integer>) parent.getActionPath().clone();
@@ -58,6 +84,8 @@ public class Node_Single implements Comparable<Node_Single> {
 		y1 = p1Y;
 		exitX = xExit;
 		exitY = yExit;
+		rootX = p1X;
+		rootY = p1Y;
 
 		depth = 0;
 
@@ -72,6 +100,20 @@ public class Node_Single implements Comparable<Node_Single> {
 	private double heuristic() {
 		int distance = Math.max(Math.abs(x1 - exitX), Math.abs(y1 - exitY));
 		return distance + depth;
+	}
+	
+	public void setNewPath(ArrayList<Integer> set){
+		while(!set.isEmpty()){
+			actionPath.add(set.remove(0));
+		}
+		depth = actionPath.size();
+	}
+	
+	public static void reRunHeuristic(ArrayList<Node_Single> set, int x, int y){
+		for(Node_Single n : set){
+			n.setExits(x, y);
+			n.value = n.heuristic();
+		}
 	}
 
 	public double getValue() {

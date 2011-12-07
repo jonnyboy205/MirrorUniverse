@@ -20,7 +20,7 @@ public class AStar_2 {
 	private static int nextToVal;
 	private boolean goingToExit;
 	private boolean focus;
-	
+	private int to_show_degree = -1;
 	private int numAdded = 0;
 	
 	public Node_2 getRoot(){
@@ -33,6 +33,11 @@ public class AStar_2 {
 	
 	public static int[][] getMap2(){
 		return map2;
+	}
+	
+	public int get_show_degree()
+	{
+		return to_show_degree;
 	}
 	
 	public AStar_2(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
@@ -178,6 +183,7 @@ public class AStar_2 {
 	}
 	
 	public Node_2 findZeroPath(){
+		System.out.println("zero");
 		if(!exitTogether() && !focus){
 			return null;
 		}
@@ -196,22 +202,26 @@ public class AStar_2 {
 			ArrayList<Node_2> nexts = successors(queue.poll());
 			queue.addAll(nexts);
 		}
+		System.out.println("Finished:");
 		Node_2 toReturn = null;
 		if(!queue.isEmpty()){
 			toReturn = queue.poll();
 		}
 		queue.clear();
+		AStar_Single.resetContinueClosed();
 		return toReturn;
 	}
 	
 	public ArrayList<Integer> startFinding(){
 		if(!closed.isEmpty()){
 			queue.addAll(closed);
+			closed.clear();
 		}
 		return findPath();
 	}
 	
 	public ArrayList<Integer> findPath(){
+		System.out.println("full");
 		while(!queue.isEmpty() && queue.peek().getValue() != 0 && !queue.peek().closeEnough()){
 			if(numAdded > maxNodes){
 				queue.clear();
@@ -243,11 +253,13 @@ public class AStar_2 {
 			exitsFound();
 			return findPath();
 		} else {
+			to_show_degree = queue.peek().getSelfDegree();
 			System.out.println("Found :)");
 			System.out.println(queue.peek());
 			System.out.println(queue.peek().getActionPath());
 			closed.clear();
 			nodesToPutOff.clear();
+			AStar_Single.resetContinueClosed();
 			return queue.peek().getActionPath();
 		}
 	}

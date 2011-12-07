@@ -1,6 +1,7 @@
 package mirroruniverse.g4;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class AStar_Single {
@@ -12,8 +13,10 @@ public class AStar_Single {
 	public boolean debugging = false;
 	private int maxNodes = Integer.MAX_VALUE;
 	private int nodesExpanded;
+	private static HashMap<ArrayList<Integer>,ArrayList<Integer>> continueClosed;
+	private boolean useClosed;
 	
-	public AStar_Single(int initialX, int initialY, int exitX, int exitY, int[][] kb){
+	public AStar_Single(int initialX, int initialY, int exitX, int exitY, int[][] kb, boolean useSeed){
 		root = new Node_Single(initialX, initialY, exitX, exitY);
 		map = kb;
 		
@@ -21,6 +24,21 @@ public class AStar_Single {
 		queue.add(root);
 		closed = new ArrayList<Node_Single>();
 		nodesExpanded = 0;
+		useClosed = useSeed;
+		
+		if(useClosed){
+			if(continueClosed == null){
+				continueClosed = new HashMap<ArrayList<Integer>,ArrayList<Integer>>();
+			} else {
+				//Node_Single.reRunHeuristic(continueClosed, exitX, exitY);
+				//System.out.println(continueClosed.size());
+				//queue.addAll(continueClosed.keySet());
+			}
+		}
+	}
+	
+	public static void resetContinueClosed(){
+		continueClosed.clear();
 	}
 	
 	public void setMaxNodes(int n){
@@ -58,8 +76,33 @@ public class AStar_Single {
 				queue.clear();
 				break;
 			}
+			Node_Single lookingAt = queue.peek();
+			ArrayList<Integer> temp = new ArrayList<Integer>();
+			temp.add(lookingAt.getX1());
+			temp.add(lookingAt.getY1());
+			temp.add(lookingAt.getExitX());
+			temp.add(lookingAt.getExitY());
+			if(useClosed){
+				ArrayList<Integer> prevPath = continueClosed.get(temp);
+				if(prevPath != null){
+					lookingAt.setNewPath(prevPath);
+					break;
+				}
+			}
 			ArrayList<Node_Single> nexts = successors(queue.poll());
 			queue.addAll(nexts);
+		}
+		if(useClosed){
+			for(Node_Single n : closed){
+			ArrayList<Integer> temp = new ArrayList<Integer>();
+			temp.add(n.getRootX());
+			temp.add(n.getRootY());
+			temp.add(n.getExitX());
+			temp.add(n.getExitY());
+				if(!continueClosed.keySet().contains(temp)){
+					continueClosed.put(temp,n.getActionPath());
+				}
+			}
 		}
 		//System.out.println("Done");
 		if(queue.isEmpty()){
