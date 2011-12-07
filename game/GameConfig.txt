@@ -1,2 +1,2 @@
-5, 50, 1, -1, maps/g7Maps/map_50_50_illusion_1.txt, 5
-5, 23, 1, -1, maps/g7Maps/map_50_50_illusion_2.txt, 5
+5, 50, 5, -1, maps/g1Maps/secondbigmap1.txt, 5
+5, 23, 5, -1, maps/g1Maps/secondbigmap2.txt, 5
