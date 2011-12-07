@@ -19,7 +19,7 @@ public class AStar_2 {
 	private static boolean goNextToExit = false;
 	private static int nextToVal;
 	private boolean goingToExit;
-	
+	private int to_show_degree = -1;
 	private int numAdded = 0;
 	
 	public Node_2 getRoot(){
@@ -32,6 +32,11 @@ public class AStar_2 {
 	
 	public static int[][] getMap2(){
 		return map2;
+	}
+	
+	public int get_show_degree()
+	{
+		return to_show_degree;
 	}
 	
 	public AStar_2(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
@@ -200,6 +205,7 @@ public class AStar_2 {
 	public ArrayList<Integer> startFinding(){
 		if(!closed.isEmpty()){
 			queue.addAll(closed);
+			closed.clear();
 		}
 		return findPath();
 	}
@@ -236,6 +242,7 @@ public class AStar_2 {
 			exitsFound();
 			return findPath();
 		} else {
+			to_show_degree = queue.peek().getSelfDegree();
 			System.out.println("Found :)");
 			System.out.println(queue.peek());
 			System.out.println(queue.peek().getActionPath());
