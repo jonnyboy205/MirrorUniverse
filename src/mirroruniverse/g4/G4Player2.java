@@ -536,7 +536,7 @@ public class G4Player2 implements Player {
 			} else {
 				map = kb_p2;
 			}
-			AStar_Single as = new AStar_Single(currentX, currentY, x, y, map, true);
+			AStar_Single as = new AStar_Single(currentX, currentY, x, y, map, false);
 			Node_Single ns = as.findPath();
 			if(ns == null){
 				dist = Integer.MAX_VALUE;
@@ -759,12 +759,15 @@ public class G4Player2 implements Player {
 				}
 			}
 		}
+		if(turn == 89){
+			System.out.println();
+		}
 		PriorityQueue<OurPoint> tempQ = new PriorityQueue<OurPoint>();
 		do{
-		for(int i = 0; i < 5; ++i){
+		for(int i = 0; i < 5  && !points.isEmpty(); ++i){
 			OurPoint p = points.poll();
 			p.calculateDist();
-			if(p.pathToFollow.isEmpty()){
+			if(p.pathToFollow == null || p.pathToFollow.isEmpty()){
 				--i;
 				continue;
 			}
