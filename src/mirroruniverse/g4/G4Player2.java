@@ -127,19 +127,23 @@ public class G4Player2 implements Player {
 				if(as2temp.exitTogether())
 				{
 					Node_2 ns2Temp = as2temp.findZeroPath();
-					if (ns2Temp != null || isMapComplete(3)) {
+					if (ns2Temp != null) {
 						path = ns2Temp.getActionPath();
 						readyToExit = true;
 					}
+					else if(isMapComplete(3))
+						readyToExit = true;
 					else //explore more
 					{
-						counter = 0;
+//						counter = 0;
 						if (!isMapComplete(1) && exploreFurtherLeft) {
 							path = exploreMore(1);
-							if(path == null) { exploreFurtherLeft = false; }
+							if(path == null) 
+							{ exploreFurtherLeft = false; }
 						} else if(exploreFurtherRight){
 							path = exploreMore(2);
-							if(path == null) { exploreFurtherRight = false; }
+							if(path == null) 
+							{ exploreFurtherRight = false; }
 						}
 						if(!exploreFurtherLeft && !exploreFurtherRight)
 							readyToExit = true;

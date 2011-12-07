@@ -35,6 +35,7 @@ public class AStar_Single {
 				//queue.addAll(continueClosed.keySet());
 			}
 		}
+		useClosed = false;
 	}
 	
 	public static void resetContinueClosed(){
