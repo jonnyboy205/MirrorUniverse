@@ -40,6 +40,10 @@ public class AStar_2 {
 		return to_show_degree;
 	}
 	
+	public void setUseSeed(boolean b){
+		root.setUseSeed(b);
+	}
+	
 	public AStar_2(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		map1 = kb_p1;
 		map2 = kb_p2;

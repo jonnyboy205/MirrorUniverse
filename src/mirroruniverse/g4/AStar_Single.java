@@ -26,14 +26,8 @@ public class AStar_Single {
 		nodesExpanded = 0;
 		useClosed = useSeed;
 		
-		if(useClosed){
 			if(continueClosed == null){
 				continueClosed = new HashMap<ArrayList<Integer>,ArrayList<Integer>>();
-			} else {
-				//Node_Single.reRunHeuristic(continueClosed, exitX, exitY);
-				//System.out.println(continueClosed.size());
-				//queue.addAll(continueClosed.keySet());
-			}
 		}
 //		useClosed = false;
 	}

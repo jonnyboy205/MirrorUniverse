@@ -30,6 +30,11 @@ public class Node_2 implements Comparable<Node_2>{
 	private boolean p2HasReached;
 	private static boolean focusOnP1;
 	private static boolean focusOnP2;
+	private boolean useSeed;
+	
+	public void setUseSeed(boolean b){
+		useSeed = b;
+	}
 	
 	public static void setFocus(int player){
 		switch(player){
@@ -139,6 +144,7 @@ public class Node_2 implements Comparable<Node_2>{
 			depth = 0;
 			actionPath = new ArrayList<Integer>();
 			value = -1;
+			useSeed = false;
 		} else {
 			depth = parent.getDepth() + 1;
 			actionPath = ((ArrayList<Integer>) parent.getActionPath().clone());
@@ -146,6 +152,7 @@ public class Node_2 implements Comparable<Node_2>{
 
 			// Set the value of this node equal to our heuristic rating for it
 			value = this.heuristic_2();
+			useSeed = parent.useSeed;
 		}
 	}
 	
@@ -173,7 +180,7 @@ public class Node_2 implements Comparable<Node_2>{
 	}
 
 	private double heuristic_2(){
-		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1(), true);
+		AStar_Single as = new AStar_Single(x1,y1,p1ExitX,p1ExitY,AStar_2.getMap1(), useSeed);
 		Node_Single ns = as.findPath();
 		int first;
 		if(ns != null){
@@ -184,7 +191,7 @@ public class Node_2 implements Comparable<Node_2>{
 		if(focusOnP1){
 			first *= 3;
 		}
-		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2(), true);
+		as = new AStar_Single(x2,y2,p2ExitX,p2ExitY,AStar_2.getMap2(), useSeed);
 		ns = as.findPath();
 		int second;
 		if(ns != null){

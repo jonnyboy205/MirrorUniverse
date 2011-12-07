@@ -953,6 +953,7 @@ public class G4Player2 implements Player {
 				a2.setExit1(p1[0], p1[1]);
 				a2.setExit2(p2[0], p2[1]);
 				a2.setGoingToExit(false);
+				a2.setUseSeed(true);
 				a2.setFocus(op.player);
 				a2.setMaxNodes(32 * (op.dist - Integer.MAX_VALUE + 1000));
 				Node_2 n2 = a2.findZeroPath();
