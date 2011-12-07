@@ -43,6 +43,7 @@ public class G4Player2 implements Player {
 		if (!started) {
 			initialize(aintViewL, aintViewR);
 		}
+		turn++;
 
 		// left player finding exit and updating kb
 		for (int y = 0; y < aintViewL.length; ++y) {
@@ -81,6 +82,7 @@ public class G4Player2 implements Player {
 				}
 			}
 		}
+		
 		if (!rightExitSet && rightExitX != -1) {
 			AStar_Single as = new AStar_Single(p2Pos[0], p2Pos[1], rightExitX,
 					rightExitY, kb_p2);
@@ -91,9 +93,9 @@ public class G4Player2 implements Player {
 			}
 		}
 		
-		if (isMapComplete(1)){
-			System.out.print("");
-		}
+//		if (isMapComplete(1)){
+//			System.out.print("");
+//		}
 
 		// after you find the exits, call AStar
 		// if not, call the modified AStar on some point given by
@@ -275,7 +277,7 @@ public class G4Player2 implements Player {
 			}
 		}
 		// initialDir = 2;
-		turn = 1;
+		turn = -1;
 		rightExitSet = false;
 		leftExitSet = false;
 		p1Exited = false;
@@ -817,10 +819,11 @@ public class G4Player2 implements Player {
 
 		// if the right player's next move is an empty space
 		// update new position
-		if (aintLocalViewL[sightRadius1 + intDeltaY3][sightRadius1 + intDeltaX3] == 0) {
+		if (kb_p1[p1PosFuture[1] + intDeltaY3][p1PosFuture[0] + intDeltaX3] == 0
+				/*|| kb_p1[p1PosFuture[1] + intDeltaY3][p1PosFuture[0] + intDeltaX3] == 3*/) {
 			p1PosFuture[0] += intDeltaX3;
 			p1PosFuture[1] += intDeltaY3;
-		} else if (aintLocalViewL[sightRadius1 + intDeltaY3][sightRadius1
+		} else if (kb_p1[p1PosFuture[1] + intDeltaY3][p1PosFuture[0]
 				+ intDeltaX3] == 1) {
 			// nothing changes, you couldn't move, and so you are in the same
 			// place
@@ -831,10 +834,10 @@ public class G4Player2 implements Player {
 
 		// if the right player's next move is an empty space
 		// update new position
-		if (aintLocalViewR[sightRadius2 + intDeltaY3][sightRadius2 + intDeltaX3] == 0) {
+		if (kb_p2[p2PosFuture[1] + intDeltaY3][p2PosFuture[0] + intDeltaX3] == 0) {
 			p2PosFuture[0] += intDeltaX3;
 			p2PosFuture[1] += intDeltaY3;
-		} else if (aintLocalViewR[sightRadius2 + intDeltaY3][sightRadius2
+		} else if (kb_p2[p2PosFuture[1] + intDeltaY3][p2PosFuture[0]
 				+ intDeltaX3] == 1) {
 			// nothing changes, you couldn't move, and so you are in the same
 			// place
