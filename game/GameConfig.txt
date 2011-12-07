@@ -1,2 +1,2 @@
-5, 50, 1, -1, maps/MisAlignmentLeft.txt, 5
-5, 23, 1, -1, maps/MisAlignmentRight.txt, 5
+5, 50, 3, -1, maps/g4Maps/Board2_L.txt, 5
+5, 23, 3, -1, maps/g4Maps/Board2_R.txt, 5
