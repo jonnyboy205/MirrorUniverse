@@ -123,8 +123,9 @@ public class G4Player2 implements Player {
 				as2temp.setExit2(rightExitX, rightExitY);
 				if(as2temp.exitTogether())
 				{
-					if (as2temp.findZeroPath() != null || isMapComplete(3)) {
-						path = as2temp.startFinding();
+					Node_2 ns2Temp = as2temp.findZeroPath();
+					if (ns2Temp != null || isMapComplete(3)) {
+						path = ns2Temp.getActionPath();
 						readyToExit = true;
 					}
 					else //explore more
