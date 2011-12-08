@@ -255,7 +255,7 @@ public class Node_2 implements Comparable<Node_2>{
 	public static void addDiff(ArrayList<Node_2> set){
 		reRunHeuristic(set);
 		for(Node_2 n: set){
-			n.value += 1 * n.calcDiff();
+			n.value += 5 * n.calcDiff();
 		}
 	}
 	public void addDiff(){
