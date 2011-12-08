@@ -38,6 +38,8 @@ public class G4Player2 implements Player {
 	private int counter;
 	private boolean exploreFurtherLeft = true;
 	private boolean exploreFurtherRight = true;
+	private boolean exploredMore = false;
+	private int maxCounter;
 
 	@Override
 	public int lookAndMove(int[][] aintViewL, int[][] aintViewR) {
@@ -133,29 +135,41 @@ public class G4Player2 implements Player {
 				AStar_2 as2temp = new AStar_2(p1Pos[0], p1Pos[1], p2Pos[0], p2Pos[1], kb_p1, kb_p2);
 				as2temp.setExit1(leftExitX, leftExitY);
 				as2temp.setExit2(rightExitX, rightExitY);
+				as2temp.setUseIncrease(true);
 				if(as2temp.exitTogether())
 				{
-					Node_2 ns2Temp = as2temp.findZeroPath();
-					if (ns2Temp != null) {
-						path = ns2Temp.getActionPath();
-						readyToExit = true;
-					}
-					else if(isMapComplete(3))
-						readyToExit = true;
-					else //explore more
-					{
-//						counter = 0;
-						if (!isMapComplete(1) && exploreFurtherLeft) {
-							path = exploreMore(1);
-							if(path == null) 
-							{ exploreFurtherLeft = false; }
-						} else if(exploreFurtherRight){
-							path = exploreMore(2);
-							if(path == null) 
-							{ exploreFurtherRight = false; }
+					exploredMore = true;
+					if (!readyToExit) {
+						if (counter >= maxCounter) {
+							counter = 0;
+							Node_2 ns2Temp = as2temp.findZeroPath();
+							if (ns2Temp != null) {
+								path = ns2Temp.getActionPath();
+								readyToExit = true;
+								path.clear();
+							}
+						} else {
+							counter++;
 						}
-						if(!exploreFurtherLeft && !exploreFurtherRight)
+					}
+					if(!readyToExit)
+					{
+						if(isMapComplete(3))
 							readyToExit = true;
+						else //explore more
+						{
+							if (!isMapComplete(1) && exploreFurtherLeft) {
+								path = exploreMore(1);
+								if(path == null) 
+								{ exploreFurtherLeft = false; }
+							} else if(exploreFurtherRight){
+								path = exploreMore(2);
+								if(path == null) 
+								{ exploreFurtherRight = false; }
+							}
+							if(!exploreFurtherLeft && !exploreFurtherRight)
+								readyToExit = true;
+						}
 					}
 				}
 			}
@@ -192,6 +206,9 @@ public class G4Player2 implements Player {
 				AStar_2.invertGoNextToExit();
 				a.setExit1(leftExitX, leftExitY);
 				a.setExit2(rightExitX, rightExitY);
+				if(exploredMore){
+					a.setUseIncrease(true);
+				}
 				path = a.findPath();
 
 				/*
@@ -201,14 +218,14 @@ public class G4Player2 implements Player {
 			}
 			if (!path.isEmpty()) {
 				direction = path.remove(0);
-				if (!readyToExit) {
-					if (counter >= 20) {
-						path.clear();
-						counter = 0;
-					} else {
-						counter++;
-					}
-				}
+//				if (!readyToExit) {
+//					if (counter >= 20) {
+//						path.clear();
+//						counter = 0;
+//					} else {
+//						counter++;
+//					}
+//				}
 			}
 
 		} else if (!leftExitSet) {
@@ -394,6 +411,7 @@ public class G4Player2 implements Player {
 		started = true;
 		sightRadius1 = (aintViewL[0].length - 1) / 2;
 		sightRadius2 = (aintViewR[0].length - 1) / 2;
+		maxCounter = 20>(21-sightRadius1)? 20 : 21-sightRadius1;
 		kb_p1 = new int[2 * (MAX_SIZE + sightRadius1) - 1][2 * (MAX_SIZE + sightRadius1) - 1];
 		kb_p2 = new int[2 * (MAX_SIZE + sightRadius2) - 1][2 * (MAX_SIZE + sightRadius2) - 1];
 

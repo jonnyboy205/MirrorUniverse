@@ -247,14 +247,21 @@ public class Node_2 implements Comparable<Node_2>{
 		int diffExitY = p1ExitY - p2ExitY;
 		int diffPY = y1-y2;
 		
-		return Math.abs(diffExitX - diffPX) + Math.abs(diffExitY - diffPY);
+		int n = Math.abs(diffExitX - diffPX) + Math.abs(diffExitY - diffPY);
+		//System.out.println(n);
+		return n;
 	}
 	
 	public static void addDiff(ArrayList<Node_2> set){
 		reRunHeuristic(set);
 		for(Node_2 n: set){
-			n.value += n.calcDiff();
+			n.value += 1 * n.calcDiff();
 		}
+	}
+	public void addDiff(){
+		value = heuristic_2();
+		updateSelfDegree();
+		value += 20 * calcDiff();
 	}
 	
 	public static void reRunHeuristic(ArrayList<Node_2> set){
@@ -262,7 +269,7 @@ public class Node_2 implements Comparable<Node_2>{
 		ArrayList<Node_2> newSet = new ArrayList<Node_2>();
 		for(Node_2 n : set){
 //			if(n.getValue() > 9999){
-				n.value = n.heuristic();
+				n.value = n.heuristic_2();
 				n.updateSelfDegree();
 				newSet.add(n);
 //			} else if (n.getValue() <= degree){

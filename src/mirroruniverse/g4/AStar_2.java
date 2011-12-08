@@ -22,6 +22,7 @@ public class AStar_2 {
 	private boolean focus;
 	private int to_show_degree = -1;
 	private int numAdded = 0;
+	private boolean useIncrease = false;
 	
 	public Node_2 getRoot(){
 		return root;
@@ -44,6 +45,10 @@ public class AStar_2 {
 		root.setUseSeed(b);
 	}
 	
+	public void setUseIncrease(boolean b){
+		useIncrease = b;
+	}
+	
 	public AStar_2(int initialX1, int initialY1, int initialX2, int initialY2, int[][] kb_p1, int[][] kb_p2){
 		map1 = kb_p1;
 		map2 = kb_p2;
@@ -54,25 +59,48 @@ public class AStar_2 {
 		goingToExit = true;
 		
 		maxNodes = 0;
-		int numOnes = 0;
-		int numZeros = 0;
+		int numOnes1 = 0;
+		int numZeros1 = 0;
 		for(int i = 0; i < kb_p1.length; ++i){
 			for(int j = 0; j < kb_p1[0].length; ++j){
 				/*if(/*kb_p1[i][j] != 1 && *//*kb_p1[i][j] != -5){
 					++maxNodes;
 				}*/
 				if(kb_p1[i][j] == 1){
-					++numOnes;
+					++numOnes1;
 				}
 				if(kb_p1[i][j] == 0){
-					++numZeros;
+					++numZeros1;
 				}
 			}
+		}
+		int numOnes2 = 0;
+		int numZeros2 = 0;
+		for(int i = 0; i < kb_p1.length; ++i){
+			for(int j = 0; j < kb_p1[0].length; ++j){
+				/*if(/*kb_p1[i][j] != 1 && *//*kb_p1[i][j] != -5){
+					++maxNodes;
+				}*/
+				if(kb_p1[i][j] == 1){
+					++numOnes2;
+				}
+				if(kb_p1[i][j] == 0){
+					++numZeros2;
+				}
+			}
+		}
+		int numZeros, numOnes;
+		if(numZeros1 > numZeros2){
+			numZeros = numZeros1;
+			numOnes = numOnes1;
+		} else {
+			numOnes = numOnes2;
+			numZeros = numZeros2;
 		}
 		if(numZeros < 300){
 			maxNodes = 8 * (numOnes + numZeros);
 		} else {
-			maxNodes = 4 * numZeros;
+			maxNodes = 8 * numZeros;
 		}
 		
 		queue = new PriorityQueue<Node_2>();
@@ -177,13 +205,18 @@ public class AStar_2 {
 			}
 			nodesToPutOff.clear();
 		} else {
-			Node_2.addDiff(closed);
-			PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(closed);
-			queue = tempQ;
-			closed.clear();
+			addDifference();
 		}
 		increase = !increase;
 		//closed.clear();
+	}
+	
+	private void addDifference(){
+		numAdded = 0;
+		Node_2.addDiff(closed);
+		PriorityQueue<Node_2> tempQ = new PriorityQueue<Node_2>(closed);
+		queue = tempQ;
+		closed.clear();
 	}
 	
 	public Node_2 findZeroPath(){
@@ -210,9 +243,17 @@ public class AStar_2 {
 		Node_2 toReturn = null;
 		if(!queue.isEmpty()){
 			toReturn = queue.poll();
+		} else {
+			if(useIncrease){
+				useIncrease = false;
+				increase = true;
+				addDifference();
+				return findZeroPath();
+			}
 		}
 		queue.clear();
 		AStar_Single.resetContinueClosed();
+		increase = false;
 		return toReturn;
 	}
 	
@@ -253,7 +294,9 @@ public class AStar_2 {
 		if(queue.isEmpty()){
 			numAdded = 0;
 			System.out.println("Empty :(");
-			increase = true;
+			if(!useIncrease){
+				increase = true;
+			}
 			exitsFound();
 			return findPath();
 		} else {
@@ -370,6 +413,9 @@ public class AStar_2 {
 					}
 				} catch (ArrayIndexOutOfBoundsException e) {}
 				Node_2 toAdd = new Node_2(x1, y1, x2, y2, n, indexOfAction[action]);
+				if(increase){
+					toAdd.addDiff();
+				}
 				//Node_2.addPathCost(toAdd, 1, map1, map2);
 				if(!n.equals(toAdd) && shouldIAdd(toAdd)){
 					nexts.add(toAdd);
